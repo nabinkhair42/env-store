@@ -5,7 +5,7 @@ export function useVariableManager(initialVariables: EnvVariable[] = []) {
   const [variables, setVariables] = useState<EnvVariable[]>(initialVariables);
 
   const addVariable = useCallback(() => {
-    setVariables((prev) => [...prev, { key: "", value: "" }]);
+    setVariables((prev) => [{ key: "", value: "" }, ...prev]);
   }, []);
 
   const updateVariable = useCallback(

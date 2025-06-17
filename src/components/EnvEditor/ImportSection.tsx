@@ -120,7 +120,7 @@ export const ImportSection = memo(function ImportSection({
           Smart Import
         </CardTitle>
         <CardDescription>
-          Import environment variables from files, JSON, or paste any format - we'll automatically convert it
+          Import environment variables from files, JSON, or paste any format - we&apos;ll automatically convert it
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -131,7 +131,7 @@ export const ImportSection = memo(function ImportSection({
             className={`border-2 border-dashed rounded-lg p-6 transition-all duration-200 cursor-pointer
               ${dragActive 
                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20' 
-                : 'border-gray-300 hover:border-gray-400 hover:bg-muted/50'
+                : 'border hover:bg-muted/50'
               }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}

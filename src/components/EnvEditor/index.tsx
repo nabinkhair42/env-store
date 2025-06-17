@@ -33,7 +33,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
     getValidVariables,
   } = useVariableManager(project.variables || []);
   
-  const { visibleValues, toggleVisibility } = useVisibilityToggle();
+  const { visibleValues, toggleVisibility, shiftIndices } = useVisibilityToggle();
   
   const {
     importText,
@@ -58,6 +58,12 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   const validVariables = useMemo(() => getValidVariables(), [getValidVariables]);
 
   // Handlers
+  const handleAddVariable = useCallback(() => {
+    addVariable();
+    // Shift all existing visibility indices by 1 since we added at the top
+    shiftIndices(1);
+  }, [addVariable, shiftIndices]);
+
   const handleDeleteVariable = useCallback((index: number) => {
     const variable = variables[index];
     setDeleteConfirm({
@@ -196,7 +202,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
         <VariablesList
           variables={variables}
           visibleValues={visibleValues}
-          onAddVariable={addVariable}
+          onAddVariable={handleAddVariable}
           onUpdateVariable={updateVariable}
           onToggleVisibility={toggleVisibility}
           onDeleteVariable={handleDeleteVariable}

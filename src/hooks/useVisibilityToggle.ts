@@ -23,10 +23,24 @@ export function useVisibilityToggle() {
     setVisibleValues(new Set(indices));
   }, []);
 
+  const shiftIndices = useCallback((offset: number) => {
+    setVisibleValues((prev) => {
+      const newSet = new Set<number>();
+      prev.forEach(index => {
+        const newIndex = index + offset;
+        if (newIndex >= 0) {
+          newSet.add(newIndex);
+        }
+      });
+      return newSet;
+    });
+  }, []);
+
   return {
     visibleValues,
     toggleVisibility,
     hideAll,
     showAll,
+    shiftIndices,
   };
 }
