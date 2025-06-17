@@ -7,15 +7,15 @@ import { ProjectForm } from "@/components/ProjectForm";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Loader from "@/components/ui/Loader";
 import { Logo } from "@/components/ui/Logo";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppContext } from "@/contexts/AppContext";
 import { useProjects } from "@/hooks/useProjects";
 import { IProject } from "@/lib/models/Project";
 import { LogOut, Plus, Settings, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
-import Loader from "@/components/ui/Loader";
-import { ModeSwitcher } from "./ui/mode";
+import { ModeSwitcher } from "@/components/ui/mode";
 
 export function Dashboard() {
   const { projects, loading, fetchProjects, deleteProject } = useProjects();
@@ -94,7 +94,7 @@ export function Dashboard() {
                 Settings
               </Button>
               <Button
-                variant="outline"
+                variant="destructive"
                 size="sm"
                 onClick={() => setShowLogoutDialog(true)}
               >
@@ -107,7 +107,11 @@ export function Dashboard() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-6"
+        >
           <TabsList>
             <TabsTrigger value="projects">Projects</TabsTrigger>
             {selectedProject && (
@@ -156,7 +160,9 @@ export function Dashboard() {
                   <ProjectCard
                     key={project._id}
                     project={project}
-                    onSelect={(project) => handleProjectSelected(project, false)}
+                    onSelect={(project) =>
+                      handleProjectSelected(project, false)
+                    }
                     onEdit={(project) => handleProjectSelected(project, true)}
                     onDelete={handleProjectDeleted}
                   />

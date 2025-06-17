@@ -3,14 +3,11 @@ import { Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "ENV Store - Environment Variable Manager",
-  description: "Securely manage and sync your environment variables across devices",
+  description:
+    "Securely manage and sync your environment variables across devices",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
@@ -24,13 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistMono.variable} antialiased`}
+        className={`antialiased`}
+        suppressHydrationWarning
       >
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
