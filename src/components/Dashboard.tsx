@@ -1,10 +1,10 @@
 "use client";
 
 import { EnvEditor } from "@/components/EnvEditor";
-import { LogOutDialog } from "@/components/LogOutDialog";
+import { LogOutDialog } from "@/components/modal/LogOutDialog";
 import { ProjectCard } from "@/components/ProjectCard";
 import { ProjectForm } from "@/components/ProjectForm";
-import { SettingsDialog } from "@/components/SettingsDialog";
+import { SettingsDialog } from "@/components/modal/SettingsDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Loader from "@/components/ui/Loader";

@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { ConfirmDialog } from "@/components/modal/confirm-dialog";
 import type { IProject } from "@/lib/models/Project";
 import { downloadFile, generateEnvFile } from "@/lib/utils/env-parser";
 import { toast } from "@/lib/utils/toast";

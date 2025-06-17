@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
-import { Providers } from "@/components/Providers";
+import { Providers } from "@/providers/Providers";
 import "./globals.css";
-
 
 export const metadata: Metadata = {
   title: "ENV Store - Environment Variable Manager",
@@ -22,10 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`antialiased`}
-        suppressHydrationWarning
-      >
+      <body className={`antialiased`} suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>

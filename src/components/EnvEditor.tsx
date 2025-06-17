@@ -24,7 +24,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { ConfirmDialog } from "@/components/modal/confirm-dialog";
 import { IProject } from "@/lib/models/Project";
 import { EnvVariable } from "@/lib/validations/project";
 import {
