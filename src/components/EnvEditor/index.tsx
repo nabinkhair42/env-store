@@ -2,15 +2,15 @@
 
 import { ConfirmDialog } from "@/components/modal/confirm-dialog";
 import { Button } from "@/components/ui/button";
-import { useFileImport } from "@/hooks/useFileImport";
 import { useProjects } from "@/hooks/useProjects";
 import { useVariableManager } from "@/hooks/useVariables";
 import { useVisibilityToggle } from "@/hooks/useVisibilityToggle";
 import { IProject } from "@/lib/models/Project";
 import { downloadFile, generateEnvFile } from "@/lib/utils/env-parser";
+import { EnvVariable } from "@/lib/validations/project";
 import { AlertCircle, Check, Copy, Download, Loader2, Save } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
-import { ImportSection } from "./ImportSection";
+import { FileUploadSection } from "./FileUploadSection";
 import { VariableStats } from "./VariableStats";
 import { VariablesList } from "./VariablesList";
 
@@ -34,14 +34,6 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   } = useVariableManager(project.variables || []);
   
   const { visibleValues, toggleVisibility, shiftIndices } = useVisibilityToggle();
-  
-  const {
-    importText,
-    setImportText,
-    handleFileUpload,
-    parseAndGetVariables,
-    clearImport,
-  } = useFileImport();
 
   // Delete confirmation state
   const [deleteConfirm, setDeleteConfirm] = useState<{
@@ -98,13 +90,21 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
     }
   }, [updateProject, project._id, validVariables, onUpdate]);
 
-  const handleImport = useCallback(() => {
-    const newVariables = parseAndGetVariables();
+  const handleSmartPaste = useCallback((newVariables: EnvVariable[]) => {
     if (newVariables.length > 0) {
       bulkAddVariables(newVariables);
-      clearImport();
+      // Shift visibility indices for the new variables
+      shiftIndices(newVariables.length);
     }
-  }, [parseAndGetVariables, bulkAddVariables, clearImport]);
+  }, [bulkAddVariables, shiftIndices]);
+
+  const handleFileVariables = useCallback((newVariables: EnvVariable[]) => {
+    if (newVariables.length > 0) {
+      bulkAddVariables(newVariables);
+      // Shift visibility indices for the new variables
+      shiftIndices(newVariables.length);
+    }
+  }, [bulkAddVariables, shiftIndices]);
 
   const handleDownload = useCallback(() => {
     try {
@@ -190,15 +190,10 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
       <div className="space-y-6">
         <VariableStats variables={variables} />
         
-        {/* Import Section - Always visible */}
-        <ImportSection
-          importText={importText}
-          onImportTextChange={setImportText}
-          onFileUpload={handleFileUpload}
-          onImport={handleImport}
-          onClear={clearImport}
+        <FileUploadSection
+          onFileVariables={handleFileVariables}
         />
-
+        
         <VariablesList
           variables={variables}
           visibleValues={visibleValues}
@@ -206,6 +201,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
           onUpdateVariable={updateVariable}
           onToggleVisibility={toggleVisibility}
           onDeleteVariable={handleDeleteVariable}
+          onSmartPaste={handleSmartPaste}
         />
       </div>
 
