@@ -14,6 +14,7 @@ import { IProject } from "@/lib/models/Project";
 import { LogOut, Plus, Settings, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import Loader from "@/components/ui/Loader";
+import { ModeSwitcher } from "./ui/mode";
 
 export function Dashboard() {
   const { projects, loading, fetchProjects, deleteProject } = useProjects();
@@ -82,6 +83,7 @@ export function Dashboard() {
               <span className="ml-2 text-sm">Environment Variable Manager</span>
             </div>
             <div className="flex items-center gap-4">
+              <ModeSwitcher />
               <Button
                 variant="outline"
                 size="sm"
