@@ -58,7 +58,7 @@ export const toast = {
     return sonnerToast.dismiss(id);
   },
 
-  // EnvSync specific toasts
+  // ENV Store specific toasts
   projectCreated: (projectName: string) => {
     return toast.success("Project created successfully", `"${projectName}" is now ready for environment variables.`);
   },
@@ -92,7 +92,7 @@ export const toast = {
   },
 
   authError: () => {
-    return toast.error("Authentication failed", "Please sign in to continue using EnvSync.");
+    return toast.error("Authentication failed", "Please sign in to continue using ENV Store.");
   },
 
   networkError: () => {

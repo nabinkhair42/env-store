@@ -1,4 +1,4 @@
-# EnvSync - Environment Variable Manager
+# ENV Store - Environment Variable Manager
 
 **Solve the Environment Variable Sync Problem Once and For All**
 
@@ -17,7 +17,7 @@ As a developer, you've faced this frustrating scenario countless times:
 
 ## Our Solution
 
-EnvSync is a secure, cloud-based environment variable manager that eliminates configuration headaches and keeps your development workflow smooth across all your devices and projects.
+ENV Store is a secure, cloud-based environment variable manager that eliminates configuration headaches and keeps your development workflow smooth across all your devices and projects.
 
 ### Key Benefits
 

@@ -264,7 +264,7 @@
   background: hsl(var(--muted) / 0.8);
 }
 
-/* EnvSync specific toast styling */
+/* ENV Store specific toast styling */
 [data-sonner-toast][data-type="success"] [data-icon] {
   color: hsl(355.7 100% 97.3%);
 }

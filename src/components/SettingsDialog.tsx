@@ -59,7 +59,7 @@ export function SettingsDialog({
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `envsync-backup-${
+      a.download = `env-store-backup-${
         new Date().toISOString().split("T")[0]
       }.json`;
       document.body.appendChild(a);
@@ -242,7 +242,7 @@ export function SettingsDialog({
           <TabsContent value="about" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>About EnvSync</CardTitle>
+                <CardTitle>About ENV Store</CardTitle>
                 <CardDescription>
                   Environment Variable Manager for Developers
                 </CardDescription>
@@ -268,7 +268,7 @@ export function SettingsDialog({
                 </div>
                 <div className="mt-4 pt-4 border-t">
                   <p className="text-sm text-muted-foreground">
-                    EnvSync helps developers manage environment variables across
+                    ENV Store helps developers manage environment variables across
                     multiple devices and projects securely. Never lose your
                     environment configurations again!
                   </p>

@@ -15,7 +15,7 @@ export default async function LoginPage() {
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">EnvSync</CardTitle>
+          <CardTitle className="text-2xl font-bold">ENV Store</CardTitle>
           <CardDescription>
             Sync your environment variables across devices securely
           </CardDescription>

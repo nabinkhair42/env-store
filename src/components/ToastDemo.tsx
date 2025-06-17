@@ -10,7 +10,7 @@ export function ToastDemo() {
       <CardHeader>
         <CardTitle>Toast Notifications</CardTitle>
         <CardDescription>
-          Test the different types of toast notifications in EnvSync
+          Test the different types of toast notifications in ENV Store
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -46,7 +46,7 @@ export function ToastDemo() {
         </div>
         
         <div className="pt-2 border-t">
-          <h4 className="text-sm font-medium mb-2">EnvSync Specific</h4>
+          <h4 className="text-sm font-medium mb-2">ENV Store Specific</h4>
           <div className="grid grid-cols-1 gap-2">
             <Button
               variant="outline"

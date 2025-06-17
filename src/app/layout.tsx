@@ -9,7 +9,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EnvSync - Environment Variable Manager",
+  title: "ENV Store - Environment Variable Manager",
   description: "Securely manage and sync your environment variables across devices",
 };
 
