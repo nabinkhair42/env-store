@@ -2,6 +2,7 @@ import { auth, signIn } from "@/auth";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Logo } from "@/components/ui/Logo";
 import { Github } from "lucide-react";
 
 export default async function LoginPage() {
@@ -15,6 +16,9 @@ export default async function LoginPage() {
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
+          <div className="flex justify-center mb-4">
+            <Logo variant="icon" size="lg" />
+          </div>
           <CardTitle className="text-2xl font-bold">ENV Store</CardTitle>
           <CardDescription>
             Sync your environment variables across devices securely

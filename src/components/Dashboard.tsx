@@ -8,6 +8,7 @@ import { SettingsDialog } from "@/components/SettingsDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Logo } from "@/components/ui/Logo";
 import { useAppContext } from "@/contexts/AppContext";
 import { useProjects } from "@/hooks/useProjects";
 import { IProject } from "@/lib/models/Project";
@@ -79,8 +80,8 @@ export function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold ">ENV Store</h1>
-              <span className="ml-2 text-sm">Environment Variable Manager</span>
+              <Logo variant="icon" size="md" className="mr-3" />
+              <h1 className="text-xl font-semibold">ENV Store</h1>
             </div>
             <div className="flex items-center gap-4">
               <ModeSwitcher />

@@ -1,5 +1,7 @@
 # ENV Store - Environment Variable Manager
 
+![ENV Store Logo](./public/logo-full.svg)
+
 **Solve the Environment Variable Sync Problem Once and For All**
 
 ## The Problem We Solve
