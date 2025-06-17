@@ -248,7 +248,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                     Environment Variables
                   </CardTitle>
                   <CardDescription>
-                    Manage your application's environment configuration
+                    Manage your application&apos;s environment configuration
                   </CardDescription>
                 </div>
                 <Button onClick={addVariable} size="sm">
