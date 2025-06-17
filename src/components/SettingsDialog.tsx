@@ -152,17 +152,17 @@ export function SettingsDialog({
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-center p-4 border bg-muted">
+                    <div className="text-2xl font-bold text-blue-600 ">
                       {projects.length}
                     </div>
-                    <div className="text-sm text-blue-600">Total Projects</div>
+                    <div className="text-sm text-blue-600 ">Total Projects</div>
                   </div>
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">
+                  <div className="text-center p-4 border bg-muted">
+                    <div className="text-2xl font-bold text-green-600 ">
                       {totalVariables}
                     </div>
-                    <div className="text-sm text-green-600">
+                    <div className="text-sm text-green-600 ">
                       Environment Variables
                     </div>
                   </div>
@@ -177,10 +177,10 @@ export function SettingsDialog({
                       {projects.slice(0, 3).map((project: IProject) => (
                         <div
                           key={project._id}
-                          className="flex justify-between items-center p-2 bg-gray-50 rounded"
+                          className="flex justify-between items-center p-2  bg-muted"
                         >
                           <span className="font-medium">{project.name}</span>
-                          <Badge variant="secondary">
+                          <Badge variant="outline">
                             {project.variables?.length || 0} vars
                           </Badge>
                         </div>
@@ -221,8 +221,8 @@ export function SettingsDialog({
                     </Button>
                   </div>
 
-                  <div className="border border-red-200 rounded-lg p-4">
-                    <h4 className="font-medium mb-2 text-red-600">
+                  <div className="border border-destructive p-4">
+                    <h4 className="font-medium mb-2 text-destructive">
                       Danger Zone
                     </h4>
                     <p className="text-sm text-muted-foreground mb-3">
@@ -268,9 +268,9 @@ export function SettingsDialog({
                 </div>
                 <div className="mt-4 pt-4 border-t">
                   <p className="text-sm text-muted-foreground">
-                    ENV Store helps developers manage environment variables across
-                    multiple devices and projects securely. Never lose your
-                    environment configurations again!
+                    ENV Store helps developers manage environment variables
+                    across multiple devices and projects securely. Never lose
+                    your environment configurations again!
                   </p>
                 </div>
               </CardContent>
