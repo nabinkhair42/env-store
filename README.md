@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EnvSync - Environment Variable Manager
 
-## Getting Started
+**Solve the Environment Variable Sync Problem Once and For All**
 
-First, run the development server:
+## The Problem We Solve
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+As a developer, you've faced this frustrating scenario countless times:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🔄 **Device Switching**: Got a new laptop? Setting up environment variables from scratch
+- 💻 **Multiple Workstations**: Working from office, home, and client sites with different setups
+- 🤝 **Team Collaboration**: Sharing environment configurations securely without exposing secrets
+- 📁 **Project Management**: Juggling dozens of `.env` files across different projects
+- 🗑️ **Accidental Loss**: `.env` files getting deleted, corrupted, or excluded from version control
+- 🔧 **Environment Drift**: Inconsistent configurations across development, staging, and local environments
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**The result?** Hours wasted recreating environment setups, deployment failures, and productivity losses.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Our Solution
 
-## Learn More
+EnvSync is a secure, cloud-based environment variable manager that eliminates configuration headaches and keeps your development workflow smooth across all your devices and projects.
 
-To learn more about Next.js, take a look at the following resources:
+### Key Benefits
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+✅ **Universal Access**: Your environment variables, available instantly on any device
+✅ **Project Organization**: Keep configurations organized by project, never lose track again
+✅ **Secure Sync**: GitHub OAuth authentication with encrypted cloud storage
+✅ **Seamless Import/Export**: Bulk import existing `.env` files and export when needed
+✅ **Team Ready**: Built with collaboration and sharing capabilities in mind
+✅ **Developer First**: Designed by developers, for developers who understand the pain
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Perfect For
 
-## Deploy on Vercel
+- **Full-Stack Developers** managing multiple client projects
+- **Remote Teams** needing consistent development environments
+- **Consultants** working across different client machines
+- **Students** switching between personal and lab computers
+- **Open Source Contributors** managing various project configurations
+- **DevOps Engineers** maintaining environment consistency
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Business Model
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Target Market**: Individual developers and small development teams (1-50 developers)
+
+**Value Proposition**: Save 2-5 hours per month on environment setup and eliminate configuration-related bugs
+
+**Pricing Strategy** (Future):
+- Free tier: Up to 3 projects, 50 variables per project
+- Pro tier: Unlimited projects, team sharing, priority support
+- Enterprise: Custom SSO, audit logs, compliance features
+
+## Technical Excellence
+
+Built with modern, production-ready technologies ensuring reliability and scalability:
+- Next.js 15 with React 19 for optimal performance
+- TypeScript for type safety and developer experience
+- MongoDB for scalable data storage
+- GitHub OAuth for trusted authentication
+- Tailwind CSS for responsive design
+
+## Get Started
+
+1. **Sign up** with your GitHub account
+2. **Create** your first project
+3. **Import** your existing `.env` files
+4. **Access** your variables from anywhere
+
+Transform your development workflow today. Never lose an environment variable again.
+
+---
+
+*"Stop recreating the same environment variables. Start syncing them."*
