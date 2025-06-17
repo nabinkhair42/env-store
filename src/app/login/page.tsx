@@ -36,7 +36,7 @@ export default async function LoginPage() {
               Continue with GitHub
             </Button>
           </form>
-          <p className="mt-4 text-xs text-center text-gray-600">
+          <p className="mt-4 text-xs text-center text-muted-foregrounds">
             By signing in, you agree to sync your environment variables securely.
           </p>
         </CardContent>

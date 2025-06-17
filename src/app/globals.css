@@ -188,3 +188,99 @@
     letter-spacing: var(--tracking-normal);
   }
 }
+
+/* Custom Toast Styling */
+[data-sonner-toaster] {
+  --width: 356px;
+  --front-toast-height: 64px;
+  --offset: 32px;
+  --gap: 14px;
+}
+
+[data-sonner-toast] {
+  --y: translateY(0px);
+  --lift-amount: calc(var(--lift) * var(--gap));
+  --toast-bg: hsl(var(--card));
+  --toast-border: hsl(var(--border));
+  --toast-text: hsl(var(--card-foreground));
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: 0 4px 12px hsl(var(--shadow-color) / 0.15);
+  backdrop-filter: blur(8px);
+}
+
+[data-sonner-toast][data-type="success"] {
+  --toast-bg: hsl(142 76% 36%);
+  --toast-border: hsl(142 76% 36%);
+  --toast-text: hsl(355.7 100% 97.3%);
+}
+
+[data-sonner-toast][data-type="error"] {
+  --toast-bg: hsl(var(--destructive));
+  --toast-border: hsl(var(--destructive));
+  --toast-text: hsl(var(--destructive-foreground));
+}
+
+[data-sonner-toast][data-type="warning"] {
+  --toast-bg: hsl(38 92% 50%);
+  --toast-border: hsl(38 92% 50%);
+  --toast-text: hsl(48 96% 89%);
+}
+
+[data-sonner-toast][data-type="info"] {
+  --toast-bg: hsl(221 83% 53%);
+  --toast-border: hsl(221 83% 53%);
+  --toast-text: hsl(210 40% 98%);
+}
+
+[data-sonner-toast] [data-title] {
+  font-weight: 500;
+  color: var(--toast-text);
+}
+
+[data-sonner-toast] [data-description] {
+  color: var(--toast-text);
+  opacity: 0.8;
+}
+
+[data-sonner-toast] [data-button] {
+  border-radius: calc(var(--radius));
+  font-weight: 500;
+  padding: 6px 12px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+[data-sonner-toast] [data-button]:hover {
+  opacity: 0.9;
+}
+
+[data-sonner-toast] [data-cancel-button] {
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  border: 1px solid hsl(var(--border));
+}
+
+[data-sonner-toast] [data-cancel-button]:hover {
+  background: hsl(var(--muted) / 0.8);
+}
+
+/* EnvSync specific toast styling */
+[data-sonner-toast][data-type="success"] [data-icon] {
+  color: hsl(355.7 100% 97.3%);
+}
+
+[data-sonner-toast][data-type="error"] [data-icon] {
+  color: hsl(var(--destructive-foreground));
+}
+
+[data-sonner-toast] [data-close-button] {
+  background: transparent;
+  border: none;
+  color: var(--toast-text);
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+[data-sonner-toast] [data-close-button]:hover {
+  opacity: 1;
+}

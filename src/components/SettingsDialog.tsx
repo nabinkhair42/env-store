@@ -128,7 +128,7 @@ export function SettingsDialog({
                     </div>
                     <div className="flex items-center gap-2">
                       <Label>Email:</Label>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-muted-foreground">
                         {session?.user?.email || "N/A"}
                       </span>
                     </div>
@@ -207,7 +207,7 @@ export function SettingsDialog({
                 <div className="space-y-4">
                   <div className="border rounded-lg p-4">
                     <h4 className="font-medium mb-2">Export All Data</h4>
-                    <p className="text-sm text-gray-600 mb-3">
+                    <p className="text-sm text-muted-foreground mb-3">
                       Download a complete backup of all your projects and
                       environment variables in JSON format.
                     </p>
@@ -225,7 +225,7 @@ export function SettingsDialog({
                     <h4 className="font-medium mb-2 text-red-600">
                       Danger Zone
                     </h4>
-                    <p className="text-sm text-gray-600 mb-3">
+                    <p className="text-sm text-muted-foreground mb-3">
                       Permanently delete your account and all associated data.
                       This action cannot be undone.
                     </p>
@@ -267,7 +267,7 @@ export function SettingsDialog({
                   </div>
                 </div>
                 <div className="mt-4 pt-4 border-t">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     EnvSync helps developers manage environment variables across
                     multiple devices and projects securely. Never lose your
                     environment configurations again!

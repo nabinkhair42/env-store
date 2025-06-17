@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { EnvVariable } from '@/lib/validations/project';
 import { parseEnvFile, generateEnvFile, downloadFile } from '@/lib/utils/env-parser';
-import { toast } from 'sonner';
+import { toast } from '@/lib/utils/toast';
 
 interface UseEnvVariablesState {
   variables: EnvVariable[];
@@ -48,7 +48,7 @@ export function useEnvVariables(initialVariables: EnvVariable[] = []): UseEnvVar
       const parsed = parseEnvFile(content);
       const newVariables = parsed.map(p => ({ ...p, description: '' }));
       setVariablesState(prev => [...prev, ...newVariables]);
-      toast.success(`Imported ${parsed.length} variables`);
+      toast.importSuccess(parsed.length);
     } catch (error) {
       toast.error('Failed to parse environment file');
     }
@@ -58,7 +58,7 @@ export function useEnvVariables(initialVariables: EnvVariable[] = []): UseEnvVar
     try {
       const envContent = generateEnvFile(variables.filter(v => v.key.trim()));
       downloadFile(envContent, filename);
-      toast.success('Environment file downloaded');
+      toast.exportSuccess('.env file');
     } catch (error) {
       toast.error('Failed to download environment file');
     }
@@ -68,7 +68,7 @@ export function useEnvVariables(initialVariables: EnvVariable[] = []): UseEnvVar
     try {
       const envContent = generateEnvFile(variables.filter(v => v.key.trim()));
       await navigator.clipboard.writeText(envContent);
-      toast.success('Copied to clipboard');
+      toast.success('Copied to clipboard', 'Environment variables are now in your clipboard.');
     } catch (error) {
       toast.error('Failed to copy to clipboard');
     }

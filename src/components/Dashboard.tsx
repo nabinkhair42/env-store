@@ -1,38 +1,58 @@
 "use client";
 
 import { EnvEditor } from "@/components/EnvEditor";
+import { LogOutDialog } from "@/components/LogOutDialog";
 import { ProjectCard } from "@/components/ProjectCard";
 import { ProjectForm } from "@/components/ProjectForm";
+import { SettingsDialog } from "@/components/SettingsDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useProjects } from "@/hooks/useProjects";
 import { useAppContext } from "@/contexts/AppContext";
-import { SettingsDialog } from "@/components/SettingsDialog";
+import { useProjects } from "@/hooks/useProjects";
+import { IProject } from "@/lib/models/Project";
 import { LogOut, Plus, Settings, Upload } from "lucide-react";
-import { signOut } from "next-auth/react";
-import { toast } from "sonner";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import Loader from "@/components/ui/Loader";
 
 export function Dashboard() {
   const { projects, loading, fetchProjects, deleteProject } = useProjects();
-  const { selectedProject, setSelectedProject, showProjectForm, setShowProjectForm } = useAppContext();
+  const {
+    selectedProject,
+    setSelectedProject,
+    showProjectForm,
+    setShowProjectForm,
+  } = useAppContext();
   const [showSettings, setShowSettings] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [activeTab, setActiveTab] = useState("projects");
 
   // Fetch projects on component mount
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
 
+  // Switch to projects tab when no project is selected
+  useEffect(() => {
+    if (!selectedProject && activeTab === "editor") {
+      setActiveTab("projects");
+    }
+  }, [selectedProject, activeTab]);
+
   const handleProjectCreated = () => {
     fetchProjects();
     setShowProjectForm(false);
-    toast.success("Project created successfully");
   };
 
   const handleProjectUpdated = () => {
     fetchProjects();
-    toast.success("Project updated successfully");
+  };
+
+  const handleProjectSelected = (project: IProject, switchToEditor = false) => {
+    setSelectedProject(project);
+    if (switchToEditor) {
+      setActiveTab("editor");
+    }
   };
 
   const handleProjectDeleted = async (projectId: string) => {
@@ -40,22 +60,15 @@ export function Dashboard() {
       await deleteProject(projectId);
       if (selectedProject?._id === projectId) {
         setSelectedProject(null);
+        setActiveTab("projects"); // Switch back to projects tab when deleting selected project
       }
-      toast.success("Project deleted successfully");
     } catch (error) {
-      toast.error("Failed to delete project");
+      console.error("Failed to delete project:", error);
     }
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
-          <p>Loading your projects...</p>
-        </div>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
@@ -66,18 +79,13 @@ export function Dashboard() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <h1 className="text-2xl font-bold ">EnvSync</h1>
-              <span className="ml-2 text-sm">
-                Environment Variable Manager
-              </span>
+              <span className="ml-2 text-sm">Environment Variable Manager</span>
             </div>
             <div className="flex items-center gap-4">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
-                onClick={() => {
-                  fetchProjects(); // Refresh projects before opening settings
-                  setShowSettings(true);
-                }}
+                onClick={() => setShowSettings(true)}
               >
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
@@ -85,7 +93,7 @@ export function Dashboard() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => signOut({ callbackUrl: "/login" })}
+                onClick={() => setShowLogoutDialog(true)}
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
@@ -96,7 +104,7 @@ export function Dashboard() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs defaultValue="projects" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList>
             <TabsTrigger value="projects">Projects</TabsTrigger>
             {selectedProject && (
@@ -110,14 +118,12 @@ export function Dashboard() {
             {/* Projects Header */}
             <div className="flex justify-between items-center">
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Your Projects
-                </h2>
-                <p className="text-sm text-gray-600">
+                <h2 className="text-lg font-semibold ">Your Projects</h2>
+                <p className="text-sm text-muted-foreground">
                   Manage your environment variables by project
                 </p>
               </div>
-              <Button onClick={() => setShowProjectForm(true)}>
+              <Button onClick={() => setShowProjectForm(true)} variant={"link"}>
                 <Plus className="h-4 w-4 mr-2" />
                 New Project
               </Button>
@@ -127,13 +133,11 @@ export function Dashboard() {
             {projects.length === 0 ? (
               <Card>
                 <CardContent className="text-center py-12">
-                  <div className="text-gray-400 mb-4">
+                  <div className="text-muted-foreground mb-4">
                     <Upload className="h-12 w-12 mx-auto" />
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    No projects yet
-                  </h3>
-                  <p className="text-gray-600 mb-4">
+                  <h3 className="text-lg font-medium  mb-2">No projects yet</h3>
+                  <p className="text-muted-foreground mb-4">
                     Create your first project to start managing environment
                     variables
                   </p>
@@ -149,7 +153,8 @@ export function Dashboard() {
                   <ProjectCard
                     key={project._id}
                     project={project}
-                    onSelect={setSelectedProject}
+                    onSelect={(project) => handleProjectSelected(project, false)}
+                    onEdit={(project) => handleProjectSelected(project, true)}
                     onDelete={handleProjectDeleted}
                   />
                 ))}
@@ -177,10 +182,16 @@ export function Dashboard() {
       )}
 
       {/* Settings Dialog */}
-      <SettingsDialog 
-        open={showSettings} 
+      <SettingsDialog
+        open={showSettings}
         onOpenChange={setShowSettings}
         projects={projects}
+      />
+
+      {/* Logout Dialog */}
+      <LogOutDialog
+        open={showLogoutDialog}
+        onOpenChange={setShowLogoutDialog}
       />
     </div>
   );

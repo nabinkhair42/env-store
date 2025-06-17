@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/utils/toast';
 import { IProject } from '@/lib/models/Project';
 import { ProjectInput } from '@/lib/validations/project';
 import { projectsApi, ApiError } from '@/lib/api/projects';
@@ -46,7 +46,7 @@ export function useProjects(): UseProjectsState & UseProjectsActions {
         projects: [project, ...prev.projects],
         loading: false,
       }));
-      toast.success(message);
+      toast.projectCreated(project.name);
       return project;
     } catch (error) {
       const errorMessage = error instanceof ApiError ? error.message : 'Failed to create project';
@@ -63,7 +63,7 @@ export function useProjects(): UseProjectsState & UseProjectsActions {
         ...prev,
         projects: prev.projects.map(p => p._id === id ? project : p),
       }));
-      toast.success(message);
+      toast.projectUpdated(project.name);
       return project;
     } catch (error) {
       const errorMessage = error instanceof ApiError ? error.message : 'Failed to update project';
@@ -74,19 +74,23 @@ export function useProjects(): UseProjectsState & UseProjectsActions {
 
   const deleteProject = useCallback(async (id: string): Promise<boolean> => {
     try {
+      // Get project name before deleting
+      const projectToDelete = state.projects.find(p => p._id === id);
+      const projectName = projectToDelete?.name || 'Project';
+      
       const { message } = await projectsApi.deleteProject(id);
       setState(prev => ({
         ...prev,
         projects: prev.projects.filter(p => p._id !== id),
       }));
-      toast.success(message);
+      toast.projectDeleted(projectName);
       return true;
     } catch (error) {
       const errorMessage = error instanceof ApiError ? error.message : 'Failed to delete project';
       toast.error(errorMessage);
       return false;
     }
-  }, []);
+  }, [state.projects]);
 
   const refreshProjects = useCallback(() => fetchProjects(), [fetchProjects]);
 

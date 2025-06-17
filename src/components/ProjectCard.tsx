@@ -7,15 +7,15 @@ import { IProject } from '@/lib/models/Project';
 import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
 import { Calendar, Download, Edit, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 interface ProjectCardProps {
   project: IProject;
   onSelect: (project: IProject) => void;
+  onEdit?: (project: IProject) => void;
   onDelete: (projectId: string) => void;
 }
 
-export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
+export function ProjectCard({ project, onSelect, onEdit, onDelete }: ProjectCardProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleDownload = (e: React.MouseEvent) => {
@@ -23,15 +23,21 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
     try {
       const envContent = generateEnvFile(project.variables || []);
       downloadFile(envContent, `${project.name}.env`);
-      toast.success('Environment file downloaded');
     } catch (error) {
-      toast.error('Failed to download environment file');
+      console.error('Failed to download environment file:', error);
     }
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowDeleteConfirm(true);
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(project);
+    }
   };
 
   const confirmDelete = () => {
@@ -75,7 +81,7 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
         </div>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="flex items-center justify-between text-sm text-gray-600">
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
           <div className="flex items-center gap-4">
             <span>{project.variables?.length || 0} variables</span>
             <div className="flex items-center gap-1">
@@ -85,7 +91,7 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
               </span>
             </div>
           </div>
-          <Button variant="ghost" size="sm" className="h-auto p-1 text-xs">
+          <Button variant="ghost" size="sm" className="h-auto p-1 text-xs" onClick={handleEdit}>
             <Edit className="h-3 w-3 mr-1" />
             Edit
           </Button>
