@@ -15,7 +15,7 @@ export default function SecurityNotes({
     <section className="px-6 py-20 border-t border-dashed">
       <div className="rounded-2xl p-10">
         <div className="mb-8 flex items-center justify-center">
-          <div className="p-4 rounded-full bg-primary/10 text-primary">
+          <div className="p-4 rounded-xl bg-primary/10 text-primary">
             <Shield className="h-10 w-10" />
           </div>
         </div>

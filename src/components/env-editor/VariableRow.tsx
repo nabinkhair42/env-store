@@ -115,9 +115,10 @@ export const VariableRow = memo(
           <div className="md:col-span-1 flex justify-end">
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={onDelete}
-              className="opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
+              className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+              aria-label="Delete variable"
             >
               <X className="h-4 w-4" />
             </Button>

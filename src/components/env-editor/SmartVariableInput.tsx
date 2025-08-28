@@ -313,12 +313,13 @@ export const SmartVariableInput = forwardRef<
                 variant="ghost"
                 size="icon"
                 onClick={onToggleVisibility}
-                className="h-6 w-6"
+                className="size-7"
+                aria-label="Toggle visibility"
               >
                 {isValueVisible ? (
-                  <EyeOff className="h-3 w-3" />
+                  <EyeOff className="size-4" />
                 ) : (
-                  <Eye className="h-3 w-3" />
+                  <Eye className="size-4" />
                 )}
               </Button>
             )}

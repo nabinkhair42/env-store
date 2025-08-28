@@ -69,15 +69,15 @@ export const VariablesList = memo(function VariablesList({
     return (
       <Card className="border-0 shadow-none">
         <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="space-y-1">
               <CardTitle className="text-lg">Environment Variables</CardTitle>
               <CardDescription>
                 Manage your application&apos;s environment configuration
               </CardDescription>
             </div>
-            <Button onClick={onAddVariable} size="sm">
-              <Plus className="h-4 w-4 mr-2" />
+            <Button onClick={onAddVariable} className="w-full md:w-auto">
+              <Plus className="h-4 w-4" />
               Add Variable
             </Button>
           </div>
@@ -106,15 +106,15 @@ export const VariablesList = memo(function VariablesList({
   return (
     <Card className="border-0 shadow-none">
       <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="space-y-1">
             <CardTitle className="text-lg">Environment Variables</CardTitle>
             <CardDescription>
               Manage your application&apos;s environment configuration
             </CardDescription>
           </div>
-          <Button onClick={onAddVariable} size="sm">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button onClick={onAddVariable} className="w-full md:w-auto">
+            <Plus className="h-4 w-4" />
             Add Variable
           </Button>
         </div>

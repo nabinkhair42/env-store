@@ -2,6 +2,7 @@
 
 import type React from 'react';
 
+import { ConfirmDialog } from '@/components/modal/confirm-dialog';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,12 +12,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ConfirmDialog } from '@/components/modal/confirm-dialog';
 import type { IProject } from '@/lib/types';
 import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
-import { toast } from 'react-hot-toast';
 import { Clock, Copy, Download, Edit, FileText, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 interface ProjectCardProps {
   project: IProject;
@@ -102,11 +102,6 @@ export function ProjectCard({
                 </CardDescription>
               )}
             </div>
-
-            <Button variant="destructive" size="icon" onClick={handleDelete}>
-              <Trash2 className="h-4 w-4" />
-              <span className="sr-only">Open menu</span>
-            </Button>
           </div>
         </CardHeader>
 
@@ -126,20 +121,23 @@ export function ProjectCard({
           </div>
         </CardContent>
 
-        <CardFooter className="pt-0 border-t">
+        <CardFooter className="pt-0 border-t flex justify-between">
           <div className="flex gap-2 w-full">
-            <Button variant="outline" size="sm" onClick={handleCopy}>
-              <Copy className="h-3 w-3 mr-1.5" />
+            <Button variant="outline" onClick={handleCopy}>
+              <Copy className="h-3 w-3" />
               Copy
             </Button>
-            <Button variant="outline" size="sm" onClick={handleEdit}>
-              <Edit className="h-3 w-3 mr-1.5" />
+            <Button variant="outline" onClick={handleEdit}>
+              <Edit className="h-3 w-3" />
               Edit
             </Button>
-            <Button variant="outline" size="sm" onClick={handleDownload}>
+            <Button variant="outline" onClick={handleDownload}>
               <Download className="h-3 w-3" />
             </Button>
           </div>
+          <Button variant="destructive" onClick={handleDelete} size="icon">
+            <Trash2 className="size-4" />
+          </Button>
         </CardFooter>
       </Card>
 

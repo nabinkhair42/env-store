@@ -27,7 +27,7 @@ interface EnvEditorProps {
 }
 
 export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
-  const { updateProject, loading } = useProjects();
+  const { updateProject } = useProjects();
   const [saveStatus, setSaveStatus] = useState<
     'idle' | 'saving' | 'saved' | 'error'
   >('idle');
@@ -151,8 +151,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   }, [validVariables]);
 
   return (
-    <div className="space-y-8">
-      {/* Header with Vercel-inspired design */}
+    <div>
       <div className="border-b pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="space-y-1">
@@ -164,17 +163,16 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                 'Manage environment variables for this project'}
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" onClick={copyToClipboard}>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="outline" onClick={copyToClipboard}>
               <Copy className="h-4 w-4 mr-2" />
               Copy All
             </Button>
-            <Button variant="outline" size="sm" onClick={handleDownload}>
+            <Button variant="outline" onClick={handleDownload}>
               <Download className="h-4 w-4 mr-2" />
               Export .env
             </Button>
             <Button
-              size="sm"
               onClick={saveProject}
               disabled={saveStatus === 'saving'}
               variant={

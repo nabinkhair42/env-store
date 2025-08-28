@@ -8,7 +8,7 @@ import SiteFooter from './site-footer';
 
 export default function LandingShell() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen">
       <main className="border border-dashed border-t-0 border-b-0 max-w-7xl mx-auto">
         <Hero />
         <ValueProps />
@@ -17,7 +17,6 @@ export default function LandingShell() {
         <SecurityNotes />
         <FAQ />
       </main>
-
       <SiteFooter />
     </div>
   );

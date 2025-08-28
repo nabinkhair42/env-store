@@ -10,8 +10,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAppContext } from '@/contexts/app-context';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
-import { Plus, Upload } from 'lucide-react';
+import { Home, Plus, Upload } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { FaProjectDiagram } from 'react-icons/fa';
 
 export function Dashboard() {
   const { projects, loading, fetchProjects, deleteProject } = useProjects();
@@ -69,31 +70,46 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto py-8 border border-dashed border-t-0 border-b-0">
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
-          className="space-y-6"
+          className="space-y-6 px-4"
         >
-          <TabsList className="flex gap-4 w-full justify-start">
-            <TabsTrigger value="projects">Projects</TabsTrigger>
+          <TabsList className="flex w-full justify-start gap-4">
+            <TabsTrigger
+              value="projects"
+              className="flex flex-row gap-2 items-center justify-center"
+            >
+              <Home className="size-3" />
+              Projects
+            </TabsTrigger>
+
+            <div className="h-4 w-px bg-primary" />
             {selectedProject && (
-              <TabsTrigger value="editor">
-                {selectedProject.name} - Editor
+              <TabsTrigger
+                value="editor"
+                className="flex flex-row gap-2 items-center justify-center"
+              >
+                <FaProjectDiagram className="size-3" />
+                {selectedProject.name}
               </TabsTrigger>
             )}
           </TabsList>
 
           <TabsContent value="projects" className="space-y-6">
             {/* Projects Header */}
-            <div className="flex justify-between items-center">
+            <div className="flex-col md:flex-row flex items-start gap-4 md:justify-between">
               <div>
                 <h2 className="text-lg font-semibold ">Your Projects</h2>
                 <p className="text-sm text-muted-foreground">
                   Manage your environment variables by project
                 </p>
               </div>
-              <Button onClick={() => setShowProjectForm(true)}>
+              <Button
+                onClick={() => setShowProjectForm(true)}
+                className="w-full md:w-auto"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 New Project
               </Button>

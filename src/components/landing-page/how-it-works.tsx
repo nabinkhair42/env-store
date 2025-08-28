@@ -1,4 +1,5 @@
-import { LogIn, FolderPlus, Download } from 'lucide-react';
+import { FaGithub, FaProjectDiagram } from 'react-icons/fa';
+import { RiDeviceRecoverLine } from 'react-icons/ri';
 
 interface HowItWorksProps {
   steps?: {
@@ -13,17 +14,17 @@ export default function HowItWorks({
     {
       title: 'Sign in',
       body: 'Use your GitHub account to access the app.',
-      icon: <LogIn className="h-6 w-6" />,
+      icon: <FaGithub className="h-6 w-6" />,
     },
     {
       title: 'Create a project',
       body: 'Add variables as KEY=VALUE, grouped by project.',
-      icon: <FolderPlus className="h-6 w-6" />,
+      icon: <FaProjectDiagram className="h-6 w-6" />,
     },
     {
       title: 'Recover anytime',
       body: 'Copy single values or export a full .env when needed.',
-      icon: <Download className="h-6 w-6" />,
+      icon: <RiDeviceRecoverLine className="h-6 w-6" />,
     },
   ],
 }: HowItWorksProps) {

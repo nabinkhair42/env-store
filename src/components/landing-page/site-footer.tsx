@@ -9,8 +9,8 @@ interface SiteFooterProps {
 
 export default function SiteFooter() {
   return (
-    <footer className=" px-6 py-12 border-t border-dashed">
-      <div className="flex items-center gap-4 justify-center mx-auto max-w-5xl">
+    <footer className="border-t border-dashed">
+      <div className="flex items-center gap-4 justify-center mx-auto max-w-7xl border-dashed border-l border-r py-6 px-4">
         <p className="text-sm text-muted-foreground">
           Developed by{' '}
           <Link
