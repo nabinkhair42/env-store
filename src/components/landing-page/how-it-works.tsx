@@ -1,5 +1,4 @@
-import { FaGithub, FaProjectDiagram } from 'react-icons/fa';
-import { RiDeviceRecoverLine } from 'react-icons/ri';
+import { Github, Workflow, RotateCw } from 'lucide-react';
 
 interface HowItWorksProps {
   steps?: {
@@ -14,17 +13,17 @@ export default function HowItWorks({
     {
       title: 'Sign in',
       body: 'Use your GitHub account to access the app.',
-      icon: <FaGithub className="h-6 w-6" />,
+      icon: <Github className="h-6 w-6" />,
     },
     {
       title: 'Create a project',
       body: 'Add variables as KEY=VALUE, grouped by project.',
-      icon: <FaProjectDiagram className="h-6 w-6" />,
+      icon: <Workflow className="h-6 w-6" />,
     },
     {
       title: 'Recover anytime',
       body: 'Copy single values or export a full .env when needed.',
-      icon: <RiDeviceRecoverLine className="h-6 w-6" />,
+      icon: <RotateCw className="h-6 w-6" />,
     },
   ],
 }: HowItWorksProps) {

@@ -1,9 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { UpdateProjectSchema } from '@/lib/zod';
 import client from '@/lib/db';
-import { IProject } from '@/lib/types';
+import { UpdateProjectSchema } from '@/lib/zod';
 import { ObjectId } from 'mongodb';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   request: NextRequest,

@@ -1,5 +1,4 @@
-import { Copy, Database } from 'lucide-react';
-import { FaGithub, FaGlobe } from 'react-icons/fa';
+import { Copy, Database, Github, Globe } from 'lucide-react';
 
 interface ValuePropsProps {
   items?: {
@@ -24,12 +23,12 @@ export default function ValueProps({
     {
       title: 'GitHub sign-in',
       desc: 'Quick access from any browser.',
-      icon: <FaGithub className="h-6 w-6" />,
+      icon: <Github className="h-6 w-6" />,
     },
     {
       title: 'No CLI required',
       desc: 'Just open the web app and paste.',
-      icon: <FaGlobe className="h-6 w-6" />,
+      icon: <Globe className="h-6 w-6" />,
     },
   ],
 }: ValuePropsProps) {

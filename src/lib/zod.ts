@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const EnvVariableSchema = z.object({
+const EnvVariableSchema = z.object({
   key: z
     .string()
     .min(1, 'Key is required')

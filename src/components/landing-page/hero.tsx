@@ -1,5 +1,5 @@
 import { CTAButtons } from '@/components/landing-page/cta-buttons';
-import Logo from '@/components/ui/Logo';
+import { Logo } from '@/components/ui/Logo';
 
 export default function Hero() {
   return (

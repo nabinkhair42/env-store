@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { FileUploadSection } from './FileUploadSection';
+// Local component-only types
+type DeleteConfirmState = { open: boolean; index: number; varName: string };
 import { VariableStats } from './VariableStats';
 import { VariablesList } from './VariablesList';
 
@@ -46,11 +48,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
     useVisibilityToggle();
 
   // Delete confirmation state
-  const [deleteConfirm, setDeleteConfirm] = useState<{
-    open: boolean;
-    index: number;
-    varName: string;
-  }>({
+  const [deleteConfirm, setDeleteConfirm] = useState<DeleteConfirmState>({
     open: false,
     index: -1,
     varName: '',

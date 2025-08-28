@@ -21,10 +21,9 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
-import { Download } from 'lucide-react';
+import { Download, Github } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { FaGithub } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import LoaderScreen from '../ui/Loader';
 
@@ -67,7 +66,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       URL.revokeObjectURL(url);
 
       toast.success('Data exported successfully');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to export data');
     } finally {
       setExportLoading(false);
@@ -130,7 +129,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <FaGithub className="h-4 w-4" />
+                      <Github className="h-4 w-4" />
                       <Badge variant="outline">GitHub Connected</Badge>
                     </div>
                   </div>

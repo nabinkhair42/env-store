@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 
-export const siteConfig = {
+// Internal site configuration (not part of the public API)
+const siteConfig = {
   name: 'ENV Store',
   description:
     'Securely manage and sync your environment variables across devices. Never lose your .env again.',
@@ -101,15 +102,4 @@ export function generateSitemap() {
   }));
 }
 
-export function generateRobotsTxt() {
-  return `User-agent: *
-Allow: /
-
-Sitemap: ${siteConfig.url}/sitemap.xml
-
-# Disallow admin and API routes
-Disallow: /api/
-Disallow: /admin/
-Disallow: /_next/
-Disallow: /static/`;
-}
+// robots.txt is implemented in app/robots.ts; keep sitemap utilities here-only

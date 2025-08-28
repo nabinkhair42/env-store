@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { ProjectSchema } from '@/lib/zod';
 import client from '@/lib/db';
 import { IProject } from '@/lib/types';
+import { ProjectSchema } from '@/lib/zod';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET() {
   try {

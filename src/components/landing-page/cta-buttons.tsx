@@ -8,9 +8,8 @@ import {
   GlimpseTrigger,
 } from '@/components/ui/kibo-ui/glimpse';
 import { glimpse } from '@/components/ui/kibo-ui/glimpse/server';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Github } from 'lucide-react';
 import Link from 'next/link';
-import { FaGithub } from 'react-icons/fa';
 interface CTAButtonsProps {
   primaryHref?: string;
   primaryLabel?: string;
@@ -38,7 +37,7 @@ export async function CTAButtons({
         <GlimpseTrigger asChild>
           <Button asChild variant="default" size="lg" className="px-8">
             <Link href={secondaryHref}>
-              <FaGithub className="w-4 h-4" /> {secondaryLabel}
+              <Github className="w-4 h-4" /> {secondaryLabel}
             </Link>
           </Button>
         </GlimpseTrigger>

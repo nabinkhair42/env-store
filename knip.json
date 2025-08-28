@@ -1,0 +1,18 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "ignoreDependencies": ["tailwindcss", "tw-animate-css", "eslint-config-next"],
+  "ignore": [
+    ".next/**",
+    "node_modules/**",
+    "src/components/ui/form.tsx",
+    "src/hooks/useEnvVariables.ts",
+    "src/hooks/useFileImport.ts",
+    "src/components/env-editor/types.ts"
+  ],
+  "workspaces": {
+    ".": {
+      "project": ["src/**/*.{ts,tsx}", "next.config.ts"],
+      "ignore": ["src/**/*.d.ts"]
+    }
+  }
+}

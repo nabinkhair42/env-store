@@ -34,4 +34,4 @@ export function Logo({ className = '', size = 'md' }: LogoProps) {
   );
 }
 
-export default Logo;
+// Removed default export to avoid duplicate export with named Logo

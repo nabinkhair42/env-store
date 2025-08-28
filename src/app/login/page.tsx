@@ -1,5 +1,4 @@
 import { auth, signIn } from '@/auth';
-import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -9,7 +8,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Logo } from '@/components/ui/Logo';
-import { FaGithub } from 'react-icons/fa';
+import { redirect } from 'next/navigation';
+import { Github } from 'lucide-react';
 
 export default async function LoginPage() {
   const session = await auth();
@@ -42,7 +42,7 @@ export default async function LoginPage() {
               className="w-full flex items-center justify-center gap-2"
               size="lg"
             >
-              <FaGithub className="h-5 w-5" />
+              <Github className="h-5 w-5" />
               Continue with GitHub
             </Button>
           </form>

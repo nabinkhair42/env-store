@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from 'react';
-import { toast } from 'react-hot-toast';
+import { ApiError, projectsApi } from '@/lib/api/projects';
 import { IProject } from '@/lib/types';
 import { ProjectInput } from '@/lib/zod';
-import { projectsApi, ApiError } from '@/lib/api/projects';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 interface UseProjectsState {
   projects: IProject[];
@@ -74,7 +74,7 @@ export function useProjects(): UseProjectsState & UseProjectsActions {
   const updateProject = useCallback(
     async (id: string, data: Partial<IProject>): Promise<IProject | null> => {
       try {
-        const { project, message } = await projectsApi.updateProject(id, data);
+        const { project } = await projectsApi.updateProject(id, data);
         setState((prev) => ({
           ...prev,
           projects: prev.projects.map((p) => (p._id === id ? project : p)),

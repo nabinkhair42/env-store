@@ -1,11 +1,4 @@
 import Link from 'next/link';
-interface SiteFooterProps {
-  year?: number;
-  links?: {
-    label: string;
-    href: string;
-  }[];
-}
 
 export default function SiteFooter() {
   return (

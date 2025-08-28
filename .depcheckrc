@@ -1,0 +1,12 @@
+{
+  "ignores": [
+    "@commitlint/cli",
+    "@commitlint/config-conventional",
+    "lint-staged",
+  "@tailwindcss/postcss",
+  "eslint-config-next",
+  "postcss",
+  "tailwindcss",
+  "tw-animate-css"
+  ]
+}

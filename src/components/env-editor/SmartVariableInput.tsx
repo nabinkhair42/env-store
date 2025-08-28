@@ -120,7 +120,7 @@ export const SmartVariableInput = forwardRef<
               }))
             );
           }
-        } catch (error) {
+        } catch (_error) {
           console.log('Failed to parse as env file, trying other formats...');
         }
 

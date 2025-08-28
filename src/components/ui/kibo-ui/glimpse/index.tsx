@@ -1,32 +1,32 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import type { ComponentProps } from 'react';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
+import { cn } from '@/lib/utils';
+import type { ComponentProps } from 'react';
 
-export type GlimpseProps = ComponentProps<typeof HoverCard>;
+type GlimpseProps = ComponentProps<typeof HoverCard>;
 
 export const Glimpse = (props: GlimpseProps) => {
   return <HoverCard {...props} />;
 };
 
-export type GlimpseContentProps = ComponentProps<typeof HoverCardContent>;
+type GlimpseContentProps = ComponentProps<typeof HoverCardContent>;
 
 export const GlimpseContent = (props: GlimpseContentProps) => (
   <HoverCardContent {...props} />
 );
 
-export type GlimpseTriggerProps = ComponentProps<typeof HoverCardTrigger>;
+type GlimpseTriggerProps = ComponentProps<typeof HoverCardTrigger>;
 
 export const GlimpseTrigger = (props: GlimpseTriggerProps) => (
   <HoverCardTrigger {...props} />
 );
 
-export type GlimpseTitleProps = ComponentProps<'p'>;
+type GlimpseTitleProps = ComponentProps<'p'>;
 
 export const GlimpseTitle = ({ className, ...props }: GlimpseTitleProps) => {
   return (
@@ -34,7 +34,7 @@ export const GlimpseTitle = ({ className, ...props }: GlimpseTitleProps) => {
   );
 };
 
-export type GlimpseDescriptionProps = ComponentProps<'p'>;
+type GlimpseDescriptionProps = ComponentProps<'p'>;
 
 export const GlimpseDescription = ({
   className,
@@ -48,16 +48,24 @@ export const GlimpseDescription = ({
   );
 };
 
-export type GlimpseImageProps = ComponentProps<'img'>;
+import { ImageProps } from 'next/image';
+
+type GlimpseImageProps = Omit<ImageProps, 'src' | 'alt'> & {
+  src: string;
+  alt?: string;
+};
 
 export const GlimpseImage = ({
   className,
   alt,
+  src,
   ...props
 }: GlimpseImageProps) => (
-  // biome-ignore lint/performance/noImgElement: "Kibo UI is framework agnostic"
   <img
     alt={alt ?? ''}
+    src={src}
+    width={1200}
+    height={630}
     className={cn(
       'mb-4 aspect-[120/63] w-full rounded-md border object-cover',
       className

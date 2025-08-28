@@ -10,9 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAppContext } from '@/contexts/app-context';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
-import { Home, Plus, Upload } from 'lucide-react';
+import { Home, Plus, Upload, Projector } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { FaProjectDiagram } from 'react-icons/fa';
 
 export function Dashboard() {
   const { projects, loading, fetchProjects, deleteProject } = useProjects();
@@ -91,7 +90,7 @@ export function Dashboard() {
                 value="editor"
                 className="flex flex-row gap-2 items-center justify-center"
               >
-                <FaProjectDiagram className="size-3" />
+                <Projector className="size-3" />
                 {selectedProject.name}
               </TabsTrigger>
             )}

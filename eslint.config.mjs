@@ -10,11 +10,15 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  { ignores: ['.next/**', 'node_modules/**'] },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     rules: {
-      '@typescript-eslint/no-unused-vars': 'off', // Disable this rule
-      '@typescript-eslint/no-explicit-any': 'off', // Disable this rule
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }
+      ],
+      '@typescript-eslint/no-explicit-any': 'error',
     },
   },
 ];
