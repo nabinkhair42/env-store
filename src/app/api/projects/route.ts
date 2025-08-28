@@ -1,27 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { Project } from '@/lib/models/Project';
-import { ProjectSchema } from '@/lib/validations/project';
-import { connectToDatabase } from '@/lib/mongoose';
+import { ProjectSchema } from '@/lib/zod';
+import client from '@/lib/db';
+import { IProject } from '@/lib/types';
 
 export async function GET() {
   try {
     const session = await auth();
-    
-    
+
     if (!session?.user?.id) {
-      
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    await connectToDatabase();
-    
-    const projects = await Project.find({ userId: session.user.id })
-      .select('name description variables createdAt updatedAt')
-      .sort({ updatedAt: -1 });
-
-     // Debug log
-
+    const collection = client.db('env-sync').collection<IProject>('projects');
+    const projects = await collection
+      .find({ userId: session.user.id })
+      .project({
+        name: 1,
+        description: 1,
+        variables: 1,
+        createdAt: 1,
+        updatedAt: 1,
+      })
+      .sort({ updatedAt: -1 })
+      .toArray();
 
     return NextResponse.json({ projects });
   } catch (error) {
@@ -36,7 +38,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -44,12 +46,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = ProjectSchema.parse(body);
 
-    await connectToDatabase();
+    const collection = client.db('env-sync').collection<IProject>('projects');
 
     // Check if project with same name already exists for this user
-    const existingProject = await Project.findOne({
+    const existingProject = await collection.findOne({
       userId: session.user.id,
-      name: validatedData.name
+      name: validatedData.name,
     });
 
     if (existingProject) {
@@ -59,20 +61,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const project = new Project({
+    const now = new Date();
+    const project = {
       ...validatedData,
-      userId: session.user.id
-    });
+      userId: session.user.id,
+      createdAt: now,
+      updatedAt: now,
+      variables: validatedData.variables || [],
+    };
 
-    await project.save();
+    const result = await collection.insertOne(project);
+    const createdProject = { ...project, _id: result.insertedId };
 
     return NextResponse.json(
-      { project, message: 'Project created successfully' },
+      { project: createdProject, message: 'Project created successfully' },
       { status: 201 }
     );
   } catch (error) {
     console.error('Error creating project:', error);
-    
+
     if (error instanceof Error && error.name === 'ZodError') {
       return NextResponse.json(
         { error: 'Invalid data', details: error },

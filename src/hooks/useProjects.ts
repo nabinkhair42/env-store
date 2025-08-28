@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
-import { toast } from '@/lib/utils/toast';
-import { IProject } from '@/lib/models/Project';
-import { ProjectInput } from '@/lib/validations/project';
+import { useState, useCallback, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
+import { IProject } from '@/lib/types';
+import { ProjectInput } from '@/lib/zod';
 import { projectsApi, ApiError } from '@/lib/api/projects';
 
 interface UseProjectsState {
@@ -13,7 +13,10 @@ interface UseProjectsState {
 interface UseProjectsActions {
   fetchProjects: () => Promise<void>;
   createProject: (data: ProjectInput) => Promise<IProject | null>;
-  updateProject: (id: string, data: Partial<IProject>) => Promise<IProject | null>;
+  updateProject: (
+    id: string,
+    data: Partial<IProject>
+  ) => Promise<IProject | null>;
   deleteProject: (id: string) => Promise<boolean>;
   refreshProjects: () => Promise<void>;
 }
@@ -26,71 +29,86 @@ export function useProjects(): UseProjectsState & UseProjectsActions {
   });
 
   const fetchProjects = useCallback(async () => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+    setState((prev) => ({ ...prev, loading: true, error: null }));
     try {
       const { projects } = await projectsApi.getProjects();
-      setState(prev => ({ ...prev, projects, loading: false }));
+      setState((prev) => ({ ...prev, projects, loading: false }));
     } catch (error) {
-      const errorMessage = error instanceof ApiError ? error.message : 'Failed to fetch projects';
-      setState(prev => ({ ...prev, error: errorMessage, loading: false }));
+      const errorMessage =
+        error instanceof ApiError ? error.message : 'Failed to fetch projects';
+      setState((prev) => ({ ...prev, error: errorMessage, loading: false }));
       toast.error(errorMessage);
     }
   }, []);
 
-  const createProject = useCallback(async (data: ProjectInput): Promise<IProject | null> => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
-    try {
-      const { project, message } = await projectsApi.createProject(data);
-      setState(prev => ({
-        ...prev,
-        projects: [project, ...prev.projects],
-        loading: false,
-      }));
-      toast.projectCreated(project.name);
-      return project;
-    } catch (error) {
-      const errorMessage = error instanceof ApiError ? error.message : 'Failed to create project';
-      setState(prev => ({ ...prev, error: errorMessage, loading: false }));
-      toast.error(errorMessage);
-      return null;
-    }
-  }, []);
+  // Fetch projects on mount
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
 
-  const updateProject = useCallback(async (id: string, data: Partial<IProject>): Promise<IProject | null> => {
-    try {
-      const { project, message } = await projectsApi.updateProject(id, data);
-      setState(prev => ({
-        ...prev,
-        projects: prev.projects.map(p => p._id === id ? project : p),
-      }));
-      toast.projectUpdated(project.name);
-      return project;
-    } catch (error) {
-      const errorMessage = error instanceof ApiError ? error.message : 'Failed to update project';
-      toast.error(errorMessage);
-      return null;
-    }
-  }, []);
+  const createProject = useCallback(
+    async (data: ProjectInput): Promise<IProject | null> => {
+      setState((prev) => ({ ...prev, loading: true, error: null }));
+      try {
+        const { project, message } = await projectsApi.createProject(data);
+        setState((prev) => ({
+          ...prev,
+          projects: [project, ...prev.projects],
+          loading: false,
+        }));
+        toast.success(message);
+        return project;
+      } catch (error) {
+        const errorMessage =
+          error instanceof ApiError
+            ? error.message
+            : 'Failed to create project';
+        setState((prev) => ({ ...prev, error: errorMessage, loading: false }));
+        toast.error(errorMessage);
+        return null;
+      }
+    },
+    []
+  );
+
+  const updateProject = useCallback(
+    async (id: string, data: Partial<IProject>): Promise<IProject | null> => {
+      try {
+        const { project, message } = await projectsApi.updateProject(id, data);
+        setState((prev) => ({
+          ...prev,
+          projects: prev.projects.map((p) => (p._id === id ? project : p)),
+        }));
+        toast.success(project.name + ' updated successfully');
+        return project;
+      } catch (error) {
+        const errorMessage =
+          error instanceof ApiError
+            ? error.message
+            : 'Failed to update project';
+        toast.error(errorMessage);
+        return null;
+      }
+    },
+    []
+  );
 
   const deleteProject = useCallback(async (id: string): Promise<boolean> => {
     try {
-      // Get project name before deleting
-      const projectToDelete = state.projects.find(p => p._id === id);
-      const projectName = projectToDelete?.name || 'Project';
-      
       const { message } = await projectsApi.deleteProject(id);
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        projects: prev.projects.filter(p => p._id !== id),
+        projects: prev.projects.filter((p) => p._id !== id),
       }));
-      toast.projectDeleted(projectName);
+      toast.success(message);
       return true;
     } catch (error) {
-      const errorMessage = error instanceof ApiError ? error.message : 'Failed to delete project';
+      const errorMessage =
+        error instanceof ApiError ? error.message : 'Failed to delete project';
       toast.error(errorMessage);
       return false;
     }
-  }, [state.projects]);
+  }, []);
 
   const refreshProjects = useCallback(() => fetchProjects(), [fetchProjects]);
 

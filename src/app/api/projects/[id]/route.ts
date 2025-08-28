@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { Project } from '@/lib/models/Project';
-import { UpdateProjectSchema } from '@/lib/validations/project';
-import { connectToDatabase } from '@/lib/mongoose';
+import { UpdateProjectSchema } from '@/lib/zod';
+import client from '@/lib/db';
+import { IProject } from '@/lib/types';
+import { ObjectId } from 'mongodb';
 
 export async function GET(
   request: NextRequest,
@@ -10,17 +11,16 @@ export async function GET(
 ) {
   try {
     const session = await auth();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    await connectToDatabase();
-    
     const { id } = await params;
-    const project = await Project.findOne({
-      _id: id,
-      userId: session.user.id
+    const collection = client.db('env-sync').collection('projects');
+    const project = await collection.findOne({
+      _id: new ObjectId(id),
+      userId: session.user.id,
     });
 
     if (!project) {
@@ -43,7 +43,7 @@ export async function PUT(
 ) {
   try {
     const session = await auth();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -52,15 +52,15 @@ export async function PUT(
     const { id } = await params;
     const validatedData = UpdateProjectSchema.parse({
       ...body,
-      id
+      id,
     });
 
-    await connectToDatabase();
+    const collection = client.db('env-sync').collection('projects');
 
     // Check if project exists and belongs to user
-    const existingProject = await Project.findOne({
-      _id: id,
-      userId: session.user.id
+    const existingProject = await collection.findOne({
+      _id: new ObjectId(id),
+      userId: session.user.id,
     });
 
     if (!existingProject) {
@@ -69,10 +69,10 @@ export async function PUT(
 
     // Check for name conflicts if name is being updated
     if (validatedData.name && validatedData.name !== existingProject.name) {
-      const nameConflict = await Project.findOne({
+      const nameConflict = await collection.findOne({
         userId: session.user.id,
         name: validatedData.name,
-        _id: { $ne: id }
+        _id: { $ne: new ObjectId(id) },
       });
 
       if (nameConflict) {
@@ -83,19 +83,28 @@ export async function PUT(
       }
     }
 
-    const project = await Project.findByIdAndUpdate(
-      id,
-      { $set: validatedData },
-      { new: true, runValidators: true }
+    const updateData = {
+      ...validatedData,
+      updatedAt: new Date(),
+    };
+
+    const result = await collection.findOneAndUpdate(
+      { _id: new ObjectId(id), userId: session.user.id },
+      { $set: updateData },
+      { returnDocument: 'after' }
     );
 
+    if (!result) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    }
+
     return NextResponse.json({
-      project,
-      message: 'Project updated successfully'
+      project: result,
+      message: 'Project updated successfully',
     });
   } catch (error) {
     console.error('Error updating project:', error);
-    
+
     if (error instanceof Error && error.name === 'ZodError') {
       return NextResponse.json(
         { error: 'Invalid data', details: error },
@@ -116,20 +125,19 @@ export async function DELETE(
 ) {
   try {
     const session = await auth();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    await connectToDatabase();
-
     const { id } = await params;
-    const project = await Project.findOneAndDelete({
-      _id: id,
-      userId: session.user.id
+    const collection = client.db('env-sync').collection('projects');
+    const result = await collection.deleteOne({
+      _id: new ObjectId(id),
+      userId: session.user.id,
     });
 
-    if (!project) {
+    if (result.deletedCount === 0) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
 

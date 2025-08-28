@@ -2,56 +2,36 @@ import React from 'react';
 
 interface LogoProps {
   className?: string;
-  variant?: 'icon' | 'text' | 'full';
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function Logo({ className = '', variant = 'full', size = 'md' }: LogoProps) {
+export function Logo({ className = '', size = 'md' }: LogoProps) {
   const sizes = {
-    sm: { icon: 'h-6 w-6', text: 'text-lg', full: 'h-8' },
-    md: { icon: 'h-8 w-8', text: 'text-xl', full: 'h-10' },
-    lg: { icon: 'h-12 w-12', text: 'text-2xl', full: 'h-16' }
+    sm: 'h-6 w-6',
+    md: 'h-8 w-8',
+    lg: 'h-12 w-12',
   };
 
-  if (variant === 'icon') {
-    return (
-      <svg 
-        className={`${sizes[size].icon} ${className}`} 
-        viewBox="0 0 60 60" 
-        fill="none" 
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style={{stopColor:"#3B82F6", stopOpacity:1}} />
-            <stop offset="100%" style={{stopColor:"#1E40AF", stopOpacity:1}} />
-          </linearGradient>
-        </defs>
-        
-        <rect x="4" y="4" width="52" height="52" rx="12" fill="url(#iconGradient)" />
-        
-        <g transform="translate(12, 12)">
-          <ellipse cx="18" cy="8" rx="14" ry="4" fill="white" opacity="0.9"/>
-          <rect x="4" y="8" width="28" height="20" fill="white" opacity="0.9"/>
-          <ellipse cx="18" cy="28" rx="14" ry="4" fill="white" opacity="0.9"/>
-          
-          <rect x="8" y="12" width="8" height="2" rx="1" fill="#3B82F6"/>
-          <rect x="18" y="12" width="12" height="2" rx="1" fill="#10B981"/>
-          <rect x="8" y="16" width="6" height="2" rx="1" fill="#F59E0B"/>
-          <rect x="16" y="16" width="10" height="2" rx="1" fill="#EF4444"/>
-          <rect x="8" y="20" width="10" height="2" rx="1" fill="#8B5CF6"/>
-          <rect x="20" y="20" width="8" height="2" rx="1" fill="#06B6D4"/>
-          <rect x="8" y="24" width="12" height="2" rx="1" fill="#84CC16"/>
-        </g>
-        
-        <g transform="translate(42, 8)">
-          <rect x="0" y="4" width="8" height="6" rx="2" fill="#10B981" opacity="0.8"/>
-          <path d="M2 4V2C2 0.9 2.9 0 4 0S6 0.9 6 2V4" stroke="white" strokeWidth="1.5" fill="none"/>
-        </g>
-      </svg>
-    );
-  }
-
+  return (
+    <svg
+      className={`${sizes[size]} ${className}`}
+      viewBox="0 0 667 667"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        opacity="0.5"
+        d="M0 333.333C0 176.198 -3.97364e-06 97.631 48.8157 48.8157C97.631 -3.97364e-06 176.198 0 333.333 0C490.467 0 569.037 -3.97364e-06 617.85 48.8157C666.667 97.631 666.667 176.198 666.667 333.333C666.667 490.467 666.667 569.037 617.85 617.85C569.037 666.667 490.467 666.667 333.333 666.667C176.198 666.667 97.631 666.667 48.8157 617.85C-3.97364e-06 569.037 0 490.467 0 333.333Z"
+        fill="currentColor"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M533.333 259.202C533.333 328.717 476.75 385.07 406.947 385.07C394.213 385.07 365.213 382.143 351.103 370.433L333.467 388C323.1 398.327 325.9 401.367 330.51 406.373C332.437 408.463 334.677 410.897 336.407 414.343C336.407 414.343 351.103 434.833 336.407 455.323C327.59 467.033 302.9 483.423 274.683 455.323L268.807 461.177C268.807 461.177 286.44 481.667 271.743 502.157C262.927 513.867 239.414 525.577 218.84 505.087L198.265 525.577C184.157 539.627 166.914 531.43 160.057 525.577L142.421 508.013C125.962 491.62 135.563 473.863 142.421 467.033L295.26 314.82C295.26 314.82 280.563 291.4 280.563 259.202C280.563 189.687 337.147 133.333 406.947 133.333C476.75 133.333 533.333 189.687 533.333 259.202ZM406.947 303.107C431.293 303.107 451.033 283.45 451.033 259.199C451.033 234.949 431.293 215.291 406.947 215.291C382.597 215.291 362.857 234.949 362.857 259.199C362.857 283.45 382.597 303.107 406.947 303.107Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
 }
 
 export default Logo;
