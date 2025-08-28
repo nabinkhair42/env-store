@@ -1,16 +1,19 @@
-import type { Metadata } from "next";
-import { Providers } from "@/providers/Providers";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Providers } from '@/providers/root-provider';
+import './globals.css';
+import { Navbar } from '@/components/navbar';
+import { Inter } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
-  title: "ENV Store - Environment Variable Manager",
+  title: 'ENV Store - Environment Variable Manager',
   description:
-    "Securely manage and sync your environment variables across devices",
-  icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-    apple: "/logo-icon.svg",
-  },
+    'Securely manage and sync your environment variables across devices',
 };
 
 export default function RootLayout({
@@ -20,8 +23,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`antialiased`} suppressHydrationWarning>
-        <Providers>{children}</Providers>
+      <body
+        className={`antialiased ${inter.variable} font-sans`}
+        suppressHydrationWarning
+      >
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );

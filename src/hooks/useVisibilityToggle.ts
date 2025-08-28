@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 
 export function useVisibilityToggle() {
   const [visibleValues, setVisibleValues] = useState<Set<number>>(new Set());
@@ -26,7 +26,7 @@ export function useVisibilityToggle() {
   const shiftIndices = useCallback((offset: number) => {
     setVisibleValues((prev) => {
       const newSet = new Set<number>();
-      prev.forEach(index => {
+      prev.forEach((index) => {
         const newIndex = index + offset;
         if (newIndex >= 0) {
           newSet.add(newIndex);

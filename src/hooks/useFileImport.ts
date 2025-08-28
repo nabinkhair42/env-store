@@ -1,9 +1,9 @@
-import { useState, useCallback } from "react";
-import { parseEnvFile } from "@/lib/utils/env-parser";
-import { EnvVariable } from "@/lib/validations/project";
+import { useState, useCallback } from 'react';
+import { parseEnvFile } from '@/lib/utils/env-parser';
+import { EnvVariable } from '@/lib/zod';
 
 export function useFileImport() {
-  const [importText, setImportText] = useState("");
+  const [importText, setImportText] = useState('');
 
   const handleFileUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,20 +28,20 @@ export function useFileImport() {
       console.error(
         error instanceof Error
           ? `Failed to import variables: ${error.message}`
-          : "Failed to import variables: Unknown error"
+          : 'Failed to import variables: Unknown error'
       );
       return [];
     }
   }, [importText]);
 
   const clearImport = useCallback(() => {
-    setImportText("");
+    setImportText('');
   }, []);
 
   const getVariableCount = useCallback(() => {
     return importText
-      .split("\n")
-      .filter((line) => line.trim() && !line.startsWith("#")).length;
+      .split('\n')
+      .filter((line) => line.trim() && !line.startsWith('#')).length;
   }, [importText]);
 
   return {

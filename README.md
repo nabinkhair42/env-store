@@ -1,73 +1,47 @@
-# ENV Store - Environment Variable Manager
+<p align="center">
+  <img src="public/logo.svg" alt="ENV Store logo" height="72">
+</p>
 
-![ENV Store Logo](./public/logo.svg)
+# ENV Store
 
-**Solve the Environment Variable Sync Problem Once and For All**
+Save and recover your project’s environment variables, so you never lose them when machines die, folders get deleted, or repos get wiped.
 
-## The Problem We Solve
+## What it solves
 
-As a developer, you've faced this frustrating scenario countless times:
+`.env` files are fragile and siloed. If your project or device disappears, recreating all the keys is painful. ENV Store lets you keep project-scoped variables in one place and restore them in seconds—copy/paste or export a full `.env`.
 
-- **Device Switching**: Got a new laptop? Setting up environment variables from scratch
-- **Multiple Workstations**: Working from office, home, and client sites with different setups
-- **Team Collaboration**: Sharing environment configurations securely without exposing secrets
-- **Project Management**: Juggling dozens of `.env` files across different projects
-- **Accidental Loss**: `.env` files getting deleted, corrupted, or excluded from version control
-- **Environment Drift**: Inconsistent configurations across development, staging, and local environments
+## Live app
 
-**The result?** Hours wasted recreating environment setups, deployment failures, and productivity losses.
+Use it here: https://envstore.nabinkhair.com.np
 
-## Our Solution
+## Core features
 
-ENV Store is a secure, cloud-based environment variable manager that eliminates configuration headaches and keeps your development workflow smooth across all your devices and projects.
+- Project-scoped secret storage (`KEY=VALUE`)
+- One-click copy for individual keys or full `.env` export
+- Sign in with GitHub
+- Works on any device with a browser
 
-### Key Benefits
+## How it works
 
-**Universal Access**: Your environment variables, available instantly on any device
-**Project Organization**: Keep configurations organized by project, never lose track again
-**Secure Sync**: GitHub OAuth authentication with encrypted cloud storage
-**Seamless Import/Export**: Bulk import existing `.env` files and export when needed
-**Team Ready**: Built with collaboration and sharing capabilities in mind
-**Developer First**: Designed by developers, for developers who understand the pain
+1. Sign in with GitHub.
+2. Create a project and add variables as `KEY=VALUE`.
+3. When you need them again, copy single values or export a `.env` and paste into your codebase.
 
-### Perfect For
+## Tech Stack:
 
-- **Full-Stack Developers** managing multiple client projects
-- **Remote Teams** needing consistent development environments
-- **Consultants** working across different client machines
-- **Students** switching between personal and lab computers
-- **Open Source Contributors** managing various project configurations
-- **DevOps Engineers** maintaining environment consistency
+ <a href="https://www.typescriptlang.org/">
+    <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
+  </a>
+<a href="https://nextjs.org/">
+    <img src="https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white" alt="Next.js">
+  </a>
+  <a href="https://pnpm.io/">
+    <img src="https://img.shields.io/badge/pnpm-F69220?logo=pnpm&logoColor=white" alt="pnpm">
+  </a>
+  <a href="https://www.mongodb.com/">
+    <img src="https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white" alt="MongoDB">
+  </a>
 
-## Business Model
+## Security
 
-**Target Market**: Individual developers and small development teams (1-50 developers)
-
-**Value Proposition**: Save 2-5 hours per month on environment setup and eliminate configuration-related bugs
-
-**Pricing Strategy** (Future):
-- Free tier: Up to 3 projects, 50 variables per project
-- Pro tier: Unlimited projects, team sharing, priority support
-- Enterprise: Custom SSO, audit logs, compliance features
-
-## Technical Excellence
-
-Built with modern, production-ready technologies ensuring reliability and scalability:
-- Next.js 15 with React 19 for optimal performance
-- TypeScript for type safety and developer experience
-- MongoDB for scalable data storage
-- GitHub OAuth for trusted authentication
-- Tailwind CSS for responsive design
-
-## Get Started
-
-1. **Sign up** with your GitHub account
-2. **Create** your first project
-3. **Import** your existing `.env` files
-4. **Access** your variables from anywhere
-
-Transform your development workflow today. Never lose an environment variable again.
-
----
-
-*"Stop recreating the same environment variables. Start syncing them."*
+Treat values as secrets. Avoid sharing accounts; rotate keys if exposed.

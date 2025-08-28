@@ -1,8 +1,11 @@
-import { IProject } from '@/lib/models/Project';
-import { ProjectInput, UpdateProjectInput } from '@/lib/validations/project';
+import { IProject } from '@/lib/types';
+import { ProjectInput, UpdateProjectInput } from '@/lib/zod';
 
 export class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  constructor(
+    public status: number,
+    message: string
+  ) {
     super(message);
     this.name = 'ApiError';
   }
@@ -10,7 +13,9 @@ export class ApiError extends Error {
 
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+    const error = await response
+      .json()
+      .catch(() => ({ error: 'Unknown error' }));
     throw new ApiError(response.status, error.error || 'Request failed');
   }
   return response.json();
@@ -30,7 +35,9 @@ export const projectsApi = {
   },
 
   // Create a new project
-  async createProject(data: ProjectInput): Promise<{ project: IProject; message: string }> {
+  async createProject(
+    data: ProjectInput
+  ): Promise<{ project: IProject; message: string }> {
     const response = await fetch('/api/projects', {
       method: 'POST',
       headers: {
@@ -42,7 +49,10 @@ export const projectsApi = {
   },
 
   // Update an existing project
-  async updateProject(id: string, data: Partial<UpdateProjectInput>): Promise<{ project: IProject; message: string }> {
+  async updateProject(
+    id: string,
+    data: Partial<UpdateProjectInput>
+  ): Promise<{ project: IProject; message: string }> {
     const response = await fetch(`/api/projects/${id}`, {
       method: 'PUT',
       headers: {
