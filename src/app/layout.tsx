@@ -1,8 +1,8 @@
-import type { Metadata } from 'next';
-import { Providers } from '@/providers/root-provider';
-import './globals.css';
 import { Navbar } from '@/components/navbar';
+import { metadata } from '@/lib/sitemap';
+import { Providers } from '@/providers/root-provider';
 import { Inter } from 'next/font/google';
+import './globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -10,11 +10,7 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-export const metadata: Metadata = {
-  title: 'ENV Store - Environment Variable Manager',
-  description:
-    'Securely manage and sync your environment variables across devices',
-};
+export { metadata };
 
 export default function RootLayout({
   children,

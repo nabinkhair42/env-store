@@ -13,11 +13,11 @@ export default function FAQ({
     },
     {
       q: 'Is there a CLI?',
-      a: 'Not required—the web app handles add, copy, and export.',
+      a: 'Not required the web app handles add, copy, and export.',
     },
     {
       q: 'Can I self-host?',
-      a: 'Yes—see the repository for setup details.',
+      a: 'Yes see the repository for setup details.',
     },
     {
       q: 'Is it free?',
