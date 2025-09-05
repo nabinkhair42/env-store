@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/card';
 import { EnvVariable } from '@/lib/zod';
 import { parseEnvFile } from '@/lib/utils/env-parser';
+import { toast } from 'react-hot-toast';
 
 interface FileUploadSectionProps {
   onFileVariables: (variables: EnvVariable[]) => void;
@@ -23,6 +24,7 @@ export const FileUploadSection = memo(function FileUploadSection({
 }: FileUploadSectionProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Handle file upload
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,21 +34,35 @@ export const FileUploadSection = memo(function FileUploadSection({
     }
   };
 
-  const processFile = (file: File) => {
+  const processFile = async (file: File) => {
+    setIsProcessing(true);
     const reader = new FileReader();
-    reader.onload = (event) => {
+
+    reader.onload = async (event) => {
       const content = event.target?.result as string;
       try {
         const parsedVars = parseEnvFile(content);
-        const variables = parsedVars.map((v) => ({
-          key: v.key,
-          value: v.value,
-        }));
-        onFileVariables(variables);
+
+        // Pass variables as-is (they will be encrypted when saved)
+        onFileVariables(parsedVars);
+        toast.success(
+          `Successfully imported ${parsedVars.length} environment variables`
+        );
       } catch (error) {
-        console.error('Failed to parse file:', error);
+        console.error('Failed to parse environment file:', error);
+        toast.error(
+          'Failed to parse environment file. Please check the file format.'
+        );
+      } finally {
+        setIsProcessing(false);
       }
     };
+
+    reader.onerror = () => {
+      toast.error('Failed to read file. Please try again.');
+      setIsProcessing(false);
+    };
+
     reader.readAsText(file);
   };
 
@@ -90,17 +106,22 @@ export const FileUploadSection = memo(function FileUploadSection({
             Upload File or Drag & Drop
           </Label>
           <div
-            className={`border-2 border-dashed rounded-lg p-6 transition-all duration-200 cursor-pointer
+            className={`border-2 border-dashed rounded-lg p-6 transition-all duration-200 
+              ${isProcessing ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
               ${
                 dragActive
                   ? 'border-primary bg-primary/10 dark:bg-primary/20'
                   : 'border hover:bg-muted/50'
               }`}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
+            onDragEnter={!isProcessing ? handleDrag : undefined}
+            onDragLeave={!isProcessing ? handleDrag : undefined}
+            onDragOver={!isProcessing ? handleDrag : undefined}
+            onDrop={!isProcessing ? handleDrop : undefined}
+            onClick={() => {
+              if (!isProcessing) {
+                fileInputRef.current?.click();
+              }
+            }}
           >
             <input
               type="file"
@@ -115,8 +136,13 @@ export const FileUploadSection = memo(function FileUploadSection({
                 ${dragActive ? 'text-primary' : 'text-muted-foreground'}
               `}
               />
-              <Button variant="outline" className="mb-2" type="button">
-                Choose file
+              <Button
+                variant="outline"
+                className="mb-2"
+                type="button"
+                disabled={isProcessing}
+              >
+                {isProcessing ? 'Processing...' : 'Choose file'}
               </Button>
               <p className="text-xs text-muted-foreground">
                 Supports .env, .txt, .json, .yml files or drag & drop here

@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/card';
 import type { IProject } from '@/lib/types';
 import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
+import { hasEncryptedVariables } from '@/lib/crypto';
 import { Clock, Copy, Download, Edit, FileText, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -36,11 +37,34 @@ export function ProjectCard({
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      const envContent = generateEnvFile(project.variables || []);
+      // Check if variables contain encrypted data
+      if (project.variables && hasEncryptedVariables(project.variables)) {
+        toast.error(
+          'Cannot copy encrypted variables. Please open the project to decrypt and copy.'
+        );
+        return;
+      }
+
+      // Only process if all values are strings
+      const stringVariables =
+        project.variables
+          ?.filter((v) => typeof v.value === 'string')
+          .map((v) => ({
+            key: v.key,
+            value: v.value as string,
+            description: v.description,
+          })) || [];
+
+      if (stringVariables.length === 0) {
+        toast.error('No variables available to copy.');
+        return;
+      }
+
+      const envContent = generateEnvFile(stringVariables);
       await navigator.clipboard.writeText(envContent);
       toast.success('Environment variables copied to clipboard!');
     } catch (error) {
-      console.error('Failed to copy environment variables:', error);
+      console.error('Copy failed:', error);
       toast.error('Failed to copy environment variables');
     }
   };
@@ -48,10 +72,35 @@ export function ProjectCard({
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      const envContent = generateEnvFile(project.variables || []);
+      // Check if variables contain encrypted data
+      if (project.variables && hasEncryptedVariables(project.variables)) {
+        toast.error(
+          'Cannot download encrypted variables. Please open the project to decrypt and download.'
+        );
+        return;
+      }
+
+      // Only process if all values are strings
+      const stringVariables =
+        project.variables
+          ?.filter((v) => typeof v.value === 'string')
+          .map((v) => ({
+            key: v.key,
+            value: v.value as string,
+            description: v.description,
+          })) || [];
+
+      if (stringVariables.length === 0) {
+        toast.error('No variables available to download.');
+        return;
+      }
+
+      const envContent = generateEnvFile(stringVariables);
       downloadFile(envContent, `${project.name}.env`);
+      toast.success('Environment file downloaded successfully!');
     } catch (error) {
-      console.error('Failed to download environment file:', error);
+      console.error('Download failed:', error);
+      toast.error('Failed to download environment file');
     }
   };
 
@@ -86,7 +135,7 @@ export function ProjectCard({
     <>
       <Card
         onClick={() => onSelect(project)}
-        className="border cursor-pointer hover:border-primary"
+        className="border cursor-pointer hover:border-primary border-dashed duration-300 ease-in-out"
       >
         <CardHeader className="pb-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
@@ -121,7 +170,7 @@ export function ProjectCard({
           </div>
         </CardContent>
 
-        <CardFooter className="pt-0 border-t flex justify-between">
+        <CardFooter className="pt-0 border-t flex justify-between border-dashed">
           <div className="flex gap-2 w-full">
             <Button variant="outline" onClick={handleCopy}>
               <Copy className="h-3 w-3" />

@@ -36,11 +36,19 @@ export function useVisibilityToggle() {
     });
   }, []);
 
+  const isVisible = useCallback(
+    (index: number) => {
+      return visibleValues.has(index);
+    },
+    [visibleValues]
+  );
+
   return {
     visibleValues,
     toggleVisibility,
     hideAll,
     showAll,
     shiftIndices,
+    isVisible,
   };
 }

@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { EnvVariable } from '@/lib/zod';
+import { EncryptedData } from '@/lib/crypto';
 import { VariableRow, VariableRowRef } from './VariableRow';
 
 interface VariablesListProps {
@@ -20,11 +21,13 @@ interface VariablesListProps {
   onUpdateVariable: (
     index: number,
     field: keyof EnvVariable,
-    value: string
+    value: string | EncryptedData
   ) => void;
   onToggleVisibility: (index: number) => void;
   onDeleteVariable: (index: number) => void;
   onSmartPaste: (variables: EnvVariable[]) => void;
+  userId: string;
+  salt: string;
 }
 
 export const VariablesList = memo(function VariablesList({
@@ -35,6 +38,8 @@ export const VariablesList = memo(function VariablesList({
   onToggleVisibility,
   onDeleteVariable,
   onSmartPaste,
+  userId,
+  salt,
 }: VariablesListProps) {
   const rowRefs = useRef<(VariableRowRef | null)[]>([]);
 
@@ -136,6 +141,8 @@ export const VariablesList = memo(function VariablesList({
               onSmartPaste={onSmartPaste}
               onNavigateToNext={() => handleNavigateToNext(index)}
               onNavigateToPrevious={() => handleNavigateToPrevious(index)}
+              userId={userId}
+              salt={salt}
             />
           ))}
         </div>

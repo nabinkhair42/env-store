@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { EnvVariable } from '@/lib/zod';
+import { EncryptedData } from '@/lib/crypto';
 
 export function useVariableManager(initialVariables: EnvVariable[] = []) {
   const [variables, setVariables] = useState<EnvVariable[]>(initialVariables);
@@ -9,7 +10,11 @@ export function useVariableManager(initialVariables: EnvVariable[] = []) {
   }, []);
 
   const updateVariable = useCallback(
-    (index: number, field: keyof EnvVariable, value: string) => {
+    (
+      index: number,
+      field: keyof EnvVariable,
+      value: string | EncryptedData
+    ) => {
       setVariables((prev) =>
         prev.map((variable, i) =>
           i === index ? { ...variable, [field]: value } : variable
@@ -54,6 +59,23 @@ export function useVariableManager(initialVariables: EnvVariable[] = []) {
     return variables.filter((v) => v.key.trim());
   }, [variables]);
 
+  const clearVariables = useCallback(() => {
+    setVariables([]);
+  }, []);
+
+  const hasChanges = useCallback(() => {
+    return (
+      variables.length !== initialVariables.length ||
+      variables.some(
+        (v, i) =>
+          !initialVariables[i] ||
+          v.key !== initialVariables[i].key ||
+          v.value !== initialVariables[i].value ||
+          v.description !== initialVariables[i].description
+      )
+    );
+  }, [variables, initialVariables]);
+
   return {
     variables,
     setVariables,
@@ -62,5 +84,7 @@ export function useVariableManager(initialVariables: EnvVariable[] = []) {
     deleteVariable,
     bulkAddVariables,
     getValidVariables,
+    clearVariables,
+    hasChanges: hasChanges(),
   };
 }

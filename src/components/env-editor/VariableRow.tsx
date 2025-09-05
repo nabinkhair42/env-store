@@ -1,9 +1,18 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { useEncryptedData } from '@/hooks/useEncryptedData';
+import { EncryptedData } from '@/lib/crypto';
 import { EnvVariable } from '@/lib/zod';
 import { X } from 'lucide-react';
-import { forwardRef, memo, useImperativeHandle, useRef } from 'react';
+import { toast } from 'react-hot-toast';
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import {
   SmartVariableInput,
   SmartVariableInputRef,
@@ -18,12 +27,14 @@ interface VariableRowProps {
   variable: EnvVariable;
   index: number;
   isValueVisible: boolean;
-  onUpdate: (field: keyof EnvVariable, value: string) => void;
+  onUpdate: (field: keyof EnvVariable, value: string | EncryptedData) => void;
   onToggleVisibility: () => void;
   onDelete: () => void;
   onSmartPaste: (variables: EnvVariable[]) => void;
   onNavigateToNext?: () => void;
   onNavigateToPrevious?: () => void;
+  userId: string;
+  salt: string;
 }
 
 export const VariableRow = memo(
@@ -38,11 +49,17 @@ export const VariableRow = memo(
       onSmartPaste,
       onNavigateToNext,
       onNavigateToPrevious,
+      userId,
+      salt,
     },
     ref
   ) {
     const keyInputRef = useRef<SmartVariableInputRef>(null);
     const valueInputRef = useRef<SmartVariableInputRef>(null);
+    const { encryptIfNeeded, decryptIfNeeded } = useEncryptedData({
+      userId,
+      salt,
+    });
 
     useImperativeHandle(ref, () => ({
       focusKey: () => keyInputRef.current?.focus(),
@@ -68,6 +85,27 @@ export const VariableRow = memo(
         onNavigateToPrevious();
       }
     };
+
+    const handleValueUpdate = useCallback(
+      async (field: keyof EnvVariable, value: string | EncryptedData) => {
+        if (field === 'value' && typeof value === 'string' && userId && salt) {
+          try {
+            const encryptedValue = await encryptIfNeeded(value);
+            onUpdate(field, encryptedValue);
+          } catch (error) {
+            console.error('Failed to encrypt value:', error);
+            toast.error(
+              'Failed to encrypt value. Please try again or refresh the page.'
+            );
+            // Don't update with plaintext on encryption failure for security
+            return;
+          }
+        } else {
+          onUpdate(field, value);
+        }
+      },
+      [encryptIfNeeded, userId, salt, onUpdate]
+    );
 
     return (
       <div className="group relative border rounded-lg p-4 hover:bg-muted/50 transition-colors">
@@ -100,7 +138,7 @@ export const VariableRow = memo(
               type="text"
               placeholder="your-secret-value"
               className="font-mono text-sm"
-              onUpdate={onUpdate}
+              onUpdate={handleValueUpdate}
               onSmartPaste={onSmartPaste}
               onNavigateNext={handleNavigateFromValue}
               onNavigatePrevious={handleNavigateToKey}
@@ -108,7 +146,9 @@ export const VariableRow = memo(
               isValueVisible={isValueVisible}
               onToggleVisibility={onToggleVisibility}
               label="Value"
+              decryptIfNeeded={decryptIfNeeded}
             />
+            {/* Removed EncryptedVariableIndicator */}
           </div>
 
           {/* Actions */}

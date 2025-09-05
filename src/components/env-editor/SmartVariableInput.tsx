@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { parseEnvFile } from '@/lib/utils/env-parser';
 import { EnvVariable } from '@/lib/zod';
+import { EncryptedData, isEncrypted } from '@/lib/crypto';
 import { Eye, EyeOff } from 'lucide-react';
 import React, {
   forwardRef,
@@ -12,6 +13,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useRef,
+  useState,
 } from 'react';
 
 interface SmartVariableInputProps {
@@ -20,7 +22,7 @@ interface SmartVariableInputProps {
   field: keyof EnvVariable;
   placeholder?: string;
   type?: string;
-  onUpdate: (field: keyof EnvVariable, value: string) => void;
+  onUpdate: (field: keyof EnvVariable, value: string | EncryptedData) => void;
   onSmartPaste: (variables: EnvVariable[]) => void;
   onNavigateNext?: () => void;
   onNavigatePrevious?: () => void;
@@ -30,6 +32,8 @@ interface SmartVariableInputProps {
   isValueVisible?: boolean;
   onToggleVisibility?: () => void;
   label?: string;
+  decryptIfNeeded?: (value: string | EncryptedData) => Promise<string>;
+  encryptionReady?: boolean;
 }
 
 export interface SmartVariableInputRef {
@@ -57,15 +61,82 @@ export const SmartVariableInput = forwardRef<
     isValueVisible = true,
     onToggleVisibility,
     label,
+    decryptIfNeeded,
+    encryptionReady,
   },
   ref
 ) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [displayValue, setDisplayValue] = useState<string>('');
+  const [isDecrypting, setIsDecrypting] = useState(false);
 
   useImperativeHandle(ref, () => ({
     focus: () => inputRef.current?.focus(),
     select: () => inputRef.current?.select(),
   }));
+
+  // Handle decryption for display
+  useEffect(() => {
+    const updateDisplayValue = async () => {
+      const rawValue = variable[field];
+
+      if (field === 'value' && decryptIfNeeded && rawValue) {
+        // Check if the value is encrypted
+        const isEncryptedValue = isEncrypted(rawValue);
+
+        if (isEncryptedValue) {
+          if (isValueVisible) {
+            if (!encryptionReady) {
+              // Encryption not ready, show loading state
+              setDisplayValue('[Initializing Encryption...]');
+              setIsDecrypting(false);
+              return;
+            }
+
+            try {
+              setIsDecrypting(true);
+              // Add a longer delay to ensure encryption context is fully ready
+              await new Promise((resolve) => setTimeout(resolve, 150));
+              const decrypted = await decryptIfNeeded(rawValue);
+              setDisplayValue(decrypted);
+            } catch (error) {
+              console.error('Failed to decrypt value for display:', error);
+              // Show more informative error message
+              const errorMessage =
+                error instanceof Error ? error.message : 'Decryption failed';
+              if (errorMessage.includes('key not available')) {
+                setDisplayValue('[Key Not Available - Please Refresh]');
+              } else if (errorMessage.includes('not ready')) {
+                setDisplayValue('[Initializing...]');
+              } else if (
+                errorMessage.includes('OperationError') ||
+                errorMessage.includes('corrupted data')
+              ) {
+                setDisplayValue('[Decryption Failed - Key Mismatch]');
+              } else {
+                setDisplayValue(`[Decryption Error: ${errorMessage}]`);
+              }
+            } finally {
+              setIsDecrypting(false);
+            }
+          } else {
+            // Value is encrypted but not visible, show encrypted indicator
+            setDisplayValue('[Encrypted]');
+            setIsDecrypting(false);
+          }
+        } else {
+          // Value is not encrypted, show as plain string
+          const stringValue = String(rawValue || '');
+          setDisplayValue(stringValue);
+        }
+      } else {
+        const stringValue = String(rawValue || '');
+        setDisplayValue(stringValue);
+      }
+    };
+
+    updateDisplayValue();
+  }, [variable, field, decryptIfNeeded, isValueVisible, encryptionReady]);
 
   // Auto-focus when requested
   useEffect(() => {
@@ -330,13 +401,19 @@ export const SmartVariableInput = forwardRef<
         ref={inputRef}
         id={`${field}-${index}`}
         type={isVisibleRequired && !isValueVisible ? 'password' : type}
-        value={variable[field] || ''}
-        onChange={(e) => onUpdate(field, e.target.value)}
+        value={displayValue}
+        onChange={(e) => {
+          setDisplayValue(e.target.value);
+          onUpdate(field, e.target.value);
+        }}
         onPaste={handlePaste}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className={className}
       />
+      {isDecrypting && (
+        <div className="text-sm text-muted-foreground">Decrypting...</div>
+      )}
     </div>
   );
 });

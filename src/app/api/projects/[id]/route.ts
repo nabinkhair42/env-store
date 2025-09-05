@@ -1,5 +1,6 @@
 import { auth } from '@/auth';
 import client from '@/lib/db';
+import { IProject } from '@/lib/types';
 import { UpdateProjectSchema } from '@/lib/zod';
 import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
@@ -16,7 +17,7 @@ export async function GET(
     }
 
     const { id } = await params;
-    const collection = client.db('env-sync').collection('projects');
+    const collection = client.db('env-sync').collection<IProject>('projects');
     const project = await collection.findOne({
       _id: new ObjectId(id),
       userId: session.user.id,
@@ -26,9 +27,14 @@ export async function GET(
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ project });
-  } catch (error) {
-    console.error('Error fetching project:', error);
+    // Ensure userId is included in the response for frontend key derivation
+    const projectWithUserId = {
+      ...project,
+      userId: session.user.id,
+    };
+
+    return NextResponse.json({ project: projectWithUserId });
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -47,14 +53,11 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json();
     const { id } = await params;
-    const validatedData = UpdateProjectSchema.parse({
-      ...body,
-      id,
-    });
+    const body = await request.json();
+    const validatedData = UpdateProjectSchema.parse({ ...body, id });
 
-    const collection = client.db('env-sync').collection('projects');
+    const collection = client.db('env-sync').collection<IProject>('projects');
 
     // Check if project exists and belongs to user
     const existingProject = await collection.findOne({
@@ -66,44 +69,39 @@ export async function PUT(
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
 
-    // Check for name conflicts if name is being updated
-    if (validatedData.name && validatedData.name !== existingProject.name) {
-      const nameConflict = await collection.findOne({
-        userId: session.user.id,
-        name: validatedData.name,
-        _id: { $ne: new ObjectId(id) },
-      });
-
-      if (nameConflict) {
-        return NextResponse.json(
-          { error: 'Project with this name already exists' },
-          { status: 409 }
-        );
-      }
-    }
-
-    const updateData = {
-      ...validatedData,
+    // Prepare update data
+    const updateData: Partial<IProject> = {
       updatedAt: new Date(),
     };
 
-    const result = await collection.findOneAndUpdate(
+    if (validatedData.name !== undefined) {
+      updateData.name = validatedData.name;
+    }
+
+    if (validatedData.description !== undefined) {
+      updateData.description = validatedData.description;
+    }
+
+    if (validatedData.variables !== undefined) {
+      updateData.variables = validatedData.variables;
+    }
+
+    if (validatedData.userSalt !== undefined) {
+      updateData.userSalt = validatedData.userSalt;
+    }
+
+    // Update the project
+    const result = await collection.updateOne(
       { _id: new ObjectId(id), userId: session.user.id },
-      { $set: updateData },
-      { returnDocument: 'after' }
+      { $set: updateData }
     );
 
-    if (!result) {
+    if (result.matchedCount === 0) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
 
-    return NextResponse.json({
-      project: result,
-      message: 'Project updated successfully',
-    });
+    return NextResponse.json({ message: 'Project updated successfully' });
   } catch (error) {
-    console.error('Error updating project:', error);
-
     if (error instanceof Error && error.name === 'ZodError') {
       return NextResponse.json(
         { error: 'Invalid data', details: error },
@@ -130,7 +128,8 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    const collection = client.db('env-sync').collection('projects');
+    const collection = client.db('env-sync').collection<IProject>('projects');
+
     const result = await collection.deleteOne({
       _id: new ObjectId(id),
       userId: session.user.id,
@@ -141,8 +140,7 @@ export async function DELETE(
     }
 
     return NextResponse.json({ message: 'Project deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting project:', error);
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { CryptoService } from '@/lib/crypto';
 import client from '@/lib/db';
 import { IProject } from '@/lib/types';
 import { ProjectSchema } from '@/lib/zod';
@@ -13,21 +14,22 @@ export async function GET() {
     }
 
     const collection = client.db('env-sync').collection<IProject>('projects');
-    const projects = await collection
+    const projects = (await collection
       .find({ userId: session.user.id })
       .project({
         name: 1,
         description: 1,
         variables: 1,
+        userSalt: 1,
+        userId: 1,
         createdAt: 1,
         updatedAt: 1,
       })
       .sort({ updatedAt: -1 })
-      .toArray();
+      .toArray()) as IProject[];
 
     return NextResponse.json({ projects });
-  } catch (error) {
-    console.error('Error fetching projects:', error);
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -62,9 +64,14 @@ export async function POST(request: NextRequest) {
     }
 
     const now = new Date();
-    const project = {
+
+    // Generate user salt if not provided
+    const userSalt = validatedData.userSalt || CryptoService.generateSalt();
+
+    const project: IProject = {
       ...validatedData,
       userId: session.user.id,
+      userSalt,
       createdAt: now,
       updatedAt: now,
       variables: validatedData.variables || [],
@@ -78,8 +85,6 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('Error creating project:', error);
-
     if (error instanceof Error && error.name === 'ZodError') {
       return NextResponse.json(
         { error: 'Invalid data', details: error },

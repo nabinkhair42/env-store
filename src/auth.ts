@@ -10,4 +10,13 @@ export const { handlers, signIn, auth } = NextAuth({
   pages: {
     signIn: '/login',
   },
+
+  callbacks: {
+    session: ({ session, user }) => {
+      if (session.user) {
+        session.user.id = user.id;
+      }
+      return session;
+    },
+  },
 });

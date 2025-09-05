@@ -45,3 +45,29 @@ Use it here: https://envstore.nabinkhair.com.np
 ## Security
 
 Treat values as secrets. Avoid sharing accounts; rotate keys if exposed.
+
+## Data Migration
+
+The application previously used plain text storage for environment variables. A migration was implemented to encrypt all existing data using AES-GCM encryption with key derivation based on user ID and project salt.
+
+### Migration Process
+
+The migration was performed using the following approach:
+
+1. **Key Derivation**: Each project was assigned a unique salt (`userSalt`) for key derivation
+2. **Encryption**: All existing plain text environment variables were encrypted using AES-GCM
+3. **Database Update**: Projects were updated with encrypted variables and the new salt
+4. **Backward Compatibility**: The system maintained support for both encrypted and plain text variables during the transition
+
+### Migration Implementation
+
+The migration service used the following components:
+
+- **CryptoService**: Core encryption/decryption functionality using Web Crypto API
+- **Key Derivation**: PBKDF2-based key derivation with user ID, AUTH_SECRET, and project salt
+- **Data Format**: Encrypted data stored as objects with `ciphertext`, `iv`, and `authTag` fields
+- **Error Handling**: Graceful fallback to original data if migration failed
+
+### Migration Status
+
+The migration has been completed and all existing data has been successfully encrypted. The migration service has been removed from the codebase as it is no longer needed.
