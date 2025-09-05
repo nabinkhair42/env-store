@@ -270,7 +270,7 @@ export function EncryptionProvider({ children }: EncryptionProviderProps) {
         throw err;
       }
     },
-    [currentKey, _currentSalt, isReady]
+    [currentKey, _currentSalt, isReady, isInitializing]
   );
 
   // Auto-initialize when session changes (only if no project-specific encryption is set)
