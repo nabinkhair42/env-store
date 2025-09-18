@@ -44,10 +44,7 @@ export default function UseCases({
 
       <div className="grid gap-8 sm:grid-cols-2">
         {items.map((item, index) => (
-          <div
-            key={index}
-            className="group border bg-background p-6 border-dashed"
-          >
+          <div key={index} className="group bg-background p-6">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-lg bg-primary/10 cursor-pointer text-primary flex-shrink-0">
                 {item.icon}

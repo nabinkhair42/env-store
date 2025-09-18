@@ -1,4 +1,5 @@
-import { Github, Workflow, RotateCw } from 'lucide-react';
+import { Workflow, RotateCw } from 'lucide-react';
+import { FaGithub } from 'react-icons/fa6';
 
 interface HowItWorksProps {
   steps?: {
@@ -13,7 +14,7 @@ export default function HowItWorks({
     {
       title: 'Sign in',
       body: 'Use your GitHub account to access the app.',
-      icon: <Github className="h-6 w-6" />,
+      icon: <FaGithub className="h-6 w-6" />,
     },
     {
       title: 'Create a project',
@@ -42,7 +43,7 @@ export default function HowItWorks({
         <div className="grid gap-12 sm:grid-cols-3">
           {steps.map((step, index) => (
             <div key={index} className="group">
-              <div className="border bg-background p-8 text-center  border-dashed">
+              <div className=" bg-background p-8 text-center ">
                 <div className="mb-6 flex justify-center">
                   <div className="p-4 rounded-xl bg-primary/10 text-primary cursor-pointer">
                     {step.icon}

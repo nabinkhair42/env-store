@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -7,8 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { LogOut } from 'lucide-react';
+import { LogOut, Loader } from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import { useState } from 'react';
 
 interface LogOutDialogProps {
   open: boolean;
@@ -16,8 +18,16 @@ interface LogOutDialogProps {
 }
 
 export function LogOutDialog({ open, onOpenChange }: LogOutDialogProps) {
-  const handleLogOut = () => {
-    signOut({ callbackUrl: '/' });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogOut = async () => {
+    setIsLoading(true);
+    try {
+      await signOut({ callbackUrl: '/' });
+    } catch (error) {
+      console.error('Logout error:', error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -40,10 +50,19 @@ export function LogOutDialog({ open, onOpenChange }: LogOutDialogProps) {
           <Button
             variant="destructive"
             onClick={handleLogOut}
+            disabled={isLoading}
             className="flex items-center gap-2"
           >
-            <LogOut className="h-4 w-4" />
-            Sign Out
+            {isLoading ? (
+              <>
+                <Loader className="h-5 w-5 animate-spin" /> Signing Out
+              </>
+            ) : (
+              <>
+                <LogOut className="h-5 w-5" />
+                Sign Out
+              </>
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

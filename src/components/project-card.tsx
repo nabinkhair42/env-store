@@ -1,20 +1,11 @@
 'use client';
 
-import type React from 'react';
-
 import { ConfirmDialog } from '@/components/modal/confirm-dialog';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import type { IProject } from '@/lib/types';
 import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
-import { Clock, Copy, Download, Edit, FileText, Trash2 } from 'lucide-react';
+import { Calendar, Copy, Download, Edit, FileText, Trash2 } from 'lucide-react';
+import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
@@ -84,62 +75,94 @@ export function ProjectCard({
 
   return (
     <>
-      <Card
+      <div
         onClick={() => onSelect(project)}
-        className="border cursor-pointer hover:border-primary"
+        className="cursor-pointer transition-colors hover:bg-muted/50 w-full flex gap-2 justify-between py-3 px-4 rounded-lg border bg-card"
       >
-        <CardHeader className="pb-4">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="min-w-0 flex-1 space-y-2">
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-xl font-semibold truncate text-foreground group-hover:text-primary transition-colors">
-                  {project.name}
-                </CardTitle>
-              </div>
-              {project.description && (
-                <CardDescription className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-                  {project.description}
-                </CardDescription>
-              )}
+        {/* Project Name & Description */}
+        <div className="flex-1 min-w-0">
+          <div className="space-y-1">
+            <div className="font-medium text-foreground hover:text-primary transition-colors text-sm sm:text-base">
+              {project.name}
             </div>
-          </div>
-        </CardHeader>
-
-        <CardContent className="pb-4">
-          <div className="flex flex-col items-start gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1.5">
-              <FileText className="h-3.5 w-3.5" />
-              <span className="font-medium">{variableCount}</span>
-              <span>
-                environment {variableCount === 1 ? 'variable' : 'variables'}
+            {project.description && (
+              <div className="text-xs sm:text-sm text-muted-foreground line-clamp-1 sm:line-clamp-2 max-w-xs sm:max-w-md">
+                {project.description}
+              </div>
+            )}
+            <div className="flex items-center gap-1 md:hidden mt-1">
+              <FileText className="h-3 w-3 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">
+                {variableCount} var{variableCount !== 1 ? 's' : ''}
               </span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              <span>Updated {formatDate(project.updatedAt)}</span>
-            </div>
           </div>
-        </CardContent>
+        </div>
 
-        <CardFooter className="pt-0 border-t flex justify-between">
-          <div className="flex gap-2 w-full">
-            <Button variant="outline" onClick={handleCopy}>
-              <Copy className="h-3 w-3" />
-              Copy
+        <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2">
+            <FileText className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium">
+              {variableCount} {variableCount === 1 ? 'variable' : 'variables'}
+            </span>
+          </div>
+        </div>
+
+        <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium">
+              {project.updatedAt ? formatDate(project.updatedAt) : '-'}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
+          <div className="flex items-center gap-0.5 sm:gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCopy}
+              className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-muted"
+              title="Copy environment variables"
+            >
+              <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
-            <Button variant="outline" onClick={handleEdit}>
-              <Edit className="h-3 w-3" />
-              Edit
+
+            {onEdit && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleEdit}
+                className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-muted"
+                title="Edit project"
+              >
+                <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+              </Button>
+            )}
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDownload}
+              className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-muted"
+              title="Download .env file"
+            >
+              <Download className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
-            <Button variant="outline" onClick={handleDownload}>
-              <Download className="h-3 w-3" />
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDelete}
+              className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-destructive hover:text-white"
+              title="Delete project"
+            >
+              <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </div>
-          <Button variant="destructive" onClick={handleDelete} size="icon">
-            <Trash2 className="size-4" />
-          </Button>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
 
       <ConfirmDialog
         open={showDeleteConfirm}

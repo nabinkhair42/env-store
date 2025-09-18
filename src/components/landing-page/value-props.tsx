@@ -1,4 +1,5 @@
-import { Copy, Database, Github, Globe } from 'lucide-react';
+import { Copy, Database, Globe } from 'lucide-react';
+import { FaGithub } from 'react-icons/fa6';
 
 interface ValuePropsProps {
   items?: {
@@ -23,7 +24,7 @@ export default function ValueProps({
     {
       title: 'GitHub sign-in',
       desc: 'Quick access from any browser.',
-      icon: <Github className="h-6 w-6" />,
+      icon: <FaGithub className="h-6 w-6" />,
     },
     {
       title: 'No CLI required',
@@ -46,10 +47,7 @@ export default function ValueProps({
 
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((item, index) => (
-          <div
-            key={index}
-            className="border bg-background p-6 text-center border-dashed"
-          >
+          <div key={index} className="bg-background p-6 text-center">
             <div className="mb-4 flex justify-center">
               <div className="p-3 rounded-xl bg-primary/10 text-primary cursor-pointer">
                 {item.icon}

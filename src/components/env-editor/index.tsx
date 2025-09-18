@@ -18,10 +18,9 @@ import {
 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { FileUploadSection } from './FileUploadSection';
+import { VariablesList } from './VariablesList';
 // Local component-only types
 type DeleteConfirmState = { open: boolean; index: number; varName: string };
-import { VariableStats } from './VariableStats';
-import { VariablesList } from './VariablesList';
 
 interface EnvEditorProps {
   project: IProject;
@@ -150,7 +149,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
 
   return (
     <div>
-      <div className="border-b pb-6">
+      <div className="border-b pb-6 px-4 border-dashed">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="space-y-1">
             <h1 className="text-2xl font-semibold tracking-tight">
@@ -213,21 +212,18 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
         </div>
       </div>
 
-      <div className="space-y-6">
-        <VariableStats variables={variables} />
+      <VariablesList
+        variables={variables}
+        visibleValues={visibleValues}
+        onAddVariable={handleAddVariable}
+        onUpdateVariable={updateVariable}
+        onToggleVisibility={toggleVisibility}
+        onDeleteVariable={handleDeleteVariable}
+        onSmartPaste={handleSmartPaste}
+      />
 
-        <FileUploadSection onFileVariables={handleFileVariables} />
-
-        <VariablesList
-          variables={variables}
-          visibleValues={visibleValues}
-          onAddVariable={handleAddVariable}
-          onUpdateVariable={updateVariable}
-          onToggleVisibility={toggleVisibility}
-          onDeleteVariable={handleDeleteVariable}
-          onSmartPaste={handleSmartPaste}
-        />
-      </div>
+      <div className="border-b pb-6 px-4 border-dashed" />
+      <FileUploadSection onFileVariables={handleFileVariables} />
 
       {/* Variable Delete Confirmation Dialog */}
       <ConfirmDialog

@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { env } from '@/env';
 import client from '@/lib/db';
 import { IProject } from '@/lib/types';
 import { ProjectSchema } from '@/lib/zod';
@@ -12,7 +13,9 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const collection = client.db('env-sync').collection<IProject>('projects');
+    const collection = client
+      .db(env.DATABASE_NAME)
+      .collection<IProject>('projects');
     const projects = await collection
       .find({ userId: session.user.id })
       .project({
@@ -46,7 +49,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = ProjectSchema.parse(body);
 
-    const collection = client.db('env-sync').collection<IProject>('projects');
+    const collection = client
+      .db(env.DATABASE_NAME)
+      .collection<IProject>('projects');
 
     // Check if project with same name already exists for this user
     const existingProject = await collection.findOne({

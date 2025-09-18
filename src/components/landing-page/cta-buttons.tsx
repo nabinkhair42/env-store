@@ -8,8 +8,9 @@ import {
   GlimpseTrigger,
 } from '@/components/ui/kibo-ui/glimpse';
 import { glimpse } from '@/components/ui/kibo-ui/glimpse/server';
-import { ChevronRight, Github } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { FaGithub } from 'react-icons/fa6';
 interface CTAButtonsProps {
   primaryHref?: string;
   primaryLabel?: string;
@@ -18,7 +19,7 @@ interface CTAButtonsProps {
 }
 
 export async function CTAButtons({
-  primaryHref = '/dashboard',
+  primaryHref = '/login',
   primaryLabel = 'Get Started',
   secondaryHref = 'https://github.com/nabinkhair42/env-store',
   secondaryLabel = 'View Source',
@@ -37,7 +38,7 @@ export async function CTAButtons({
         <GlimpseTrigger asChild>
           <Button asChild variant="default" size="lg" className="px-8">
             <Link href={secondaryHref}>
-              <Github className="w-4 h-4" /> {secondaryLabel}
+              <FaGithub className="w-4 h-4" /> {secondaryLabel}
             </Link>
           </Button>
         </GlimpseTrigger>

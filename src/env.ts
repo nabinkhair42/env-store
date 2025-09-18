@@ -5,6 +5,7 @@ const EnvSchema = z.object({
   AUTH_GITHUB_ID: z.string().min(1),
   AUTH_GITHUB_SECRET: z.string().min(1),
   MONGODB_URI: z.string().url().or(z.string().startsWith('mongodb')),
+  DATABASE_NAME: z.string().min(1).default('env-store'),
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
@@ -24,6 +25,7 @@ const raw = STRICT_VALIDATION
       AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
       MONGODB_URI: process.env.MONGODB_URI,
       NODE_ENV: process.env.NODE_ENV,
+      DATABASE_NAME: process.env.DATABASE_NAME,
     }
   : {
       AUTH_SECRET: process.env.AUTH_SECRET ?? 'dev-secret',

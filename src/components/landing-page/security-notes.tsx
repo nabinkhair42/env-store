@@ -34,7 +34,7 @@ export default function SecurityNotes({
           {notes.map((note, index) => (
             <div
               key={index}
-              className="flex items-start gap-2 p-2 border border-dashed rounded-none"
+              className="flex items-start gap-2 p-2 rounded-none"
             >
               <CheckCheck className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
               <span className="text-muted-foreground leading-relaxed">

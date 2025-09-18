@@ -3,6 +3,7 @@ import client from '@/lib/db';
 import { UpdateProjectSchema } from '@/lib/zod';
 import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
+import { env } from '@/env';
 
 export async function GET(
   request: NextRequest,
@@ -16,7 +17,7 @@ export async function GET(
     }
 
     const { id } = await params;
-    const collection = client.db('env-sync').collection('projects');
+    const collection = client.db(env.DATABASE_NAME).collection('projects');
     const project = await collection.findOne({
       _id: new ObjectId(id),
       userId: session.user.id,
@@ -54,7 +55,7 @@ export async function PUT(
       id,
     });
 
-    const collection = client.db('env-sync').collection('projects');
+    const collection = client.db(env.DATABASE_NAME).collection('projects');
 
     // Check if project exists and belongs to user
     const existingProject = await collection.findOne({
@@ -130,7 +131,7 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    const collection = client.db('env-sync').collection('projects');
+    const collection = client.db(env.DATABASE_NAME).collection('projects');
     const result = await collection.deleteOne({
       _id: new ObjectId(id),
       userId: session.user.id,

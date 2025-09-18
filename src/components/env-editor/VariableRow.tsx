@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { EnvVariable } from '@/lib/zod';
-import { X } from 'lucide-react';
+import { MinusCircle } from 'lucide-react';
 import { forwardRef, memo, useImperativeHandle, useRef } from 'react';
 import {
   SmartVariableInput,
@@ -70,61 +70,53 @@ export const VariableRow = memo(
     };
 
     return (
-      <div className="group relative border rounded-lg p-4 hover:bg-muted/50 transition-colors">
-        <div className="grid gap-4 md:grid-cols-6 ">
+      <>
+        <div className="flex gap-2 items-center">
           {/* Key Field */}
-          <div className="md:col-span-2">
-            <SmartVariableInput
-              ref={keyInputRef}
-              variable={variable}
-              index={index}
-              field="key"
-              placeholder="API_KEY"
-              className="font-mono text-sm"
-              onUpdate={onUpdate}
-              onSmartPaste={onSmartPaste}
-              onNavigateNext={handleNavigateFromKey}
-              onNavigatePrevious={handleNavigateToPreviousRow}
-              autoFocus={index === 0 && !variable.key}
-              label="Key"
-            />
-          </div>
+          <SmartVariableInput
+            ref={keyInputRef}
+            variable={variable}
+            index={index}
+            field="key"
+            placeholder="API_KEY"
+            onUpdate={onUpdate}
+            onSmartPaste={onSmartPaste}
+            onNavigateNext={handleNavigateFromKey}
+            onNavigatePrevious={handleNavigateToPreviousRow}
+            autoFocus={index === 0 && !variable.key}
+            label="Key"
+          />
 
           {/* Value Field with Preview */}
-          <div className="md:col-span-3">
-            <SmartVariableInput
-              ref={valueInputRef}
-              variable={variable}
-              index={index}
-              field="value"
-              type="text"
-              placeholder="your-secret-value"
-              className="font-mono text-sm"
-              onUpdate={onUpdate}
-              onSmartPaste={onSmartPaste}
-              onNavigateNext={handleNavigateFromValue}
-              onNavigatePrevious={handleNavigateToKey}
-              isVisibleRequired={true}
-              isValueVisible={isValueVisible}
-              onToggleVisibility={onToggleVisibility}
-              label="Value"
-            />
-          </div>
+          <SmartVariableInput
+            ref={valueInputRef}
+            variable={variable}
+            index={index}
+            field="value"
+            type="text"
+            placeholder="your-secret-value"
+            onUpdate={onUpdate}
+            onSmartPaste={onSmartPaste}
+            onNavigateNext={handleNavigateFromValue}
+            onNavigatePrevious={handleNavigateToKey}
+            isVisibleRequired={true}
+            isValueVisible={isValueVisible}
+            onToggleVisibility={onToggleVisibility}
+            label="Value"
+          />
 
           {/* Actions */}
-          <div className="md:col-span-1 flex justify-end">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onDelete}
-              className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
-              aria-label="Delete variable"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onDelete}
+            className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+            aria-label="Delete variable"
+          >
+            <MinusCircle className="h-4 w-4" />
+          </Button>
         </div>
-      </div>
+      </>
     );
   })
 );

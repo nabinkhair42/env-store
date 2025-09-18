@@ -302,9 +302,9 @@ export const SmartVariableInput = forwardRef<
   );
 
   return (
-    <div className="md:col-span-3 flex flex-col gap-1">
+    <div className="flex flex-col w-full gap-2">
       {label && (
-        <div className="flex items-center justify-between min-h-[24px]">
+        <div className="flex items-center justify-between">
           <Label>{label}</Label>
           <div className="flex items-center">
             {isVisibleRequired && onToggleVisibility && (
@@ -313,7 +313,7 @@ export const SmartVariableInput = forwardRef<
                 variant="ghost"
                 size="icon"
                 onClick={onToggleVisibility}
-                className="size-7"
+                className="size-3"
                 aria-label="Toggle visibility"
               >
                 {isValueVisible ? (
