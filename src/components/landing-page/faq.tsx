@@ -1,3 +1,6 @@
+import { ArrowLeft01FreeIcons } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
+
 interface FAQProps {
   items?: {
     q: string;
@@ -26,23 +29,26 @@ export default function FAQ({
   ],
 }: FAQProps) {
   return (
-    <section className="px-6 py-16 border-t border-dashed">
-      <h2 className="mb-12 text-center text-3xl font-bold text-foreground">
-        Frequently asked questions
-      </h2>
+    <section className="px-6 py-24 border-t border-dashed">
+      <div className="max-w-3xl mx-auto">
+        <h2 className="mb-12 text-center text-4xl font-medium text-foreground">
+          Frequently asked questions
+        </h2>
 
-      <div className="mx-auto max-w-3xl space-y-6">
-        {items.map((item, index) => (
-          <div
-            key={index}
-            className="border bg-background p-5 border-dashed rounded-none"
-          >
-            <h3 className="mb-3 text-lg font-semibold text-foreground">
-              {item.q}
-            </h3>
-            <p className="text-sm text-muted-foreground">{item.a}</p>
-          </div>
-        ))}
+        <div className="space-y-6">
+          {items.map((item, index) => (
+            <div key={index} className="space-y-2">
+              <h3 className="text-lg font-medium text-foreground">{item.q}</h3>
+              <p className="text-muted-foreground">
+                <HugeiconsIcon
+                  icon={ArrowLeft01FreeIcons}
+                  className="inline-block mr-2 size-4 rotate-180 text-muted-foreground"
+                />
+                {item.a}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

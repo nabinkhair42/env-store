@@ -29,9 +29,9 @@ export default function HowItWorks({
   ],
 }: HowItWorksProps) {
   return (
-    <section className="px-6 py-20 border-t border-dashed">
+    <section className="px-6 py-24 border-t border-dashed">
       <div className="text-center mb-16">
-        <h2 className="text-4xl font-bold text-foreground mb-4">
+        <h2 className="text-4xl font-medium text-foreground mb-4">
           How it works
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -39,27 +39,20 @@ export default function HowItWorks({
         </p>
       </div>
 
-      <div className="relative">
-        <div className="grid gap-12 sm:grid-cols-3">
-          {steps.map((step, index) => (
-            <div key={index} className="group">
-              <div className=" bg-background p-8 text-center ">
-                <div className="mb-6 flex justify-center">
-                  <div className="p-4 rounded-xl bg-primary/10 text-primary cursor-pointer">
-                    {step.icon}
-                  </div>
-                </div>
-
-                <h3 className="mb-4 text-xl font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
-                  {step.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {step.body}
-                </p>
+      <div className="grid gap-12 sm:grid-cols-3 max-w-5xl mx-auto">
+        {steps.map((step, index) => (
+          <div key={index} className="space-y-2">
+            <div className="flex justify-start">
+              <div className="p-1 rounded bg-muted text-foreground">
+                {step.icon}
               </div>
             </div>
-          ))}
-        </div>
+            <h3 className="text-xl font-medium text-foreground">
+              {step.title}
+            </h3>
+            <p className="text-muted-foreground leading-relaxed">{step.body}</p>
+          </div>
+        ))}
       </div>
     </section>
   );

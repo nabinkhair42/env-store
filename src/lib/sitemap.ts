@@ -92,7 +92,7 @@ export const metadata: Metadata = {
 export function generateSitemap() {
   const baseUrl = siteConfig.url;
 
-  const routes = ['', '/dashboard', '/login'];
+  const routes = ['', '/dashboard'];
 
   return routes.map((route) => ({
     url: `${baseUrl}${route}`,

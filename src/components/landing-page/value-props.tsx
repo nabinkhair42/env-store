@@ -34,9 +34,9 @@ export default function ValueProps({
   ],
 }: ValuePropsProps) {
   return (
-    <section className="px-6 py-20 border-t border-dashed">
+    <section className="px-6 py-24 border-t border-dashed">
       <div className="text-center mb-16">
-        <h2 className="text-4xl font-bold text-foreground mb-4">
+        <h2 className="text-4xl font-medium text-foreground mb-4">
           Why ENV Store?
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -47,13 +47,11 @@ export default function ValueProps({
 
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((item, index) => (
-          <div key={index} className="bg-background p-6 text-center">
-            <div className="mb-4 flex justify-center">
-              <div className="p-3 rounded-xl bg-primary/10 text-primary cursor-pointer">
-                {item.icon}
-              </div>
+          <div key={index} className="space-y-2">
+            <div className="p-1 rounded bg-muted text-foreground w-fit">
+              {item.icon}
             </div>
-            <h3 className="mb-3 text-lg font-semibold text-foreground">
+            <h3 className="text-lg font-semibold text-foreground">
               {item.title}
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">

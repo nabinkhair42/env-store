@@ -25,7 +25,7 @@ import { Download, Github } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import LoaderScreen from '../ui/Loader';
+import LoaderScreen from '../ui/loader';
 
 interface SettingsDialogProps {
   open: boolean;
@@ -168,7 +168,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   <>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center p-4 border bg-muted">
-                        <div className="text-2xl font-bold text-blue-600 ">
+                        <div className="text-2xl font-medium text-blue-600 ">
                           {projects.length}
                         </div>
                         <div className="text-sm text-blue-600 ">
@@ -176,7 +176,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                         </div>
                       </div>
                       <div className="text-center p-4 border bg-muted">
-                        <div className="text-2xl font-bold text-green-600 ">
+                        <div className="text-2xl font-medium text-green-600 ">
                           {totalVariables}
                         </div>
                         <div className="text-sm text-green-600 ">

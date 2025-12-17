@@ -4,7 +4,7 @@ import { ProjectCard } from '@/components/project-card';
 import { ProjectForm } from '@/components/project-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import Loader from '@/components/ui/Loader';
+import Loader from '@/components/ui/loader';
 import { useAppContext } from '@/contexts/app-context';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
@@ -46,7 +46,7 @@ export function Dashboard() {
 
   return (
     <>
-      <div className="max-w-5xl mx-auto py-8 border border-dashed border-t-0 border-b-0 min-h-[100svh]">
+      <div className="max-w-4xl mx-auto py-8 border border-dashed border-t-0 border-b-0 min-h-svh">
         <div className="space-y-6 px-4">
           {/* Projects Header */}
           {projects.length > 0 && (

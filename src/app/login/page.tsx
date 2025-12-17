@@ -21,13 +21,13 @@ export default async function LoginPage() {
   return (
     <>
       {' '}
-      <div className="flex items-center justify-center min-h-[calc(100vh-100px)] max-w-5xl mx-auto border-dashed border-x-1 border-y-0">
+      <div className="flex items-center justify-center min-h-[calc(100vh-100px)] max-w-4xl mx-auto border-dashed border-x border-y-0">
         <Card className="w-full max-w-md border-none shadow-none">
           <CardHeader className="space-y-1 text-center">
             <div className="flex justify-center mb-4">
               <Logo size="lg" />
             </div>
-            <CardTitle className="text-2xl font-bold">ENV Store</CardTitle>
+            <CardTitle className="text-2xl font-medium">ENV Store</CardTitle>
             <CardDescription>
               Sync your environment variables across devices securely
             </CardDescription>

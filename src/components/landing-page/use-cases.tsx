@@ -33,27 +33,27 @@ export default function UseCases({
   ],
 }: UseCasesProps) {
   return (
-    <section className="px-6 py-20 border-t border-dashed">
+    <section className="px-6 py-24 border-t border-dashed">
       <div className="text-center mb-16">
-        <h2 className="text-4xl font-bold text-foreground mb-4">Use cases</h2>
+        <h2 className="text-4xl font-medium text-foreground mb-4">Use cases</h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Perfect for any scenario where you need reliable access to environment
           variables
         </p>
       </div>
 
-      <div className="grid gap-8 sm:grid-cols-2">
+      <div className="grid gap-8 sm:grid-cols-2 max-w-4xl mx-auto">
         {items.map((item, index) => (
-          <div key={index} className="group bg-background p-6">
+          <div key={index}>
             <div className="flex items-start gap-4">
-              <div className="p-3 rounded-lg bg-primary/10 cursor-pointer text-primary flex-shrink-0">
+              <div className="p-2 rounded-lg bg-muted text-foreground shrink-0">
                 {item.icon}
               </div>
               <div className="flex-1">
-                <h3 className="mb-3 text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
+                <h3 className="text-lg font-medium text-foreground">
                   {item.title}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed text-sm">
                   {item.body}
                 </p>
               </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { EnvEditor } from '@/components/env-editor/index';
-import Loader from '@/components/ui/Loader';
+import Loader from '@/components/ui/loader';
 import { Button } from '@/components/ui/button';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
@@ -42,7 +42,7 @@ export default function ProjectPage() {
 
   if (!project) {
     return (
-      <div className="flex items-center justify-center min-h-[100svh] max-w-5xl mx-auto border border-dashed border-t-0 border-b-0">
+      <div className="flex items-center justify-center min-h-svh max-w-4xl mx-auto border border-dashed border-t-0 border-b-0">
         <div className="text-center space-y-4">
           <h1 className="text-2xl font-semibold text-foreground">
             Project Not Found
@@ -64,7 +64,7 @@ export default function ProjectPage() {
 
   return (
     <div className="min-h-[100svh] ">
-      <div className="max-w-5xl mx-auto py-8 border border-dashed border-t-0 border-b-0">
+      <div className="max-w-4xl mx-auto py-8 border border-dashed border-t-0 border-b-0">
         <div className="space-y-6">
           {/* Back Navigation */}
           <div className="flex items-center gap-4 px-4">

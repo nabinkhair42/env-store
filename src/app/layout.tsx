@@ -1,4 +1,4 @@
-import { Navbar } from '@/components/navbar';
+import { Navbar } from '@/components/layouts/navbar';
 import { metadata } from '@/lib/sitemap';
 import { Providers } from '@/providers/root-provider';
 import { Inter } from 'next/font/google';

@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Glimpse,
@@ -6,48 +8,57 @@ import {
   GlimpseImage,
   GlimpseTitle,
   GlimpseTrigger,
-} from '@/components/ui/kibo-ui/glimpse';
-import { glimpse } from '@/components/ui/kibo-ui/glimpse/server';
+} from '@/components/ui/glimpse';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { FaGithub } from 'react-icons/fa6';
+import { LoginDialog } from '@/components/modal/LoginDialog';
+import { useState } from 'react';
+
 interface CTAButtonsProps {
-  primaryHref?: string;
   primaryLabel?: string;
   secondaryHref?: string;
   secondaryLabel?: string;
+  glimpseData?: {
+    image: string | null;
+    title: string;
+    description: string;
+  };
 }
 
-export async function CTAButtons({
-  primaryHref = '/login',
+export function CTAButtons({
   primaryLabel = 'Get Started',
   secondaryHref = 'https://github.com/nabinkhair42/env-store',
   secondaryLabel = 'View Source',
+  glimpseData,
 }: CTAButtonsProps) {
-  const data = await glimpse(secondaryHref);
+  const [loginOpen, setLoginOpen] = useState(false);
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-      <Button asChild size="lg" className="px-8">
-        <Link href={primaryHref}>
+    <>
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+        <Button size="default" onClick={() => setLoginOpen(true)}>
           {primaryLabel} <ChevronRight className="w-4 h-4" />
-        </Link>
-      </Button>
+        </Button>
 
-      <Glimpse closeDelay={0} openDelay={0}>
-        <GlimpseTrigger asChild>
-          <Button asChild variant="default" size="lg" className="px-8">
-            <Link href={secondaryHref}>
-              <FaGithub className="w-4 h-4" /> {secondaryLabel}
-            </Link>
-          </Button>
-        </GlimpseTrigger>
-        <GlimpseContent className="w-80">
-          <GlimpseImage src={data.image ?? ''} />
-          <GlimpseTitle>{data.title}</GlimpseTitle>
-          <GlimpseDescription>{data.description}</GlimpseDescription>
-        </GlimpseContent>
-      </Glimpse>
-    </div>
+        <Glimpse closeDelay={0} openDelay={0}>
+          <GlimpseTrigger asChild>
+            <Button asChild variant="outline">
+              <Link href={secondaryHref}>
+                <FaGithub className="w-4 h-4" /> {secondaryLabel}
+              </Link>
+            </Button>
+          </GlimpseTrigger>
+          {glimpseData && (
+            <GlimpseContent className="w-80">
+              <GlimpseImage src={glimpseData.image ?? ''} />
+              <GlimpseTitle>{glimpseData.title}</GlimpseTitle>
+              <GlimpseDescription>{glimpseData.description}</GlimpseDescription>
+            </GlimpseContent>
+          )}
+        </Glimpse>
+      </div>
+      <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
+    </>
   );
 }
