@@ -739,8 +739,8 @@ packages:
       '@cfworker/json-schema':
         optional: true
 
-  '@mongodb-js/saslprep@1.4.3':
-    resolution: {integrity: sha512-9ovU6/3DzvahMYWOA3kZQNWqAfrFFXz+jucNHQ9HcVfBfalYJDncqs/RIgzEzfI4G3kBcCMfS8eDw/gunwfoqA==}
+  '@mongodb-js/saslprep@1.4.4':
+    resolution: {integrity: sha512-p7X/ytJDIdwUfFL/CLOhKgdfJe1Fa8uw9seJYvdOmnP9JBWGWHW69HkOixXS6Wy9yvGf1MbhcS6lVmrhy4jm2g==}
 
   '@mswjs/interceptors@0.40.0':
     resolution: {integrity: sha512-EFd6cVbHsgLa6wa4RljGj6Wk75qoHxUSyc5asLyyPSyuhIcdS2Q3Phw6ImS1q+CkALthJRShiYfKANcQMuMqsQ==}
@@ -5511,7 +5511,7 @@ snapshots:
       - hono
       - supports-color
 
-  '@mongodb-js/saslprep@1.4.3':
+  '@mongodb-js/saslprep@1.4.4':
     dependencies:
       sparse-bitfield: 3.0.3
 
@@ -8568,7 +8568,7 @@ snapshots:
 
   mongodb@6.21.0:
     dependencies:
-      '@mongodb-js/saslprep': 1.4.3
+      '@mongodb-js/saslprep': 1.4.4
       bson: 6.10.4
       mongodb-connection-string-url: 3.0.2
 

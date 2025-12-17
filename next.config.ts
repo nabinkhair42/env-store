@@ -9,6 +9,8 @@ const withAnalyzer = withBundleAnalyzer({
 const nextConfig: NextConfig = {
   // Opt-in to React strict mode
   reactStrictMode: true,
+  // Add empty turbopack config to silence the warning
+  turbopack: {},
 };
 
 export default withAnalyzer(nextConfig);

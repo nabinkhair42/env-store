@@ -3,6 +3,13 @@ import { glimpse } from '@/components/ui/glimpse/server';
 
 export default async function Hero() {
   const githubData = await glimpse('https://github.com/nabinkhair42/env-store');
+  const glimpseData = {
+    title: githubData.title || 'ENV Store',
+    description:
+      githubData.description ||
+      'A tool to manage your environment variables securely.',
+    image: githubData.image,
+  };
 
   return (
     <section className="text-center min-h-[calc(100svh-100px)] flex flex-col justify-center">
@@ -18,7 +25,7 @@ export default async function Hero() {
           and recoverable. Access your config from anywhere, anytime.
         </p>
 
-        <CTAButtons glimpseData={githubData} />
+        <CTAButtons glimpseData={glimpseData} />
       </div>
     </section>
   );
