@@ -17,7 +17,7 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
-      # - run: pnpm typecheck 
+      - run: pnpm typecheck 
       - run: pnpm build
       - name: Check unused code and deps
         run: pnpm unused
