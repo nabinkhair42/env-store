@@ -6,7 +6,7 @@ import client from '@/lib/db';
 export const { handlers, signIn, auth } = NextAuth({
   adapter: MongoDBAdapter(client),
 
-  providers: [GitHub],
+  providers: [GitHub({})],
   pages: {
     signIn: '/',
   },
