@@ -1,5 +1,12 @@
 {
   "permissions": {
-    "allow": ["Bash(pnpm add:*)", "Bash(pnpm remove:*)"]
+    "allow": [
+      "Bash(pnpm add:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm build:*)",
+      "Bash(cat:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(git mv:*)"
+    ]
   }
 }

@@ -12,7 +12,7 @@ import {
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { FaGithub } from 'react-icons/fa6';
-import { LoginDialog } from '@/components/modal/LoginDialog';
+import { LoginDialog } from '@/components/modal/login-dialog';
 import { useState } from 'react';
 
 interface CTAButtonsProps {

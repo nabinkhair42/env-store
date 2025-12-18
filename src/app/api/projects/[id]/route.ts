@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import client from '@/lib/db';
+import { client } from '@/lib/db';
 import { UpdateProjectSchema } from '@/lib/zod';
 import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';

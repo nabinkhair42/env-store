@@ -4,7 +4,7 @@ import { ProjectCard } from '@/components/project-card';
 import { ProjectForm } from '@/components/project-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import Loader from '@/components/ui/loader';
+import LoaderScreen from '@/components/ui/loader';
 import { useAppContext } from '@/contexts/app-context';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
@@ -41,7 +41,7 @@ export function Dashboard() {
   };
 
   if (loading) {
-    return <Loader />;
+    return <LoaderScreen />;
   }
 
   return (

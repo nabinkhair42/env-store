@@ -1,14 +1,5 @@
 'use client';
 import dynamic from 'next/dynamic';
-const SettingsDialog = dynamic(
-  () =>
-    import('@/components/modal/SettingsDialog').then((m) => m.SettingsDialog),
-  { ssr: false }
-);
-const LogOutDialog = dynamic(
-  () => import('@/components/modal/LogOutDialog').then((m) => m.LogOutDialog),
-  { ssr: false }
-);
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -21,7 +12,16 @@ import { LogOut, Settings } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Logo } from './Logo';
+import { Logo } from './logo';
+const SettingsDialog = dynamic(
+  () =>
+    import('@/components/modal/settings-dialog').then((m) => m.SettingsDialog),
+  { ssr: false }
+);
+const LogOutDialog = dynamic(
+  () => import('@/components/modal/logout-dialog').then((m) => m.LogOutDialog),
+  { ssr: false }
+);
 
 export function UserDropdown() {
   const { data: session } = useSession();
