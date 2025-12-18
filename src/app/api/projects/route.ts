@@ -1,6 +1,6 @@
 import { auth } from '@/auth';
 import { env } from '@/env';
-import client from '@/lib/db';
+import { client } from '@/lib/db';
 import { IProject } from '@/lib/types';
 import { ProjectSchema } from '@/lib/zod';
 import { NextRequest, NextResponse } from 'next/server';
