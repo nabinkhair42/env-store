@@ -1,7 +1,7 @@
 'use client';
 
 import { EnvEditor } from '@/components/env-editor/index';
-import Loader from '@/components/ui/loader';
+import LoaderScreen from '@/components/ui/loader';
 import { Button } from '@/components/ui/button';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
@@ -37,7 +37,7 @@ export default function ProjectPage() {
   };
 
   if (loading || projectLoading) {
-    return <Loader />;
+    return <LoaderScreen />;
   }
 
   if (!project) {
@@ -63,7 +63,7 @@ export default function ProjectPage() {
   }
 
   return (
-    <div className="min-h-[100svh] ">
+    <div className="min-h-svh">
       <div className="max-w-4xl mx-auto py-8 border border-dashed border-t-0 border-b-0">
         <div className="space-y-6">
           {/* Back Navigation */}

@@ -1,5 +1,4 @@
 'use client';
-import { Logo } from '@/components/ui/logo';
 import { ModeSwitcher } from '@/components/ui/mode';
 import { UserDropdown } from '@/components/ui/user-dropdown';
 import { useRouter } from 'next/navigation';
@@ -7,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { LoginDialog } from '@/components/modal/login-dialog';
 import { useState } from 'react';
+import { Logo } from '@/components/ui/logo';
 
 export function Navbar() {
   const router = useRouter();
