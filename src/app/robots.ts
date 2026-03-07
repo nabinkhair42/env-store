@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/admin/', '/_next/', '/static/'],
+        disallow: ['/api/', '/dashboard/', '/_next/', '/static/'],
       },
     ],
     sitemap: 'https://envstore.nabinkhair.com.np/sitemap.xml',

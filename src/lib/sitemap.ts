@@ -92,13 +92,14 @@ export const metadata: Metadata = {
 export function generateSitemap() {
   const baseUrl = siteConfig.url;
 
-  const routes = ['', '/dashboard'];
+  // Only include publicly accessible pages
+  // Exclude auth-required pages (/dashboard, /dashboard/[id])
+  const routes = ['', '/privacy', '/terms', '/contact'];
 
   return routes.map((route) => ({
     url: `${baseUrl}${route}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: route === '' ? 'daily' : 'weekly',
-    priority: route === '' ? 1 : 0.8,
+    lastModified: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+    // Removed deprecated changeFrequency and priority (ignored by Google since 2024)
   }));
 }
 

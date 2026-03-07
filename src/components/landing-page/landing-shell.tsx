@@ -1,6 +1,7 @@
 import Hero from './hero';
 import HowItWorks from './how-it-works';
 import ValueProps from './value-props';
+import SecurityNotes from './security-notes';
 import FAQ from './faq';
 import CTASection from './cta-section';
 import SiteFooter from '../layouts/site-footer';
@@ -14,6 +15,8 @@ export default function LandingShell() {
         <HowItWorks />
         <div className="section-divider" aria-hidden="true" />
         <ValueProps />
+        <div className="section-divider" aria-hidden="true" />
+        <SecurityNotes />
         <div className="section-divider" aria-hidden="true" />
         <FAQ />
         <div className="section-divider" aria-hidden="true" />
