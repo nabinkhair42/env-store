@@ -1,11 +1,11 @@
 'use client';
 
 import { LoginDialog } from '@/components/modal/login-dialog';
-import Link from 'next/link';
-import { useState } from 'react';
-import { FaGithub } from 'react-icons/fa6';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { FaGithub } from 'react-icons/fa6';
+import { Button } from '../ui/button';
 
 interface CTAButtonsProps {
   primaryLabel?: string;
@@ -33,19 +33,23 @@ export function CTAButtons({
   return (
     <>
       <div className="flex flex-col items-center gap-3 sm:flex-row">
-        <button
+        <Button
           onClick={handlePrimaryClick}
-          className="inline-flex h-11 w-44 items-center justify-center gap-2 rounded-lg bg-foreground text-sm font-medium text-background shadow-[inset_0_1px_0_rgba(255,255,255,0.25),inset_0_-1px_0_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,0.2),0_4px_12px_rgba(0,0,0,0.5),0_0_32px_rgba(255,255,255,0.1)] transition-opacity hover:opacity-80"
+          size={'lg'}
+          className="cursor-pointer"
         >
           {primaryLabel}
-        </button>
-
-        <Link
-          href={secondaryHref}
-          className="inline-flex h-11 w-44 items-center justify-center gap-2 rounded-lg border border-border text-sm font-medium text-foreground transition-colors hover:bg-muted/30"
+        </Button>
+        <Button
+          variant="outline"
+          className="cursor-pointer"
+          size={'lg'}
+          onClick={() => {
+            window.location.href = secondaryHref;
+          }}
         >
           <FaGithub className="w-4 h-4" /> {secondaryLabel}
-        </Link>
+        </Button>
       </div>
       <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
     </>

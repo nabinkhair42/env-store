@@ -1,23 +1,35 @@
 const faqs = [
   {
     q: 'How does ENV Store work?',
-    a: 'Sign in with GitHub, create projects for each application, add your environment variables as KEY=VALUE pairs, and export or copy them whenever you need to set up a new environment.',
+    a: 'Sign in with your GitHub account, then create a project for each application. Add your environment variables as KEY=VALUE pairs — either manually, or by uploading an existing .env file. When you need to set up a new environment, export the whole project as a .env file or copy individual values with one click.',
   },
   {
-    q: 'Is my data secure?',
-    a: 'Yes. Your data is encrypted and stored securely. We recommend treating stored values as secrets, rotating keys if exposed, and using separate projects per environment (dev, staging, production).',
+    q: 'How is my data protected?',
+    a: 'All environment variables are encrypted at rest using AES-256-GCM — the same standard trusted by banks and governments. Key derivation uses PBKDF2 with 100,000 iterations and a unique salt per entry, making brute-force attacks computationally infeasible. Data is also transmitted over HTTPS/TLS at all times.',
   },
   {
-    q: 'Can I self-host ENV Store?',
-    a: 'Absolutely. ENV Store is open source. Check the GitHub repository for detailed setup instructions and deployment guides.',
+    q: 'Can I import an existing .env file?',
+    a: 'Yes. Paste the contents of any .env file directly into the editor and ENV Store will automatically parse each KEY=VALUE pair. Comments and blank lines are handled gracefully, so you can paste real .env files without cleanup.',
+  },
+  {
+    q: 'How do I export my variables?',
+    a: 'Open any project from the dashboard and click Export. You get a standard .env file with all your variables, ready to drop into any project. You can also copy individual values or the entire file to clipboard without downloading.',
   },
   {
     q: 'Is ENV Store free to use?',
-    a: 'Yes, the hosted version is completely free. For teams and enterprises, we may introduce premium features in the future.',
+    a: 'Yes — completely free and open source. There are no plans, paywalls, or premium tiers. You can also self-host it by cloning the GitHub repository and following the setup guide.',
+  },
+  {
+    q: 'Can I self-host ENV Store?',
+    a: 'Absolutely. ENV Store is open source (MIT licensed). Clone the repository, set up a MongoDB database, configure GitHub OAuth, add your ENCRYPTION_SECRET, and deploy anywhere — Vercel, Railway, a VPS, or locally. The README has a full setup guide.',
+  },
+  {
+    q: 'What encryption does ENV Store use?',
+    a: 'AES-256-GCM with PBKDF2-SHA256 key derivation (100,000 iterations, random salt per encryption). GCM mode provides authenticated encryption — it detects any tampering with stored ciphertext before decryption, adding an extra layer of integrity protection.',
   },
   {
     q: 'Can I share variables with my team?',
-    a: 'Currently, each account manages its own projects. Team sharing features are planned for future releases.',
+    a: 'Currently each account manages its own projects. To share variables with teammates, export a .env file and send it through a secure channel. Team collaboration and shared projects are on the roadmap.',
   },
 ];
 
@@ -43,7 +55,7 @@ export default function FAQ() {
       </div>
 
       {/* FAQ grid */}
-      <div className="relative rail-bounded border-t border-dashed border-border pb-20">
+      <div className="relative rail-bounded border-t border-dashed border-border">
         <div className="grid sm:grid-cols-2">
           {faqs.map((item, i) => (
             <div
@@ -52,8 +64,6 @@ export default function FAQ() {
                 ${i % 2 !== 0 ? 'sm:border-l sm:border-dashed sm:border-border' : ''}
                 ${i >= 2 ? 'sm:border-t sm:border-dashed sm:border-border' : ''}
                 ${i >= 1 ? 'max-sm:border-t max-sm:border-dashed max-sm:border-border' : ''}
-                ${i >= 4 ? 'sm:border-b sm:border-dashed sm:border-border' : ''}
-                ${i === 5 ? 'max-sm:border-b max-sm:border-dashed max-sm:border-border' : ''}
               `}
             >
               <h3 className="text-[15px] font-semibold tracking-tight">
