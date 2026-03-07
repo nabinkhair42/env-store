@@ -4,27 +4,27 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import LoaderScreen from '@/components/ui/loader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
-import { Download, Github } from 'lucide-react';
+import {
+  Activity,
+  Database,
+  Download,
+  FileText,
+  Github,
+  Mail,
+  User,
+} from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 interface SettingsDialogProps {
@@ -73,151 +73,206 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     }
   };
 
-  const totalVariables = projects.reduce(
-    (sum: number, project: IProject) => sum + (project.variables?.length || 0),
-    0
-  );
+  const stats = useMemo(() => {
+    const totalVariables = projects.reduce(
+      (sum: number, project: IProject) =>
+        sum + (project.variables?.length || 0),
+      0
+    );
+
+    const mostRecent =
+      projects.length > 0
+        ? projects.sort((a, b) => {
+            const dateA = new Date(a.updatedAt || a.createdAt || 0);
+            const dateB = new Date(b.updatedAt || b.createdAt || 0);
+            return dateB.getTime() - dateA.getTime();
+          })[0]
+        : null;
+
+    return { totalVariables, mostRecent };
+  }, [projects]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Settings</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="flex items-center gap-2 text-base font-bold uppercase tracking-wide">
+            <Activity className="h-4 w-4" />
+            Settings
+          </DialogTitle>
+          <DialogDescription className="font-mono text-xs text-muted-foreground">
             Manage your account, projects, and application preferences
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="profile" className="space-y-4">
-          <TabsList className="flex gap-4 w-full justify-start">
-            <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="projects">Projects Stats</TabsTrigger>
-            <TabsTrigger value="data">Data</TabsTrigger>
+        <Tabs defaultValue="profile" className="space-y-6">
+          <TabsList className="flex gap-0 w-full justify-start p-0 bg-transparent border-y border-border">
+            <TabsTrigger
+              value="profile"
+              className="font-mono uppercase text-xs tracking-wide data-[state=active]:bg-muted/50"
+            >
+              Profile
+            </TabsTrigger>
+            <TabsTrigger
+              value="projects"
+              className="font-mono uppercase text-xs tracking-wide data-[state=active]:bg-muted/50"
+            >
+              Projects
+            </TabsTrigger>
+            <TabsTrigger
+              value="data"
+              className="font-mono uppercase text-xs tracking-wide data-[state=active]:bg-muted/50"
+            >
+              Data
+            </TabsTrigger>
           </TabsList>
 
+          {/* Profile Tab */}
           <TabsContent value="profile" className="space-y-4">
-            <Card className="p-0">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+            <div className="border border-border bg-muted/10">
+              <div className="border-b border-border bg-muted/20 px-6 py-4">
+                <h3 className="flex items-center gap-2 font-bold uppercase tracking-wide text-sm">
+                  <User className="h-4 w-4" />
                   Profile Information
-                </CardTitle>
-                <CardDescription>
+                </h3>
+                <p className="text-xs text-muted-foreground font-mono mt-1">
                   Your account is connected via GitHub OAuth
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-16 w-16 border border-primary">
+                </p>
+              </div>
+
+              <div className="p-6">
+                {/* Avatar and Basic Info */}
+                <div className="flex items-start gap-4">
+                  <Avatar className="h-20 w-20 border border-border">
                     <AvatarImage src={session?.user?.image || ''} />
-                    <AvatarFallback>
+                    <AvatarFallback className="bg-muted font-bold text-lg">
                       {session?.user?.name?.charAt(0) ||
                         session?.user?.email?.charAt(0) ||
                         'U'}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <Label>Name:</Label>
-                      <span className="font-medium">
-                        {session?.user?.name || 'N/A'}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Label>Email:</Label>
-                      <span className="text-sm text-muted-foreground">
-                        {session?.user?.email || 'N/A'}
-                      </span>
+                  <div className="flex-1 space-y-3">
+                    <div>
+                      <div className="text-lg font-bold">
+                        {session?.user?.name || 'Unknown User'}
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Mail className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground font-mono">
+                          {session?.user?.email || 'N/A'}
+                        </span>
+                      </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <Github className="h-4 w-4" />
-                      <Badge variant="outline">GitHub Connected</Badge>
+                      <Badge
+                        variant="outline"
+                        className="font-mono text-xs border-border"
+                      >
+                        GitHub Connected
+                      </Badge>
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </TabsContent>
 
+          {/* Projects Tab */}
           <TabsContent value="projects" className="space-y-4">
-            <Card className="p-0">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  Projects Stats
-                </CardTitle>
-                <CardDescription>
+            <div className="border border-border bg-muted/10">
+              <div className="border-b border-border bg-muted/20 px-6 py-4">
+                <h3 className="flex items-center gap-2 font-bold uppercase tracking-wide text-sm">
+                  <Database className="h-4 w-4" />
+                  Projects Overview
+                </h3>
+                <p className="text-xs text-muted-foreground font-mono mt-1">
                   View your projects and their statistics
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+                </p>
+              </div>
+
+              <div className="p-6">
                 {loading ? (
                   <LoaderScreen />
                 ) : error ? (
-                  <div className="text-center p-4">
-                    <p className="text-destructive mb-2">
+                  <div className="text-center p-6 border border-destructive bg-destructive/10">
+                    <p className="text-destructive mb-3 font-mono text-sm">
                       Failed to load projects
                     </p>
                     <Button
                       onClick={refreshProjects}
                       variant="outline"
                       size="sm"
+                      className="font-mono uppercase text-xs"
                     >
                       Retry
                     </Button>
                   </div>
+                ) : projects.length === 0 ? (
+                  <div className="text-center py-12 border border-dashed border-border bg-muted/20">
+                    <Database className="h-12 w-12 mx-auto mb-3 text-muted-foreground/50" />
+                    <p className="font-mono text-sm text-muted-foreground">
+                      No projects found. Create your first project to get
+                      started!
+                    </p>
+                  </div>
                 ) : (
-                  <>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-4 border bg-muted">
-                        <div className="text-2xl font-medium text-blue-600 ">
-                          {projects.length}
-                        </div>
-                        <div className="text-sm text-blue-600 ">
+                  <div className="grid grid-cols-2 gap-0 border border-border">
+                    <div className="p-6 border-r border-border bg-muted/20">
+                      <div className="flex items-center gap-3 mb-2">
+                        <Database className="h-5 w-5 text-muted-foreground" />
+                        <span className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
                           Total Projects
-                        </div>
+                        </span>
                       </div>
-                      <div className="text-center p-4 border bg-muted">
-                        <div className="text-2xl font-medium text-green-600 ">
-                          {totalVariables}
-                        </div>
-                        <div className="text-sm text-green-600 ">
-                          Environment Variables
-                        </div>
+                      <div className="text-3xl font-bold tabular-nums">
+                        {projects.length}
                       </div>
                     </div>
-
-                    {projects.length === 0 && (
-                      <div className="text-center p-4 text-muted-foreground">
-                        No projects found. Create your first project to get
-                        started!
+                    <div className="p-6 bg-muted/20">
+                      <div className="flex items-center gap-3 mb-2">
+                        <FileText className="h-5 w-5 text-muted-foreground" />
+                        <span className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
+                          Total Variables
+                        </span>
                       </div>
-                    )}
-                  </>
+                      <div className="text-3xl font-bold tabular-nums">
+                        {stats.totalVariables}
+                      </div>
+                    </div>
+                  </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </TabsContent>
 
+          {/* Data Tab */}
           <TabsContent value="data" className="space-y-4">
-            <Card className="p-0">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  Data Management
-                </CardTitle>
-                <CardDescription>
-                  Export your data or manage your account
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="border border-border bg-muted/10">
+              <div className="border-b border-border bg-muted/20 px-6 py-4">
+                <h3 className="flex items-center gap-2 font-bold uppercase tracking-wide text-sm">
+                  <Download className="h-4 w-4" />
+                  Export All Data
+                </h3>
+                <p className="text-xs text-muted-foreground font-mono mt-1">
+                  Download a JSON file containing all your projects and
+                  environment variables.
+                </p>
+              </div>
+
+              <div className="p-6 space-y-6">
+                {/* Export Section */}
                 <Button
                   onClick={handleExportAllData}
                   disabled={exportLoading || loading || projects.length === 0}
-                  className="w-full"
+                  className="w-full font-mono uppercase tracking-wide text-xs"
+                  size="sm"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   {exportLoading ? 'Exporting...' : 'Export All Data'}
                 </Button>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </DialogContent>

@@ -71,50 +71,56 @@ export const VariableRow = memo(
 
     return (
       <>
-        <div className="flex gap-2 items-center">
+        <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
           {/* Key Field */}
-          <SmartVariableInput
-            ref={keyInputRef}
-            variable={variable}
-            index={index}
-            field="key"
-            placeholder="API_KEY"
-            onUpdate={onUpdate}
-            onSmartPaste={onSmartPaste}
-            onNavigateNext={handleNavigateFromKey}
-            onNavigatePrevious={handleNavigateToPreviousRow}
-            autoFocus={index === 0 && !variable.key}
-            label="Key"
-          />
+          <div className="flex-1">
+            <SmartVariableInput
+              ref={keyInputRef}
+              variable={variable}
+              index={index}
+              field="key"
+              placeholder="API_KEY"
+              onUpdate={onUpdate}
+              onSmartPaste={onSmartPaste}
+              onNavigateNext={handleNavigateFromKey}
+              onNavigatePrevious={handleNavigateToPreviousRow}
+              autoFocus={index === 0 && !variable.key}
+              label="Key"
+            />
+          </div>
 
           {/* Value Field with Preview */}
-          <SmartVariableInput
-            ref={valueInputRef}
-            variable={variable}
-            index={index}
-            field="value"
-            type="text"
-            placeholder="your-secret-value"
-            onUpdate={onUpdate}
-            onSmartPaste={onSmartPaste}
-            onNavigateNext={handleNavigateFromValue}
-            onNavigatePrevious={handleNavigateToKey}
-            isVisibleRequired={true}
-            isValueVisible={isValueVisible}
-            onToggleVisibility={onToggleVisibility}
-            label="Value"
-          />
+          <div className="flex-1">
+            <SmartVariableInput
+              ref={valueInputRef}
+              variable={variable}
+              index={index}
+              field="value"
+              type="text"
+              placeholder="your-secret-value"
+              onUpdate={onUpdate}
+              onSmartPaste={onSmartPaste}
+              onNavigateNext={handleNavigateFromValue}
+              onNavigatePrevious={handleNavigateToKey}
+              isVisibleRequired={true}
+              isValueVisible={isValueVisible}
+              onToggleVisibility={onToggleVisibility}
+              label="Value"
+            />
+          </div>
 
           {/* Actions */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onDelete}
-            className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
-            aria-label="Delete variable"
-          >
-            <MinusCircle className="h-4 w-4" />
-          </Button>
+          <div className="flex sm:items-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onDelete}
+              className="size-9 sm:size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+              aria-label="Delete variable"
+            >
+              <MinusCircle className="h-5 w-5 sm:h-4 sm:w-4" />
+            </Button>
+          </div>
         </div>
       </>
     );

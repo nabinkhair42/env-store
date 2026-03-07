@@ -1,15 +1,14 @@
 'use client';
-import dynamic from 'next/dynamic';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LogOut, Settings } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Logo } from './logo';
@@ -36,55 +35,71 @@ export function UserDropdown() {
       <DropdownMenu key={`${showSettingsDialog}-${showLogoutDialog}`}>
         {/* This key is used to force a re-render of the dropdown menu when the dialogs are closed */}
         <DropdownMenuTrigger asChild>
-          <Avatar className="h-8 w-8 border cursor-pointer">
-            <AvatarImage
-              src={session?.user?.image || ''}
-              alt={session?.user?.name || ''}
-            />
-          </Avatar>
+          <button className="group relative cursor-pointer outline-none">
+            <Avatar className="h-8 w-8 border border-border transition-colors group-hover:border-foreground/20">
+              <AvatarImage
+                src={session?.user?.image || ''}
+                alt={session?.user?.name || ''}
+              />
+            </Avatar>
+          </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem className="flex flex-col items-start">
-            <div className="flex flex-col items-start">
-              <span className="text-sm font-medium">{session?.user?.name}</span>
-              <span className="text-xs text-muted-foreground">
-                {session?.user?.email}
-              </span>
+        <DropdownMenuContent align="end" className="w-56">
+          {/* User Info Section */}
+          <div className="px-3 py-3 border-b border-border">
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10 border border-border">
+                <AvatarImage
+                  src={session?.user?.image || ''}
+                  alt={session?.user?.name || ''}
+                />
+              </Avatar>
+              <div className="flex flex-col overflow-hidden">
+                <span className="text-sm font-semibold truncate">
+                  {session?.user?.name}
+                </span>
+                <span className="text-xs text-muted-foreground truncate">
+                  {session?.user?.email}
+                </span>
+              </div>
             </div>
-          </DropdownMenuItem>
+          </div>
+
+          {/* Navigation Items */}
           {!isPathnameDashboard && (
-            <>
-              <DropdownMenuSeparator />
+            <div className="py-1">
               <DropdownMenuItem
                 onClick={() => router.push('/dashboard')}
                 className="cursor-pointer"
               >
                 <Logo size="sm" />
-                Go to Dashboard
+                <span>Go to Dashboard</span>
               </DropdownMenuItem>
-            </>
+            </div>
           )}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setShowSettingsDialog(true);
-              setShowLogoutDialog(false);
-            }}
-            className="cursor-pointer"
-          >
-            <Settings />
-            Settings
-          </DropdownMenuItem>
 
-          <DropdownMenuSeparator />
+          {/* Settings & Logout */}
+          <div className="border-t border-border py-1">
+            <DropdownMenuItem
+              onClick={() => {
+                setShowSettingsDialog(true);
+                setShowLogoutDialog(false);
+              }}
+              className="cursor-pointer hover:bg-muted"
+            >
+              <Settings className="h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={() => setShowLogoutDialog(true)}
-            className="cursor-pointer"
-          >
-            <LogOut />
-            Logout
-          </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => setShowLogoutDialog(true)}
+              className="cursor-pointer hover:bg-muted"
+              variant="destructive"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
+            </DropdownMenuItem>
+          </div>
         </DropdownMenuContent>
       </DropdownMenu>
 

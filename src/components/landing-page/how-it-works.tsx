@@ -1,58 +1,82 @@
-import { Workflow, RotateCw } from 'lucide-react';
-import { FaGithub } from 'react-icons/fa6';
+import { ArrowRight } from 'lucide-react';
 
-interface HowItWorksProps {
-  steps?: {
-    title: string;
-    body: string;
-    icon?: React.ReactNode;
-  }[];
-}
+const steps = [
+  {
+    number: '01',
+    title: 'Sign in with GitHub',
+    description:
+      'Authenticate securely using your GitHub account. No password, no setup.',
+  },
+  {
+    number: '02',
+    title: 'Create projects',
+    description:
+      'Organize variables by project and environment (dev, staging, prod).',
+  },
+  {
+    number: '03',
+    title: 'Add variables',
+    description:
+      'Paste your .env content or add variables one by one. Search and edit anytime.',
+  },
+  {
+    number: '04',
+    title: 'Export & recover',
+    description:
+      'Copy individual values or export full .env files when setting up new machines.',
+  },
+];
 
-export default function HowItWorks({
-  steps = [
-    {
-      title: 'Sign in',
-      body: 'Use your GitHub account to access the app.',
-      icon: <FaGithub className="h-6 w-6" />,
-    },
-    {
-      title: 'Create a project',
-      body: 'Add variables as KEY=VALUE, grouped by project.',
-      icon: <Workflow className="h-6 w-6" />,
-    },
-    {
-      title: 'Recover anytime',
-      body: 'Copy single values or export a full .env when needed.',
-      icon: <RotateCw className="h-6 w-6" />,
-    },
-  ],
-}: HowItWorksProps) {
+export default function HowItWorks() {
   return (
-    <section className="px-6 py-24 border-t border-dashed">
-      <div className="text-center mb-16">
-        <h2 className="text-4xl font-medium text-foreground mb-4">
-          How it works
-        </h2>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Get started in minutes with our simple three-step process
-        </p>
+    <section className="relative">
+      {/* Section header */}
+      <div className="mx-auto w-full max-w-6xl px-6">
+        <div className="pb-6 pt-16">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            How it works
+          </p>
+          <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
+            From setup to recovery in four steps
+          </h2>
+          <p className="mt-2 max-w-2xl text-base text-muted-foreground">
+            Simple workflow designed for developers who need quick access to
+            their configs.
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-12 sm:grid-cols-3 max-w-5xl mx-auto">
-        {steps.map((step, index) => (
-          <div key={index} className="space-y-2">
-            <div className="flex justify-start">
-              <div className="p-1 rounded bg-muted text-foreground">
-                {step.icon}
+      {/* Steps */}
+      <div className="rail-bounded border-t border-dashed border-border">
+        <div className="grid sm:grid-cols-2">
+          {steps.map((step, i) => (
+            <div
+              key={i}
+              className={`group px-6 py-8 transition-colors hover:bg-muted/20 relative
+                ${i % 2 !== 0 ? 'sm:border-l sm:border-dashed sm:border-border' : ''}
+                ${i >= 2 ? 'sm:border-t sm:border-dashed sm:border-border' : ''}
+                ${i >= 1 ? 'max-sm:border-t max-sm:border-dashed max-sm:border-border' : ''}
+              `}
+            >
+              {/* Step number */}
+              <div className="mb-4 flex items-center gap-3">
+                <span className="text-3xl font-bold text-muted-foreground/20 tabular-nums">
+                  {step.number}
+                </span>
+                {i < steps.length - 1 && (
+                  <ArrowRight className="hidden sm:block ml-auto h-4 w-4 text-muted-foreground/40" />
+                )}
               </div>
+
+              <h3 className="text-[15px] font-semibold tracking-tight">
+                {step.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {step.description}
+              </p>
             </div>
-            <h3 className="text-xl font-medium text-foreground">
-              {step.title}
-            </h3>
-            <p className="text-muted-foreground leading-relaxed">{step.body}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

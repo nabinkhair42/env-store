@@ -46,7 +46,7 @@ export default function UseCases({
         {items.map((item, index) => (
           <div key={index}>
             <div className="flex items-start gap-4">
-              <div className="p-2 rounded-lg bg-muted text-foreground shrink-0">
+              <div className="p-2 bg-muted text-foreground shrink-0">
                 {item.icon}
               </div>
               <div className="flex-1">

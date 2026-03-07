@@ -1,8 +1,16 @@
 'use client';
 
 import { EnvEditor } from '@/components/env-editor/index';
-import LoaderScreen from '@/components/ui/loader';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
+import LoaderScreen from '@/components/ui/loader';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
 import { ChevronLeft } from 'lucide-react';
@@ -63,23 +71,34 @@ export default function ProjectPage() {
   }
 
   return (
-    <div className="min-h-svh">
-      <div className="max-w-4xl mx-auto py-8 border border-dashed border-t-0 border-b-0">
-        <div className="space-y-6">
-          {/* Back Navigation */}
-          <div className="flex items-center gap-4 px-4">
-            <Link href="/dashboard">
-              <Button variant="outline" size="sm">
-                <ChevronLeft className="h-4 w-4" />
-                Back to Projects
-              </Button>
-            </Link>
+    <div className="page-rails min-h-svh">
+      {/* Breadcrumb Navigation */}
+      <div className="rail-bounded">
+        <div className="px-6 py-4">
+          <div className="mx-auto flex w-full max-w-6xl items-start justify-between gap-4">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link href="/dashboard" className="flex items-center gap-1">
+                      <span>Dashboard</span>
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{project.name}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
-
-          {/* Environment Editor */}
-          <EnvEditor project={project} onUpdate={handleProjectUpdate} />
         </div>
       </div>
+
+      <div className="section-divider" aria-hidden="true" />
+
+      {/* Environment Editor */}
+      <EnvEditor project={project} onUpdate={handleProjectUpdate} />
     </div>
   );
 }

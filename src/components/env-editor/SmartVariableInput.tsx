@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { parseEnvFile } from '@/lib/utils/env-parser';
 import { EnvVariable } from '@/lib/zod';
 import { Eye, EyeOff } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import React, {
   forwardRef,
   useCallback,
@@ -200,9 +201,17 @@ export const SmartVariableInput = forwardRef<
           const validVariables = variables.filter((v) => v.key.length > 0);
           if (validVariables.length > 0) {
             onSmartPaste(validVariables);
+            toast.success(
+              `Pasted ${validVariables.length} variable${validVariables.length !== 1 ? 's' : ''}`
+            );
             return;
           }
         }
+
+        // If we detected bulk paste but couldn't parse anything, show error
+        toast.error(
+          'Could not parse the pasted content. Please check the format.'
+        );
       }
 
       // Single value paste - handle normally but with smart navigation
@@ -311,15 +320,15 @@ export const SmartVariableInput = forwardRef<
               <Button
                 type="button"
                 variant="ghost"
-                size="icon"
+                size="sm"
                 onClick={onToggleVisibility}
                 className="size-3"
-                aria-label="Toggle visibility"
+                aria-label={isValueVisible ? 'Hide value' : 'Show value'}
               >
                 {isValueVisible ? (
-                  <EyeOff className="size-4" />
+                  <EyeOff className="size-3" />
                 ) : (
-                  <Eye className="size-4" />
+                  <Eye className="size-3" />
                 )}
               </Button>
             )}

@@ -10,6 +10,7 @@ import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
 import { EnvVariable } from '@/lib/zod';
 import {
   AlertCircle,
+  AlertTriangleIcon,
   Check,
   Copy,
   Download,
@@ -32,6 +33,8 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   const [saveStatus, setSaveStatus] = useState<
     'idle' | 'saving' | 'saved' | 'error'
   >('idle');
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   // Custom hooks for state management
   const {
@@ -62,6 +65,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   // Handlers
   const handleAddVariable = useCallback(() => {
     addVariable();
+    setHasUnsavedChanges(true);
     // Shift all existing visibility indices by 1 since we added at the top
     shiftIndices(1);
   }, [addVariable, shiftIndices]);
@@ -80,8 +84,33 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
 
   const confirmDeleteVariable = useCallback(() => {
     deleteVariable(deleteConfirm.index);
+    setHasUnsavedChanges(true);
     setDeleteConfirm({ open: false, index: -1, varName: '' });
   }, [deleteVariable, deleteConfirm.index]);
+
+  const handleUpdateVariable = useCallback(
+    (index: number, field: keyof EnvVariable, value: string) => {
+      updateVariable(index, field, value);
+      setHasUnsavedChanges(true);
+    },
+    [updateVariable]
+  );
+
+  const formatLastSaved = (date: Date) => {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+
+    if (diffMins < 1) return 'just now';
+    if (diffMins === 1) return '1 minute ago';
+    if (diffMins < 60) return `${diffMins} minutes ago`;
+
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours === 1) return '1 hour ago';
+    if (diffHours < 24) return `${diffHours} hours ago`;
+
+    return date.toLocaleString();
+  };
 
   const saveProject = useCallback(async () => {
     setSaveStatus('saving');
@@ -90,6 +119,8 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
         variables: validVariables,
       });
       setSaveStatus('saved');
+      setLastSaved(new Date());
+      setHasUnsavedChanges(false);
       onUpdate();
 
       // Reset status after 2 seconds
@@ -149,80 +180,111 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
 
   return (
     <div>
-      <div className="border-b pb-6 px-4 border-dashed">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="space-y-1">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              {project.name}
-            </h1>
-            <p className="text-muted-foreground">
-              {project.description ||
-                'Manage environment variables for this project'}
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <Button variant="outline" onClick={copyToClipboard}>
-              <Copy className="h-4 w-4 mr-2" />
-              Copy All
-            </Button>
-            <Button variant="outline" onClick={handleDownload}>
-              <Download className="h-4 w-4 mr-2" />
-              Export .env
-            </Button>
-            <Button
-              onClick={saveProject}
-              disabled={saveStatus === 'saving'}
-              variant={
-                saveStatus === 'error'
-                  ? 'destructive'
-                  : saveStatus === 'saved'
-                    ? 'default'
-                    : 'default'
-              }
-              className={
-                saveStatus === 'saved' ? 'bg-green-600 hover:bg-green-700' : ''
-              }
-            >
-              {saveStatus === 'saving' && (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              )}
-              {saveStatus === 'saved' && (
-                <>
-                  <Check className="h-4 w-4 mr-2" />
-                  Saved!
-                </>
-              )}
-              {saveStatus === 'error' && (
-                <>
-                  <AlertCircle className="h-4 w-4 mr-2" />
-                  Error
-                </>
-              )}
-              {saveStatus === 'idle' && (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </>
-              )}
-            </Button>
+      {/* Project Header */}
+      <div className="rail-bounded">
+        <div className="px-6 py-6 bg-muted/20">
+          <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <div className="space-y-1">
+              <div className="space-y-1">
+                <h1 className="text-xl font-bold uppercase tracking-tight">
+                  {project.name}
+                </h1>
+              </div>
+              <div className="space-y-1.5">
+                <p className="text-sm text-muted-foreground">
+                  {project.description ||
+                    'Manage environment variables for this project'}
+                </p>
+                {lastSaved && (
+                  <p className="text-xs text-muted-foreground/70">
+                    Last saved: {formatLastSaved(lastSaved)}
+                  </p>
+                )}
+                {hasUnsavedChanges && saveStatus === 'idle' && (
+                  <p className="text-xs font-semibold text-amber-600 dark:text-amber-500">
+                    <AlertTriangleIcon /> Unsaved changes
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex items-stretch w-fit border border-border">
+              <div className="flex items-center">
+                <Button
+                  variant="outline"
+                  onClick={copyToClipboard}
+                  title="Copy to clipboard"
+                >
+                  <Copy className="size-4" />
+                  <span className="text-xs uppercase tracking-wide">Copy</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleDownload}
+                  title="Export as .env file"
+                >
+                  <Download className="size-4" />
+                  <span className="text-xs uppercase tracking-wide">
+                    Export
+                  </span>
+                </Button>
+                <Button
+                  onClick={saveProject}
+                  disabled={saveStatus === 'saving'}
+                  variant={saveStatus === 'error' ? 'destructive' : 'outline'}
+                >
+                  {saveStatus === 'saving' && (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      <span className="text-xs uppercase tracking-wide">
+                        Saving
+                      </span>
+                    </>
+                  )}
+                  {saveStatus === 'saved' && (
+                    <>
+                      <Check className="size-4" />
+                      <span className="text-xs uppercase tracking-wide">
+                        Saved!
+                      </span>
+                    </>
+                  )}
+                  {saveStatus === 'error' && (
+                    <>
+                      <AlertCircle className="size-4" />
+                      <span className="text-xs uppercase tracking-wide">
+                        Retry
+                      </span>
+                    </>
+                  )}
+                  {saveStatus === 'idle' && (
+                    <>
+                      <Save className="size-4" />
+                      <span className="text-xs uppercase tracking-wide">
+                        Save
+                      </span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      <div className="section-divider" aria-hidden="true" />
 
       <VariablesList
         variables={variables}
         visibleValues={visibleValues}
         onAddVariable={handleAddVariable}
-        onUpdateVariable={updateVariable}
+        onUpdateVariable={handleUpdateVariable}
         onToggleVisibility={toggleVisibility}
         onDeleteVariable={handleDeleteVariable}
         onSmartPaste={handleSmartPaste}
       />
 
-      <div className="border-b pb-6 px-4 border-dashed" />
+      <div className="section-divider" aria-hidden="true" />
+
       <FileUploadSection onFileVariables={handleFileVariables} />
 
       {/* Variable Delete Confirmation Dialog */}

@@ -1,64 +1,85 @@
-import { Copy, Database, Globe } from 'lucide-react';
+'use client';
+
+import { Copy, Database, Globe, Shield, Zap } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa6';
 
-interface ValuePropsProps {
-  items?: {
-    title: string;
-    desc: string;
-    icon?: React.ReactNode;
-  }[];
-}
-
-export default function ValueProps({
-  items = [
+export default function ValueProps() {
+  const features = [
     {
       title: 'Project-scoped storage',
-      desc: 'Keep keys grouped by project and environment (local, staging, prod).',
-      icon: <Database className="h-6 w-6" />,
+      desc: 'Keep keys grouped by project and environment (dev, staging, prod).',
+      icon: Database,
     },
     {
       title: 'Fast copy & export',
-      desc: 'Copy single values or export a full .env when setting up a new machine.',
-      icon: <Copy className="h-6 w-6" />,
+      desc: 'Copy values or export .env files instantly with one click.',
+      icon: Copy,
     },
     {
-      title: 'GitHub sign-in',
-      desc: 'Quick access from any browser.',
-      icon: <FaGithub className="h-6 w-6" />,
+      title: 'GitHub OAuth',
+      desc: 'Quick and secure access from any browser.',
+      icon: FaGithub,
     },
     {
       title: 'No CLI required',
-      desc: 'Just open the web app and paste.',
-      icon: <Globe className="h-6 w-6" />,
+      desc: 'Simple web interface - just open, paste, and save.',
+      icon: Globe,
     },
-  ],
-}: ValuePropsProps) {
+    {
+      title: 'Secure by design',
+      desc: 'Your data stays private with industry-standard encryption.',
+      icon: Shield,
+    },
+    {
+      title: 'Lightning fast',
+      desc: 'Instant search, copy, and export. No waiting around.',
+      icon: Zap,
+    },
+  ];
   return (
-    <section className="px-6 py-24 border-t border-dashed">
-      <div className="text-center mb-16">
-        <h2 className="text-4xl font-medium text-foreground mb-4">
-          Why ENV Store?
-        </h2>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Built for developers who need reliable, secure access to their
-          environment variables
-        </p>
+    <section className="relative">
+      {/* Section header */}
+      <div className="mx-auto w-full max-w-6xl px-6">
+        <div className="pb-6 pt-16">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Features
+          </p>
+          <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
+            Everything you need to manage environment variables
+          </h2>
+          <p className="mt-2 max-w-2xl text-base text-muted-foreground">
+            Built for developers who need reliable, secure access to their
+            project configurations.
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((item, index) => (
-          <div key={index} className="space-y-2">
-            <div className="p-1 rounded bg-muted text-foreground w-fit">
-              {item.icon}
+      {/* Grid with dashed internal dividers */}
+      <div className="rail-bounded border-t border-dashed border-border">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((item, i) => (
+            <div
+              key={i}
+              className={`group px-6 py-8 transition-colors hover:bg-muted/20
+                ${i % 3 !== 0 ? 'lg:border-l lg:border-dashed lg:border-border' : ''}
+                ${i % 2 !== 0 ? 'sm:max-lg:border-l sm:max-lg:border-dashed sm:max-lg:border-border' : ''}
+                ${i >= 3 ? 'lg:border-t lg:border-dashed lg:border-border' : ''}
+                ${i >= 2 ? 'sm:max-lg:border-t sm:max-lg:border-dashed sm:max-lg:border-border' : ''}
+                ${i >= 1 ? 'max-sm:border-t max-sm:border-dashed max-sm:border-border' : ''}
+              `}
+            >
+              <div className="mb-4 inline-flex size-10 items-center justify-center rounded-xl border border-border bg-muted/30 text-muted-foreground transition-colors group-hover:text-foreground">
+                <item.icon className="h-[18px] w-[18px]" strokeWidth={1.5} />
+              </div>
+              <h3 className="text-[15px] font-semibold tracking-tight">
+                {item.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {item.desc}
+              </p>
             </div>
-            <h3 className="text-lg font-semibold text-foreground">
-              {item.title}
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {item.desc}
-            </p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

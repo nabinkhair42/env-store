@@ -1,23 +1,25 @@
 import Hero from './hero';
-import ValueProps from './value-props';
 import HowItWorks from './how-it-works';
-import UseCases from './use-cases';
-import SecurityNotes from './security-notes';
+import ValueProps from './value-props';
 import FAQ from './faq';
+import CTASection from './cta-section';
 import SiteFooter from '../layouts/site-footer';
 
 export default function LandingShell() {
   return (
-    <div className="min-h-svh ">
-      <main className="border border-dashed border-t-0 border-b-0 max-w-4xl mx-auto">
+    <>
+      <div className="page-rails flex flex-col">
         <Hero />
-        <ValueProps />
+        <div className="section-divider" aria-hidden="true" />
         <HowItWorks />
-        <UseCases />
-        <SecurityNotes />
+        <div className="section-divider" aria-hidden="true" />
+        <ValueProps />
+        <div className="section-divider" aria-hidden="true" />
         <FAQ />
-      </main>
+        <div className="section-divider" aria-hidden="true" />
+        <CTASection />
+      </div>
       <SiteFooter />
-    </div>
+    </>
   );
 }
