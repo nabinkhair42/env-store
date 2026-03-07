@@ -1,8 +1,13 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { EnvVariable } from '@/lib/zod';
 
 export function useVariableManager(initialVariables: EnvVariable[] = []) {
   const [variables, setVariables] = useState<EnvVariable[]>(initialVariables);
+
+  // Sync with external changes (e.g., after successful save)
+  useEffect(() => {
+    setVariables(initialVariables);
+  }, [initialVariables]);
 
   const addVariable = useCallback(() => {
     setVariables((prev) => [{ key: '', value: '' }, ...prev]);

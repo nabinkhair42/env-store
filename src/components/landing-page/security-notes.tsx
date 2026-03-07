@@ -1,4 +1,4 @@
-import { CheckCircle2 } from 'lucide-react';
+import { CheckmarkCircle01 } from 'hugeicons-react';
 
 interface SecurityNotesProps {
   notes?: string[];
@@ -27,7 +27,7 @@ export default function SecurityNotes({
         <div className="space-y-2 max-w-2xl mx-auto">
           {notes.map((note, index) => (
             <div key={index} className="flex items-start gap-1">
-              <CheckCircle2 className="size-4 text-green-500 shrink-0 mt-1" />
+              <CheckmarkCircle01 className="size-4 text-green-500 shrink-0 mt-1" />
               <span className="text-foreground leading-relaxed">{note}</span>
             </div>
           ))}

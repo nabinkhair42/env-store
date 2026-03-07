@@ -7,7 +7,7 @@ import LoaderScreen from '@/components/ui/loader';
 import { useAppContext } from '@/contexts/app-context';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
-import { FileText, Plus } from 'lucide-react';
+import { FileText, Add01 } from 'hugeicons-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -63,7 +63,7 @@ export function Dashboard() {
                 onClick={() => setShowProjectForm(true)}
                 className="w-full md:w-auto"
               >
-                <Plus className="h-4 w-4" />
+                <Add01 className="h-4 w-4" />
                 <span className="text-xs uppercase tracking-wide">
                   New Project
                 </span>
@@ -92,7 +92,7 @@ export function Dashboard() {
                   </p>
                 </div>
                 <Button onClick={() => setShowProjectForm(true)}>
-                  <Plus className="h-4 w-4" />
+                  <Add01 className="h-4 w-4" />
                   <span className="text-xs uppercase tracking-wide">
                     Create Project
                   </span>

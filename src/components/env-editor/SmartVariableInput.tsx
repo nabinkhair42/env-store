@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { parseEnvFile } from '@/lib/utils/env-parser';
 import { EnvVariable } from '@/lib/zod';
-import { Eye, EyeOff } from 'lucide-react';
+import { View, ViewOff } from 'hugeicons-react';
 import { toast } from 'react-hot-toast';
 import React, {
   forwardRef,
@@ -326,9 +326,9 @@ export const SmartVariableInput = forwardRef<
                 aria-label={isValueVisible ? 'Hide value' : 'Show value'}
               >
                 {isValueVisible ? (
-                  <EyeOff className="size-3" />
+                  <ViewOff className="size-3" />
                 ) : (
-                  <Eye className="size-3" />
+                  <View className="size-3" />
                 )}
               </Button>
             )}

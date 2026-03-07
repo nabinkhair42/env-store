@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, Settings } from 'lucide-react';
+import { Logout01, Settings01 } from 'hugeicons-react';
 import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
@@ -87,7 +87,7 @@ export function UserDropdown() {
               }}
               className="cursor-pointer hover:bg-muted"
             >
-              <Settings className="h-4 w-4" />
+              <Settings01 className="h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
 
@@ -96,7 +96,7 @@ export function UserDropdown() {
               className="cursor-pointer hover:bg-muted"
               variant="destructive"
             >
-              <LogOut className="h-4 w-4" />
+              <Logout01 className="h-4 w-4" />
               <span>Logout</span>
             </DropdownMenuItem>
           </div>

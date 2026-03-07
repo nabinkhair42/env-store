@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { EnvVariable } from '@/lib/zod';
-import { MinusCircle } from 'lucide-react';
+import { RemoveCircle } from 'hugeicons-react';
 import { forwardRef, memo, useImperativeHandle, useRef } from 'react';
 import {
   SmartVariableInput,
@@ -118,7 +118,7 @@ export const VariableRow = memo(
               className="size-9 sm:size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
               aria-label="Delete variable"
             >
-              <MinusCircle className="h-5 w-5 sm:h-4 sm:w-4" />
+              <RemoveCircle className="h-5 w-5 sm:h-4 sm:w-4" />
             </Button>
           </div>
         </div>

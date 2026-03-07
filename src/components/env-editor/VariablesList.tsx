@@ -1,7 +1,7 @@
 'use client';
 
 import { memo, useRef, useEffect } from 'react';
-import { Plus, FileText, Keyboard } from 'lucide-react';
+import { Add01, FileText, Keyboard01 } from 'hugeicons-react';
 import { Button } from '@/components/ui/button';
 import {
   HoverCard,
@@ -80,7 +80,7 @@ export const VariablesList = memo(function VariablesList({
               </p>
             </div>
             <Button onClick={onAddVariable} className="w-full md:w-auto">
-              <Plus className="h-4 w-4" />
+              <Add01 className="h-4 w-4" />
               <span className="text-xs uppercase tracking-wide">
                 Add Variable
               </span>
@@ -105,7 +105,7 @@ export const VariablesList = memo(function VariablesList({
                 </p>
               </div>
               <Button onClick={onAddVariable} variant="outline">
-                <Plus className="h-4 w-4" />
+                <Add01 className="h-4 w-4" />
                 <span className="text-xs uppercase tracking-wide">
                   Add Variable
                 </span>
@@ -134,13 +134,13 @@ export const VariablesList = memo(function VariablesList({
                     className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground"
                     aria-label="Show keyboard shortcuts"
                   >
-                    <Keyboard className="h-3.5 w-3.5" />
+                    <Keyboard01 className="h-3.5 w-3.5" />
                   </Button>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80">
                   <div className="space-y-2">
                     <h4 className="font-semibold text-sm flex items-center gap-2">
-                      <Keyboard className="h-4 w-4" />
+                      <Keyboard01 className="h-4 w-4" />
                       Keyboard Shortcuts
                     </h4>
                     <div className="space-y-1 text-xs">

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { memo, useRef, useState } from 'react';
-import { Upload, Info } from 'lucide-react';
+import { Upload02, InformationCircle } from 'hugeicons-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {
@@ -95,7 +95,7 @@ export const FileUploadSection = memo(function FileUploadSection({
       <div className="mx-auto w-full max-w-6xl px-6 py-6">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <Upload className="h-5 w-5 text-primary" />
+            <Upload02 className="h-5 w-5 text-primary" />
             <h2 className="text-lg font-bold tracking-tight">
               Import from File
             </h2>
@@ -107,7 +107,7 @@ export const FileUploadSection = memo(function FileUploadSection({
                   className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground"
                   aria-label="Show supported file formats"
                 >
-                  <Info className="h-3.5 w-3.5" />
+                  <InformationCircle className="h-3.5 w-3.5" />
                 </Button>
               </HoverCardTrigger>
               <HoverCardContent className="w-80">
@@ -168,7 +168,7 @@ export const FileUploadSection = memo(function FileUploadSection({
                 className="hidden"
               />
               <div className="text-center">
-                <Upload
+                <Upload02
                   className={`h-8 w-8 mx-auto mb-4 transition-colors
                   ${dragActive ? 'text-primary' : 'text-muted-foreground'}
                 `}

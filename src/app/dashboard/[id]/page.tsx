@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import LoaderScreen from '@/components/ui/loader';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
-import { ChevronLeft } from 'lucide-react';
+import { ArrowLeft01 } from 'hugeicons-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -33,7 +33,12 @@ export default function ProjectPage() {
   useEffect(() => {
     if (!loading && projects.length > 0) {
       const foundProject = projects.find((p) => p._id === projectId);
-      setProject(foundProject || null);
+      if (foundProject) {
+        // Always update to latest from server
+        setProject(foundProject);
+      } else {
+        setProject(null);
+      }
       setProjectLoading(false);
     } else if (!loading) {
       setProjectLoading(false);
@@ -61,7 +66,7 @@ export default function ProjectPage() {
           </p>
           <Link href="/dashboard">
             <Button>
-              <ChevronLeft className="h-4 w-4" />
+              <ArrowLeft01 className="h-4 w-4" />
               Back to Projects
             </Button>
           </Link>

@@ -15,12 +15,6 @@ export default async function Hero() {
       {/* Subtle glow */}
       <div className="hero-glow" aria-hidden="true" />
 
-      {/* Badge */}
-      <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-muted/30 px-3 py-1">
-        <span className="size-1.5 rounded-full bg-emerald-500/60 animate-pulse" />
-        <span className="text-xs text-foreground/70">Open Source</span>
-      </div>
-
       {/* Main headline */}
       <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
         Your <span className="text-muted-foreground">.env</span> files,

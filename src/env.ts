@@ -6,6 +6,9 @@ const EnvSchema = z.object({
   AUTH_GITHUB_SECRET: z.string().min(1),
   MONGODB_URI: z.string().url().or(z.string().startsWith('mongodb')),
   DATABASE_NAME: z.string().min(1).default('env-store'),
+  ENCRYPTION_SECRET: z
+    .string()
+    .min(32, 'Encryption secret must be at least 32 characters'),
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
@@ -26,6 +29,7 @@ const raw = STRICT_VALIDATION
       MONGODB_URI: process.env.MONGODB_URI,
       NODE_ENV: process.env.NODE_ENV,
       DATABASE_NAME: process.env.DATABASE_NAME,
+      ENCRYPTION_SECRET: process.env.ENCRYPTION_SECRET,
     }
   : {
       AUTH_SECRET: process.env.AUTH_SECRET ?? 'dev-secret',
@@ -34,6 +38,9 @@ const raw = STRICT_VALIDATION
       MONGODB_URI:
         process.env.MONGODB_URI ?? 'mongodb://localhost:27017/env-store',
       NODE_ENV: process.env.NODE_ENV ?? 'development',
+      ENCRYPTION_SECRET:
+        process.env.ENCRYPTION_SECRET ??
+        'dev-encryption-secret-min-32-chars-long',
     };
 
 const parsed = EnvSchema.safeParse(raw);

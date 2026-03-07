@@ -10,13 +10,13 @@ import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
 import { EnvVariable } from '@/lib/zod';
 import {
   AlertCircle,
-  AlertTriangleIcon,
-  Check,
-  Copy,
-  Download,
-  Loader2,
-  Save,
-} from 'lucide-react';
+  AlertTriangle,
+  Tick01,
+  Copy01,
+  Download01,
+  Loading03,
+  Save01,
+} from 'hugeicons-react';
 import { useCallback, useMemo, useState } from 'react';
 import { FileUploadSection } from './FileUploadSection';
 import { VariablesList } from './VariablesList';
@@ -115,16 +115,23 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   const saveProject = useCallback(async () => {
     setSaveStatus('saving');
     try {
-      await updateProject(project._id as string, {
+      const updatedProject = await updateProject(project._id as string, {
         variables: validVariables,
       });
-      setSaveStatus('saved');
-      setLastSaved(new Date());
-      setHasUnsavedChanges(false);
-      onUpdate();
 
-      // Reset status after 2 seconds
-      setTimeout(() => setSaveStatus('idle'), 2000);
+      if (updatedProject) {
+        setSaveStatus('saved');
+        setLastSaved(new Date());
+        setHasUnsavedChanges(false);
+
+        // Call onUpdate to refresh parent state
+        onUpdate();
+
+        // Reset status after 2 seconds
+        setTimeout(() => setSaveStatus('idle'), 2000);
+      } else {
+        throw new Error('Update failed');
+      }
     } catch (error) {
       console.error('Failed to save project:', error);
       setSaveStatus('error');
@@ -201,8 +208,8 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                   </p>
                 )}
                 {hasUnsavedChanges && saveStatus === 'idle' && (
-                  <p className="text-xs font-semibold text-amber-600 dark:text-amber-500">
-                    <AlertTriangleIcon /> Unsaved changes
+                  <p className="text-xs font-semibold text-amber-600 dark:text-amber-500 flex items-center gap-1">
+                    <AlertTriangle className="size-3" /> Unsaved changes
                   </p>
                 )}
               </div>
@@ -214,7 +221,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                   onClick={copyToClipboard}
                   title="Copy to clipboard"
                 >
-                  <Copy className="size-4" />
+                  <Copy01 className="size-4" />
                   <span className="text-xs uppercase tracking-wide">Copy</span>
                 </Button>
                 <Button
@@ -222,7 +229,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                   onClick={handleDownload}
                   title="Export as .env file"
                 >
-                  <Download className="size-4" />
+                  <Download01 className="size-4" />
                   <span className="text-xs uppercase tracking-wide">
                     Export
                   </span>
@@ -234,7 +241,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                 >
                   {saveStatus === 'saving' && (
                     <>
-                      <Loader2 className="size-4 animate-spin" />
+                      <Loading03 className="size-4 animate-spin" />
                       <span className="text-xs uppercase tracking-wide">
                         Saving
                       </span>
@@ -242,7 +249,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                   )}
                   {saveStatus === 'saved' && (
                     <>
-                      <Check className="size-4" />
+                      <Tick01 className="size-4" />
                       <span className="text-xs uppercase tracking-wide">
                         Saved!
                       </span>
@@ -258,7 +265,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                   )}
                   {saveStatus === 'idle' && (
                     <>
-                      <Save className="size-4" />
+                      <Save01 className="size-4" />
                       <span className="text-xs uppercase tracking-wide">
                         Save
                       </span>

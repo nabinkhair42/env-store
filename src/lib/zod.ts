@@ -1,13 +1,7 @@
 import { z } from 'zod';
 
 const EnvVariableSchema = z.object({
-  key: z
-    .string()
-    .min(1, 'Key is required')
-    .regex(
-      /^[A-Z_][A-Z0-9_]*$/,
-      'Key must be uppercase letters, numbers, and underscores only'
-    ),
+  key: z.string(),
   value: z.string(),
   description: z.string().optional(),
 });

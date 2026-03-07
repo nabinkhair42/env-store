@@ -46,11 +46,13 @@ export function useProjects(): UseProjectsState & UseProjectsActions {
     fetchProjects();
   }, [fetchProjects]);
 
+  // 5.9 Use functional setState updates - ensures stable callbacks
   const createProject = useCallback(
     async (data: ProjectInput): Promise<IProject | null> => {
       setState((prev) => ({ ...prev, loading: true, error: null }));
       try {
         const { project, message } = await projectsApi.createProject(data);
+        // 5.9 Functional update for correct state
         setState((prev) => ({
           ...prev,
           projects: [project, ...prev.projects],
@@ -68,20 +70,34 @@ export function useProjects(): UseProjectsState & UseProjectsActions {
         return null;
       }
     },
-    []
+    [] // 5.9 No dependencies needed with functional updates
   );
 
   const updateProject = useCallback(
     async (id: string, data: Partial<IProject>): Promise<IProject | null> => {
+      // Optimistic update
+      setState((prev) => ({
+        ...prev,
+        projects: prev.projects.map((p) =>
+          p._id === id ? { ...p, ...data } : p
+        ),
+      }));
+
       try {
         const { project } = await projectsApi.updateProject(id, data);
+
+        // Update with server response
         setState((prev) => ({
           ...prev,
           projects: prev.projects.map((p) => (p._id === id ? project : p)),
         }));
-        toast.success(project.name + ' updated successfully');
+
+        toast.success('Project updated successfully');
         return project;
       } catch (error) {
+        // Revert optimistic update on error
+        await fetchProjects();
+
         const errorMessage =
           error instanceof ApiError
             ? error.message
@@ -90,7 +106,7 @@ export function useProjects(): UseProjectsState & UseProjectsActions {
         return null;
       }
     },
-    []
+    [fetchProjects]
   );
 
   const deleteProject = useCallback(async (id: string): Promise<boolean> => {

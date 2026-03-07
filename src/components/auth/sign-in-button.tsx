@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Loader } from 'lucide-react';
+import { Loading03 } from 'hugeicons-react';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { FaGithub } from 'react-icons/fa6';
@@ -28,7 +28,7 @@ export function SignInButton() {
     >
       {isLoading ? (
         <>
-          <Loader className="h-5 w-5 animate-spin" /> Signing In
+          <Loading03 className="h-5 w-5 animate-spin" /> Signing In
         </>
       ) : (
         <>

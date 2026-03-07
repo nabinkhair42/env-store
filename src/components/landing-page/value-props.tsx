@@ -1,6 +1,12 @@
 'use client';
 
-import { Copy, Database, Globe, Shield, Zap } from 'lucide-react';
+import {
+  Copy01,
+  Database,
+  Globe01,
+  SecurityCheck,
+  Lightning01,
+} from 'hugeicons-react';
 import { FaGithub } from 'react-icons/fa6';
 
 export default function ValueProps() {
@@ -13,7 +19,7 @@ export default function ValueProps() {
     {
       title: 'Fast copy & export',
       desc: 'Copy values or export .env files instantly with one click.',
-      icon: Copy,
+      icon: Copy01,
     },
     {
       title: 'GitHub OAuth',
@@ -23,17 +29,17 @@ export default function ValueProps() {
     {
       title: 'No CLI required',
       desc: 'Simple web interface - just open, paste, and save.',
-      icon: Globe,
+      icon: Globe01,
     },
     {
       title: 'Secure by design',
       desc: 'Your data stays private with industry-standard encryption.',
-      icon: Shield,
+      icon: SecurityCheck,
     },
     {
       title: 'Lightning fast',
       desc: 'Instant search, copy, and export. No waiting around.',
-      icon: Zap,
+      icon: Lightning01,
     },
   ];
   return (

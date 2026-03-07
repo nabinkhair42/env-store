@@ -3,6 +3,10 @@ import { env } from '@/env';
 import { client } from '@/lib/db';
 import { IProject } from '@/lib/types';
 import { ProjectSchema } from '@/lib/zod';
+import {
+  safeDecryptVariables,
+  safeEncryptVariables,
+} from '@/lib/crypto-helpers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET() {
@@ -28,7 +32,13 @@ export async function GET() {
       .sort({ updatedAt: -1 })
       .toArray();
 
-    return NextResponse.json({ projects });
+    // Decrypt variables before sending to client
+    const decryptedProjects = projects.map((project) => ({
+      ...project,
+      variables: safeDecryptVariables(project.variables),
+    }));
+
+    return NextResponse.json({ projects: decryptedProjects });
   } catch (error) {
     console.error('Error fetching projects:', error);
     return NextResponse.json(
@@ -67,16 +77,28 @@ export async function POST(request: NextRequest) {
     }
 
     const now = new Date();
+
+    // Encrypt variables before storing
+    const encryptedVariables = safeEncryptVariables(
+      validatedData.variables || []
+    );
+
     const project = {
       ...validatedData,
       userId: session.user.id,
       createdAt: now,
       updatedAt: now,
-      variables: validatedData.variables || [],
+      variables: encryptedVariables,
     };
 
     const result = await collection.insertOne(project);
-    const createdProject = { ...project, _id: result.insertedId };
+
+    // Decrypt for response
+    const createdProject = {
+      ...project,
+      _id: result.insertedId,
+      variables: safeDecryptVariables(encryptedVariables),
+    };
 
     return NextResponse.json(
       { project: createdProject, message: 'Project created successfully' },

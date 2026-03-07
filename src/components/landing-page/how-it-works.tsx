@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight01 } from 'hugeicons-react';
 
 const steps = [
   {
@@ -64,7 +64,7 @@ export default function HowItWorks() {
                   {step.number}
                 </span>
                 {i < steps.length - 1 && (
-                  <ArrowRight className="hidden sm:block ml-auto h-4 w-4 text-muted-foreground/40" />
+                  <ArrowRight01 className="hidden sm:block ml-auto h-4 w-4 text-muted-foreground/40" />
                 )}
               </div>
 

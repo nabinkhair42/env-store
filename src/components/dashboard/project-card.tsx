@@ -4,7 +4,7 @@ import { ConfirmDialog } from '@/components/modal/confirm-dialog';
 import { Button } from '@/components/ui/button';
 import type { IProject } from '@/lib/types';
 import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
-import { Copy, Download, Trash2 } from 'lucide-react';
+import { Copy01, Download01, Delete02 } from 'hugeicons-react';
 import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -80,7 +80,7 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
               className="flex-1 rounded-none hover:bg-primary/10 hover:text-primary"
               title="Copy to clipboard"
             >
-              <Copy className="size-4" />
+              <Copy01 className="size-4" />
             </Button>
 
             <Button
@@ -90,7 +90,7 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
               className="flex-1 rounded-none hover:bg-primary/10 hover:text-primary"
               title="Download .env file"
             >
-              <Download className="size-4" />
+              <Download01 className="size-4" />
             </Button>
 
             <Button
@@ -100,7 +100,7 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
               className="flex-1 rounded-none hover:bg-destructive/10 hover:text-destructive"
               title="Delete project"
             >
-              <Trash2 className="size-4" />
+              <Delete02 className="size-4" />
             </Button>
           </div>
         </div>

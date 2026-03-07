@@ -24,13 +24,17 @@ async function handleResponse<T>(response: Response): Promise<T> {
 export const projectsApi = {
   // Get all projects for the current user
   async getProjects(): Promise<{ projects: IProject[] }> {
-    const response = await fetch('/api/projects');
+    const response = await fetch('/api/projects', {
+      cache: 'no-store', // Disable cache for fresh data
+    });
     return handleResponse(response);
   },
 
   // Get a single project by ID
   async getProject(id: string): Promise<{ project: IProject }> {
-    const response = await fetch(`/api/projects/${id}`);
+    const response = await fetch(`/api/projects/${id}`, {
+      cache: 'no-store', // Disable cache for fresh data
+    });
     return handleResponse(response);
   },
 
@@ -44,6 +48,7 @@ export const projectsApi = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
+      cache: 'no-store',
     });
     return handleResponse(response);
   },
@@ -59,6 +64,7 @@ export const projectsApi = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
+      cache: 'no-store',
     });
     return handleResponse(response);
   },
@@ -67,6 +73,7 @@ export const projectsApi = {
   async deleteProject(id: string): Promise<{ message: string }> {
     const response = await fetch(`/api/projects/${id}`, {
       method: 'DELETE',
+      cache: 'no-store',
     });
     return handleResponse(response);
   },

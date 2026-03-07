@@ -17,12 +17,12 @@ import { IProject } from '@/lib/types';
 import {
   Activity,
   Database,
-  Download,
+  Download01,
   FileText,
   Github,
-  Mail,
+  Mail01,
   User,
-} from 'lucide-react';
+} from 'hugeicons-react';
 import { useSession } from 'next-auth/react';
 import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -157,7 +157,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                         {session?.user?.name || 'Unknown User'}
                       </div>
                       <div className="flex items-center gap-2 mt-1">
-                        <Mail className="h-3 w-3 text-muted-foreground" />
+                        <Mail01 className="h-3 w-3 text-muted-foreground" />
                         <span className="text-sm text-muted-foreground font-mono">
                           {session?.user?.email || 'N/A'}
                         </span>
@@ -251,7 +251,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             <div className="border border-border bg-muted/10">
               <div className="border-b border-border bg-muted/20 px-6 py-4">
                 <h3 className="flex items-center gap-2 font-bold uppercase tracking-wide text-sm">
-                  <Download className="h-4 w-4" />
+                  <Download01 className="h-4 w-4" />
                   Export All Data
                 </h3>
                 <p className="text-xs text-muted-foreground font-mono mt-1">
@@ -268,7 +268,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   className="w-full font-mono uppercase tracking-wide text-xs"
                   size="sm"
                 >
-                  <Download className="h-4 w-4 mr-2" />
+                  <Download01 className="h-4 w-4 mr-2" />
                   {exportLoading ? 'Exporting...' : 'Export All Data'}
                 </Button>
               </div>

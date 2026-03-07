@@ -1,4 +1,9 @@
-import { Laptop, Users, AlertTriangle, FolderOpen } from 'lucide-react';
+import {
+  Laptop,
+  UserMultiple,
+  AlertTriangle,
+  FolderOpen,
+} from 'hugeicons-react';
 
 interface UseCasesProps {
   items?: {
@@ -18,7 +23,7 @@ export default function UseCases({
     {
       title: 'Team onboarding',
       body: 'Share exactly the keys teammates need without passing raw files around.',
-      icon: <Users className="h-6 w-6" />,
+      icon: <UserMultiple className="h-6 w-6" />,
     },
     {
       title: 'Incident recovery',

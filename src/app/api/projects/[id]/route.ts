@@ -1,9 +1,13 @@
 import { auth } from '@/auth';
+import { env } from '@/env';
+import {
+  safeDecryptVariables,
+  safeEncryptVariables,
+} from '@/lib/crypto-helpers';
 import { client } from '@/lib/db';
 import { UpdateProjectSchema } from '@/lib/zod';
 import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
-import { env } from '@/env';
 
 export async function GET(
   request: NextRequest,
@@ -27,7 +31,13 @@ export async function GET(
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ project });
+    // Decrypt variables before sending to client
+    const decryptedProject = {
+      ...project,
+      variables: safeDecryptVariables(project.variables),
+    };
+
+    return NextResponse.json({ project: decryptedProject });
   } catch (error) {
     console.error('Error fetching project:', error);
     return NextResponse.json(
@@ -48,8 +58,9 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json();
-    const { id } = await params;
+    // 1.4 Promise.all() for independent operations - parallelize body and params
+    const [body, { id }] = await Promise.all([request.json(), params]);
+
     const validatedData = UpdateProjectSchema.parse({
       ...body,
       id,
@@ -63,11 +74,12 @@ export async function PUT(
       userId: session.user.id,
     });
 
+    // 1.1 Defer await until needed - early return if project doesn't exist
     if (!existingProject) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
 
-    // Check for name conflicts if name is being updated
+    // 1.1 Defer await until needed - only check name conflict if name is being updated
     if (validatedData.name && validatedData.name !== existingProject.name) {
       const nameConflict = await collection.findOne({
         userId: session.user.id,
@@ -83,10 +95,15 @@ export async function PUT(
       }
     }
 
-    const updateData = {
+    // Encrypt variables if they are being updated
+    const updateData: Record<string, unknown> = {
       ...validatedData,
       updatedAt: new Date(),
     };
+
+    if (validatedData.variables) {
+      updateData.variables = safeEncryptVariables(validatedData.variables);
+    }
 
     const result = await collection.findOneAndUpdate(
       { _id: new ObjectId(id), userId: session.user.id },
@@ -98,8 +115,14 @@ export async function PUT(
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
 
+    // Decrypt variables before sending to client
+    const decryptedResult = {
+      ...result,
+      variables: safeDecryptVariables(result.variables),
+    };
+
     return NextResponse.json({
-      project: result,
+      project: decryptedResult,
       message: 'Project updated successfully',
     });
   } catch (error) {

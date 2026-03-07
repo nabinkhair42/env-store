@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { LogOut, Loader } from 'lucide-react';
+import { Logout01, Loading03 } from 'hugeicons-react';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 
@@ -35,7 +35,7 @@ export function LogOutDialog({ open, onOpenChange }: LogOutDialogProps) {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <LogOut className="h-5 w-5" />
+            <Logout01 className="h-5 w-5" />
             Sign Out
           </DialogTitle>
           <DialogDescription>
@@ -55,11 +55,11 @@ export function LogOutDialog({ open, onOpenChange }: LogOutDialogProps) {
           >
             {isLoading ? (
               <>
-                <Loader className="h-5 w-5 animate-spin" /> Signing Out
+                <Loading03 className="h-5 w-5 animate-spin" /> Signing Out
               </>
             ) : (
               <>
-                <LogOut className="h-5 w-5" />
+                <Logout01 className="h-5 w-5" />
                 Sign Out
               </>
             )}
