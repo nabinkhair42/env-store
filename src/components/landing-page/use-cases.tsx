@@ -1,9 +1,10 @@
+import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  Laptop,
-  UserMultiple,
-  AlertTriangle,
-  FolderOpen,
-} from 'hugeicons-react';
+  LaptopIcon,
+  UserMultipleIcon,
+  Alert01Icon,
+  FolderOpenIcon,
+} from '@hugeicons/core-free-icons';
 
 interface UseCasesProps {
   items?: {
@@ -18,22 +19,22 @@ export default function UseCases({
     {
       title: 'New laptop / clean install',
       body: 'Rebuild your dev setup fast. Paste variables and continue working.',
-      icon: <Laptop className="h-6 w-6" />,
+      icon: <HugeiconsIcon icon={LaptopIcon} size={24} />,
     },
     {
       title: 'Team onboarding',
       body: 'Share exactly the keys teammates need without passing raw files around.',
-      icon: <UserMultiple className="h-6 w-6" />,
+      icon: <HugeiconsIcon icon={UserMultipleIcon} size={24} />,
     },
     {
       title: 'Incident recovery',
       body: 'Restore configuration during outages.',
-      icon: <AlertTriangle className="h-6 w-6" />,
+      icon: <HugeiconsIcon icon={Alert01Icon} size={24} />,
     },
     {
       title: 'Side projects',
       body: "Keep hobby project keys in one place so they don't get lost.",
-      icon: <FolderOpen className="h-6 w-6" />,
+      icon: <HugeiconsIcon icon={FolderOpenIcon} size={24} />,
     },
   ],
 }: UseCasesProps) {

@@ -1,7 +1,11 @@
 'use client';
 
 import React, { memo, useRef, useState } from 'react';
-import { Upload02, InformationCircle } from 'hugeicons-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import {
+  Upload02Icon,
+  InformationCircleIcon,
+} from '@hugeicons/core-free-icons';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {
@@ -95,7 +99,11 @@ export const FileUploadSection = memo(function FileUploadSection({
       <div className="mx-auto w-full max-w-6xl px-6 py-6">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <Upload02 className="h-5 w-5 text-primary" />
+            <HugeiconsIcon
+              icon={Upload02Icon}
+              size={20}
+              className="text-primary"
+            />
             <h2 className="text-lg font-bold tracking-tight">
               Import from File
             </h2>
@@ -107,7 +115,7 @@ export const FileUploadSection = memo(function FileUploadSection({
                   className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground"
                   aria-label="Show supported file formats"
                 >
-                  <InformationCircle className="h-3.5 w-3.5" />
+                  <HugeiconsIcon icon={InformationCircleIcon} size={14} />
                 </Button>
               </HoverCardTrigger>
               <HoverCardContent className="w-80">
@@ -168,8 +176,10 @@ export const FileUploadSection = memo(function FileUploadSection({
                 className="hidden"
               />
               <div className="text-center">
-                <Upload02
-                  className={`h-8 w-8 mx-auto mb-4 transition-colors
+                <HugeiconsIcon
+                  icon={Upload02Icon}
+                  size={32}
+                  className={`mx-auto mb-4 transition-colors
                   ${dragActive ? 'text-primary' : 'text-muted-foreground'}
                 `}
                 />

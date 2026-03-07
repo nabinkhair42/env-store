@@ -6,7 +6,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Logout01, Settings01 } from 'hugeicons-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Logout01Icon, Settings01Icon } from '@hugeicons/core-free-icons';
 import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
@@ -87,7 +88,7 @@ export function UserDropdown() {
               }}
               className="cursor-pointer hover:bg-muted"
             >
-              <Settings01 className="h-4 w-4" />
+              <HugeiconsIcon icon={Settings01Icon} size={16} />
               <span>Settings</span>
             </DropdownMenuItem>
 
@@ -96,7 +97,7 @@ export function UserDropdown() {
               className="cursor-pointer hover:bg-muted"
               variant="destructive"
             >
-              <Logout01 className="h-4 w-4" />
+              <HugeiconsIcon icon={Logout01Icon} size={16} />
               <span>Logout</span>
             </DropdownMenuItem>
           </div>

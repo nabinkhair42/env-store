@@ -5,7 +5,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { parseEnvFile } from '@/lib/utils/env-parser';
 import { EnvVariable } from '@/lib/zod';
-import { View, ViewOff } from 'hugeicons-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ViewIcon, ViewOffIcon } from '@hugeicons/core-free-icons';
 import { toast } from 'react-hot-toast';
 import React, {
   forwardRef,
@@ -326,9 +327,9 @@ export const SmartVariableInput = forwardRef<
                 aria-label={isValueVisible ? 'Hide value' : 'Show value'}
               >
                 {isValueVisible ? (
-                  <ViewOff className="size-3" />
+                  <HugeiconsIcon icon={ViewOffIcon} size={12} />
                 ) : (
-                  <View className="size-3" />
+                  <HugeiconsIcon icon={ViewIcon} size={12} />
                 )}
               </Button>
             )}

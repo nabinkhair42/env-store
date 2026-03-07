@@ -16,10 +16,6 @@ const faqs = [
     a: 'Yes, the hosted version is completely free. For teams and enterprises, we may introduce premium features in the future.',
   },
   {
-    q: 'Do I need to install a CLI?',
-    a: "No. ENV Store is a web application - just open it in your browser. There's no command-line tool to install or configure.",
-  },
-  {
     q: 'Can I share variables with my team?',
     a: 'Currently, each account manages its own projects. Team sharing features are planned for future releases.',
   },

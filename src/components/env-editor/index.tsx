@@ -8,15 +8,16 @@ import { useVisibilityToggle } from '@/hooks/useVisibilityToggle';
 import { IProject } from '@/lib/types';
 import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
 import { EnvVariable } from '@/lib/zod';
+import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  AlertCircle,
-  AlertTriangle,
-  Tick01,
-  Copy01,
-  Download01,
-  Loading03,
-  Save01,
-} from 'hugeicons-react';
+  AlertCircleIcon,
+  Alert01Icon,
+  Tick01Icon,
+  Copy01Icon,
+  Download01Icon,
+  Loading03Icon,
+  SaveIcon,
+} from '@hugeicons/core-free-icons';
 import { useCallback, useMemo, useState } from 'react';
 import { FileUploadSection } from './FileUploadSection';
 import { VariablesList } from './VariablesList';
@@ -209,7 +210,8 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                 )}
                 {hasUnsavedChanges && saveStatus === 'idle' && (
                   <p className="text-xs font-semibold text-amber-600 dark:text-amber-500 flex items-center gap-1">
-                    <AlertTriangle className="size-3" /> Unsaved changes
+                    <HugeiconsIcon icon={Alert01Icon} size={12} /> Unsaved
+                    changes
                   </p>
                 )}
               </div>
@@ -221,7 +223,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                   onClick={copyToClipboard}
                   title="Copy to clipboard"
                 >
-                  <Copy01 className="size-4" />
+                  <HugeiconsIcon icon={Copy01Icon} size={16} />
                   <span className="text-xs uppercase tracking-wide">Copy</span>
                 </Button>
                 <Button
@@ -229,7 +231,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                   onClick={handleDownload}
                   title="Export as .env file"
                 >
-                  <Download01 className="size-4" />
+                  <HugeiconsIcon icon={Download01Icon} size={16} />
                   <span className="text-xs uppercase tracking-wide">
                     Export
                   </span>
@@ -241,7 +243,11 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                 >
                   {saveStatus === 'saving' && (
                     <>
-                      <Loading03 className="size-4 animate-spin" />
+                      <HugeiconsIcon
+                        icon={Loading03Icon}
+                        size={16}
+                        className="animate-spin"
+                      />
                       <span className="text-xs uppercase tracking-wide">
                         Saving
                       </span>
@@ -249,7 +255,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                   )}
                   {saveStatus === 'saved' && (
                     <>
-                      <Tick01 className="size-4" />
+                      <HugeiconsIcon icon={Tick01Icon} size={16} />
                       <span className="text-xs uppercase tracking-wide">
                         Saved!
                       </span>
@@ -257,7 +263,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                   )}
                   {saveStatus === 'error' && (
                     <>
-                      <AlertCircle className="size-4" />
+                      <HugeiconsIcon icon={AlertCircleIcon} size={16} />
                       <span className="text-xs uppercase tracking-wide">
                         Retry
                       </span>
@@ -265,7 +271,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
                   )}
                   {saveStatus === 'idle' && (
                     <>
-                      <Save01 className="size-4" />
+                      <HugeiconsIcon icon={SaveIcon} size={16} />
                       <span className="text-xs uppercase tracking-wide">
                         Save
                       </span>

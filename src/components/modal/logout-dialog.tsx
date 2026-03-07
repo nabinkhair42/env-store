@@ -8,7 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Logout01, Loading03 } from 'hugeicons-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Logout01Icon, Loading03Icon } from '@hugeicons/core-free-icons';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 
@@ -35,7 +36,7 @@ export function LogOutDialog({ open, onOpenChange }: LogOutDialogProps) {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Logout01 className="h-5 w-5" />
+            <HugeiconsIcon icon={Logout01Icon} size={20} />
             Sign Out
           </DialogTitle>
           <DialogDescription>
@@ -55,11 +56,16 @@ export function LogOutDialog({ open, onOpenChange }: LogOutDialogProps) {
           >
             {isLoading ? (
               <>
-                <Loading03 className="h-5 w-5 animate-spin" /> Signing Out
+                <HugeiconsIcon
+                  icon={Loading03Icon}
+                  size={20}
+                  className="animate-spin"
+                />{' '}
+                Signing Out
               </>
             ) : (
               <>
-                <Logout01 className="h-5 w-5" />
+                <HugeiconsIcon icon={Logout01Icon} size={20} />
                 Sign Out
               </>
             )}

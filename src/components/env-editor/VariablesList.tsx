@@ -1,7 +1,12 @@
 'use client';
 
 import { memo, useRef, useEffect } from 'react';
-import { Add01, FileText, Keyboard01 } from 'hugeicons-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import {
+  Add01Icon,
+  File02Icon,
+  KeyboardIcon,
+} from '@hugeicons/core-free-icons';
 import { Button } from '@/components/ui/button';
 import {
   HoverCard,
@@ -80,7 +85,7 @@ export const VariablesList = memo(function VariablesList({
               </p>
             </div>
             <Button onClick={onAddVariable} className="w-full md:w-auto">
-              <Add01 className="h-4 w-4" />
+              <HugeiconsIcon icon={Add01Icon} size={16} />
               <span className="text-xs uppercase tracking-wide">
                 Add Variable
               </span>
@@ -94,7 +99,7 @@ export const VariablesList = memo(function VariablesList({
           <div className="flex min-h-[300px] items-center justify-center py-16">
             <div className="space-y-6 text-center">
               <div className="mx-auto inline-flex size-14 items-center justify-center rounded-xl border text-muted-foreground">
-                <FileText className="h-7 w-7" />
+                <HugeiconsIcon icon={File02Icon} size={28} />
               </div>
               <div className="space-y-2">
                 <h3 className="text-base font-semibold uppercase tracking-wide">
@@ -105,7 +110,7 @@ export const VariablesList = memo(function VariablesList({
                 </p>
               </div>
               <Button onClick={onAddVariable} variant="outline">
-                <Add01 className="h-4 w-4" />
+                <HugeiconsIcon icon={Add01Icon} size={16} />
                 <span className="text-xs uppercase tracking-wide">
                   Add Variable
                 </span>
@@ -134,13 +139,13 @@ export const VariablesList = memo(function VariablesList({
                     className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground"
                     aria-label="Show keyboard shortcuts"
                   >
-                    <Keyboard01 className="h-3.5 w-3.5" />
+                    <HugeiconsIcon icon={KeyboardIcon} size={14} />
                   </Button>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80">
                   <div className="space-y-2">
                     <h4 className="font-semibold text-sm flex items-center gap-2">
-                      <Keyboard01 className="h-4 w-4" />
+                      <HugeiconsIcon icon={KeyboardIcon} size={16} />
                       Keyboard Shortcuts
                     </h4>
                     <div className="space-y-1 text-xs">
@@ -191,7 +196,7 @@ export const VariablesList = memo(function VariablesList({
             </p>
           </div>
           <Button onClick={onAddVariable} className="w-full md:w-auto">
-            <Plus className="h-4 w-4" />
+            <HugeiconsIcon icon={Add01Icon} size={16} />
             <span className="text-xs uppercase tracking-wide">
               Add Variable
             </span>

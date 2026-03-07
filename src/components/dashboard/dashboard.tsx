@@ -7,7 +7,8 @@ import LoaderScreen from '@/components/ui/loader';
 import { useAppContext } from '@/contexts/app-context';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
-import { FileText, Add01 } from 'hugeicons-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { File02Icon, Add01Icon } from '@hugeicons/core-free-icons';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -63,7 +64,7 @@ export function Dashboard() {
                 onClick={() => setShowProjectForm(true)}
                 className="w-full md:w-auto"
               >
-                <Add01 className="h-4 w-4" />
+                <HugeiconsIcon icon={Add01Icon} size={16} />
                 <span className="text-xs uppercase tracking-wide">
                   New Project
                 </span>
@@ -80,7 +81,7 @@ export function Dashboard() {
             <div className="flex min-h-[400px] items-center justify-center py-16">
               <div className="space-y-6 text-center">
                 <div className="mx-auto inline-flex size-14 items-center justify-center rounded-xl border border-border bg-muted/30 text-muted-foreground">
-                  <FileText className="h-7 w-7" />
+                  <HugeiconsIcon icon={File02Icon} size={28} />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-base font-semibold uppercase tracking-wide">
@@ -92,7 +93,7 @@ export function Dashboard() {
                   </p>
                 </div>
                 <Button onClick={() => setShowProjectForm(true)}>
-                  <Add01 className="h-4 w-4" />
+                  <HugeiconsIcon icon={Add01Icon} size={16} />
                   <span className="text-xs uppercase tracking-wide">
                     Create Project
                   </span>

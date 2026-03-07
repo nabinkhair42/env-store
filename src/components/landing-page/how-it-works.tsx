@@ -1,4 +1,5 @@
-import { ArrowRight01 } from 'hugeicons-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
 
 const steps = [
   {
@@ -64,7 +65,11 @@ export default function HowItWorks() {
                   {step.number}
                 </span>
                 {i < steps.length - 1 && (
-                  <ArrowRight01 className="hidden sm:block ml-auto h-4 w-4 text-muted-foreground/40" />
+                  <HugeiconsIcon
+                    icon={ArrowRight01Icon}
+                    size={16}
+                    className="hidden sm:block ml-auto text-muted-foreground/40"
+                  />
                 )}
               </div>
 

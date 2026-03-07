@@ -13,7 +13,8 @@ import { Button } from '@/components/ui/button';
 import LoaderScreen from '@/components/ui/loader';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
-import { ArrowLeft01 } from 'hugeicons-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowLeft01Icon } from '@hugeicons/core-free-icons';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -66,7 +67,7 @@ export default function ProjectPage() {
           </p>
           <Link href="/dashboard">
             <Button>
-              <ArrowLeft01 className="h-4 w-4" />
+              <HugeiconsIcon icon={ArrowLeft01Icon} size={16} />
               Back to Projects
             </Button>
           </Link>

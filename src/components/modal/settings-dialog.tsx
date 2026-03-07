@@ -14,15 +14,16 @@ import LoaderScreen from '@/components/ui/loader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
+import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  Activity,
-  Database,
-  Download01,
-  FileText,
-  Github,
-  Mail01,
-  User,
-} from 'hugeicons-react';
+  ActivityIcon,
+  DatabaseIcon,
+  Download01Icon,
+  File02Icon,
+  GithubIcon,
+  Mail01Icon,
+  UserIcon,
+} from '@hugeicons/core-free-icons';
 import { useSession } from 'next-auth/react';
 import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -97,7 +98,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-base font-bold uppercase tracking-wide">
-            <Activity className="h-4 w-4" />
+            <HugeiconsIcon icon={ActivityIcon} size={16} />
             Settings
           </DialogTitle>
           <DialogDescription className="font-mono text-xs text-muted-foreground">
@@ -132,7 +133,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             <div className="border border-border bg-muted/10">
               <div className="border-b border-border bg-muted/20 px-6 py-4">
                 <h3 className="flex items-center gap-2 font-bold uppercase tracking-wide text-sm">
-                  <User className="h-4 w-4" />
+                  <HugeiconsIcon icon={UserIcon} size={16} />
                   Profile Information
                 </h3>
                 <p className="text-xs text-muted-foreground font-mono mt-1">
@@ -157,14 +158,18 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                         {session?.user?.name || 'Unknown User'}
                       </div>
                       <div className="flex items-center gap-2 mt-1">
-                        <Mail01 className="h-3 w-3 text-muted-foreground" />
+                        <HugeiconsIcon
+                          icon={Mail01Icon}
+                          size={12}
+                          className="text-muted-foreground"
+                        />
                         <span className="text-sm text-muted-foreground font-mono">
                           {session?.user?.email || 'N/A'}
                         </span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Github className="h-4 w-4" />
+                      <HugeiconsIcon icon={GithubIcon} size={16} />
                       <Badge
                         variant="outline"
                         className="font-mono text-xs border-border"
@@ -183,7 +188,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             <div className="border border-border bg-muted/10">
               <div className="border-b border-border bg-muted/20 px-6 py-4">
                 <h3 className="flex items-center gap-2 font-bold uppercase tracking-wide text-sm">
-                  <Database className="h-4 w-4" />
+                  <HugeiconsIcon icon={DatabaseIcon} size={16} />
                   Projects Overview
                 </h3>
                 <p className="text-xs text-muted-foreground font-mono mt-1">
@@ -210,7 +215,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   </div>
                 ) : projects.length === 0 ? (
                   <div className="text-center py-12 border border-dashed border-border bg-muted/20">
-                    <Database className="h-12 w-12 mx-auto mb-3 text-muted-foreground/50" />
+                    <HugeiconsIcon
+                      icon={DatabaseIcon}
+                      size={48}
+                      className="mx-auto mb-3 text-muted-foreground/50"
+                    />
                     <p className="font-mono text-sm text-muted-foreground">
                       No projects found. Create your first project to get
                       started!
@@ -220,7 +229,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   <div className="grid grid-cols-2 gap-0 border border-border">
                     <div className="p-6 border-r border-border bg-muted/20">
                       <div className="flex items-center gap-3 mb-2">
-                        <Database className="h-5 w-5 text-muted-foreground" />
+                        <HugeiconsIcon
+                          icon={DatabaseIcon}
+                          size={20}
+                          className="text-muted-foreground"
+                        />
                         <span className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
                           Total Projects
                         </span>
@@ -231,7 +244,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     </div>
                     <div className="p-6 bg-muted/20">
                       <div className="flex items-center gap-3 mb-2">
-                        <FileText className="h-5 w-5 text-muted-foreground" />
+                        <HugeiconsIcon
+                          icon={File02Icon}
+                          size={20}
+                          className="text-muted-foreground"
+                        />
                         <span className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
                           Total Variables
                         </span>
@@ -251,7 +268,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             <div className="border border-border bg-muted/10">
               <div className="border-b border-border bg-muted/20 px-6 py-4">
                 <h3 className="flex items-center gap-2 font-bold uppercase tracking-wide text-sm">
-                  <Download01 className="h-4 w-4" />
+                  <HugeiconsIcon icon={Download01Icon} size={16} />
                   Export All Data
                 </h3>
                 <p className="text-xs text-muted-foreground font-mono mt-1">
@@ -268,7 +285,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   className="w-full font-mono uppercase tracking-wide text-xs"
                   size="sm"
                 >
-                  <Download01 className="h-4 w-4 mr-2" />
+                  <HugeiconsIcon
+                    icon={Download01Icon}
+                    size={16}
+                    className="mr-2"
+                  />
                   {exportLoading ? 'Exporting...' : 'Export All Data'}
                 </Button>
               </div>

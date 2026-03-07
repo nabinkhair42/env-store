@@ -2,7 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { EnvVariable } from '@/lib/zod';
-import { RemoveCircle } from 'hugeicons-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { RemoveCircleIcon } from '@hugeicons/core-free-icons';
 import { forwardRef, memo, useImperativeHandle, useRef } from 'react';
 import {
   SmartVariableInput,
@@ -118,7 +119,11 @@ export const VariableRow = memo(
               className="size-9 sm:size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
               aria-label="Delete variable"
             >
-              <RemoveCircle className="h-5 w-5 sm:h-4 sm:w-4" />
+              <HugeiconsIcon
+                icon={RemoveCircleIcon}
+                size={20}
+                className="sm:size-4"
+              />
             </Button>
           </div>
         </div>

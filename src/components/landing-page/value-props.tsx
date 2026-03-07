@@ -1,45 +1,46 @@
 'use client';
 
+import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  Copy01,
-  Database,
-  Globe01,
-  SecurityCheck,
-  Lightning01,
-} from 'hugeicons-react';
-import { FaGithub } from 'react-icons/fa6';
+  Copy01Icon,
+  DatabaseIcon,
+  Globe02Icon,
+  SecurityCheckIcon,
+  LockKeyIcon,
+  GithubIcon,
+} from '@hugeicons/core-free-icons';
 
 export default function ValueProps() {
   const features = [
     {
       title: 'Project-scoped storage',
       desc: 'Keep keys grouped by project and environment (dev, staging, prod).',
-      icon: Database,
+      icon: DatabaseIcon,
     },
     {
       title: 'Fast copy & export',
       desc: 'Copy values or export .env files instantly with one click.',
-      icon: Copy01,
+      icon: Copy01Icon,
     },
     {
       title: 'GitHub OAuth',
       desc: 'Quick and secure access from any browser.',
-      icon: FaGithub,
+      icon: GithubIcon,
     },
     {
       title: 'No CLI required',
       desc: 'Simple web interface - just open, paste, and save.',
-      icon: Globe01,
+      icon: Globe02Icon,
+    },
+    {
+      title: 'End-to-end encryption',
+      desc: 'All environment variables are encrypted before storage and decrypted only when you access them.',
+      icon: LockKeyIcon,
     },
     {
       title: 'Secure by design',
-      desc: 'Your data stays private with industry-standard encryption.',
-      icon: SecurityCheck,
-    },
-    {
-      title: 'Lightning fast',
-      desc: 'Instant search, copy, and export. No waiting around.',
-      icon: Lightning01,
+      desc: 'Your data stays private with industry-standard encryption and secure authentication.',
+      icon: SecurityCheckIcon,
     },
   ];
   return (
@@ -75,7 +76,7 @@ export default function ValueProps() {
               `}
             >
               <div className="mb-4 inline-flex size-10 items-center justify-center rounded-xl border border-border bg-muted/30 text-muted-foreground transition-colors group-hover:text-foreground">
-                <item.icon className="h-[18px] w-[18px]" strokeWidth={1.5} />
+                <HugeiconsIcon icon={item.icon} size={18} strokeWidth={1.5} />
               </div>
               <h3 className="text-[15px] font-semibold tracking-tight">
                 {item.title}
