@@ -8,42 +8,18 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Spinner } from '@/components/ui/spinner';
 import { useAppContext } from '@/contexts/app-context';
 import { useProjects } from '@/hooks/use-project';
-import { IProject } from '@/types/projects';
 import { Add01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 export function Dashboard() {
   const { projects, loading, fetchProjects, deleteProject } = useProjects();
   const { showProjectForm, setShowProjectForm } = useAppContext();
   const router = useRouter();
 
-  useEffect(() => {
-    fetchProjects();
-  }, [fetchProjects]);
-
-  const handleProjectCreated = () => {
-    fetchProjects();
-    setShowProjectForm(false);
-  };
-
-  const handleProjectSelected = (project: IProject) => {
-    router.push(`/dashboard/${project._id}`);
-  };
-
-  const handleProjectDeleted = async (projectId: string) => {
-    try {
-      await deleteProject(projectId);
-    } catch (error) {
-      console.error('Failed to delete project:', error);
-    }
-  };
-
   return (
     <>
       <div className="mx-auto w-full max-w-4xl px-6">
-        {/* Header — always visible */}
         <div className="flex flex-col gap-4 py-8 md:flex-row md:items-start md:justify-between">
           <div>
             <p className="text-xs font-medium text-muted-foreground">
@@ -67,7 +43,6 @@ export function Dashboard() {
           )}
         </div>
 
-        {/* Content */}
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <Spinner className="size-5" />
@@ -91,8 +66,8 @@ export function Dashboard() {
                 <div key={project._id as string}>
                   <ProjectCard
                     project={project}
-                    onSelect={handleProjectSelected}
-                    onDelete={handleProjectDeleted}
+                    onSelect={(p) => router.push(`/dashboard/${p._id}`)}
+                    onDelete={(id) => deleteProject(id)}
                   />
                 </div>
               ))}
@@ -103,7 +78,10 @@ export function Dashboard() {
 
       {showProjectForm && (
         <ProjectForm
-          onSuccess={handleProjectCreated}
+          onSuccess={() => {
+            fetchProjects();
+            setShowProjectForm(false);
+          }}
           onCancel={() => setShowProjectForm(false)}
         />
       )}

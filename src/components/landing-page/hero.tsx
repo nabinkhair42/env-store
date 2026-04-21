@@ -1,4 +1,5 @@
 import { CTAButtons } from '@/components/landing-page/cta-buttons';
+import { Badge } from '../ui/badge';
 
 export default async function Hero() {
   return (
@@ -21,9 +22,9 @@ export default async function Hero() {
       <div className="mt-16 w-full max-w-3xl">
         <div className="overflow-hidden rounded-lg border bg-card">
           <div className="border-b px-4 py-2.5">
-            <span className="text-xs text-muted-foreground font-mono">
-              localhost:3000/dashboard
-            </span>
+            <Badge variant="outline" className="text-xs font-medium">
+              ENV Store
+            </Badge>
           </div>
 
           <div className="p-5 sm:p-6">

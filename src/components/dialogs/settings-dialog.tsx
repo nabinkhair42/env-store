@@ -31,7 +31,7 @@ interface SettingsDialogProps {
 }
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
-  const { projects, loading, error, refreshProjects } = useProjects();
+  const { projects, loading, error, fetchProjects } = useProjects();
   const { data: session } = useSession();
   const [exportLoading, setExportLoading] = useState(false);
 
@@ -154,7 +154,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   Failed to load projects
                 </p>
                 <Button
-                  onClick={refreshProjects}
+                  onClick={fetchProjects}
                   variant="outline"
                   size="sm"
                 >

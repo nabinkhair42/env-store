@@ -2,15 +2,11 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { CheckmarkCircle01Icon } from '@hugeicons/core-free-icons';
 
 const notes = [
-  'All environment variables are encrypted at rest using AES-256-GCM encryption.',
-  'Key derivation uses PBKDF2 with 100,000 iterations and unique salts.',
-  'Data is encrypted before leaving your browser and only decrypted when you view it.',
-  'GitHub OAuth provides secure authentication without storing passwords.',
-  'HTTPS/TLS encryption protects all data in transit.',
-  'Treat stored values as secrets and rotate API keys regularly.',
-  'Organize projects by environment to minimize accidental exposure.',
-  'Never commit real environment variables to version control.',
-  'Regularly audit stored variables and remove ones no longer needed.',
+  'All variables are encrypted at rest using AES-256-GCM with authenticated encryption.',
+  'Key derivation uses PBKDF2 with 100,000 iterations and a unique random salt per value.',
+  'GitHub OAuth for authentication — no passwords stored.',
+  'HTTPS/TLS protects all data in transit.',
+  'Fully open source — audit the code anytime.',
 ];
 
 export default function SecurityNotes() {
@@ -21,8 +17,8 @@ export default function SecurityNotes() {
         Built with security at every layer
       </h2>
       <p className="mt-2 max-w-2xl text-muted-foreground">
-        Your environment variables contain sensitive information. ENV Store uses
-        industry-standard encryption to keep your data private and secure.
+        Your environment variables contain sensitive data. Here is how ENV Store
+        keeps them safe.
       </p>
 
       <div className="mt-10 space-y-4">

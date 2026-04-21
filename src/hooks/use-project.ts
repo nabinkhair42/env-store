@@ -80,6 +80,5 @@ export function useProjects() {
     createProject,
     updateProject,
     deleteProject,
-    refreshProjects: fetchProjects,
   };
 }

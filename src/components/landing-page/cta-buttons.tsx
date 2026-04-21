@@ -1,51 +1,44 @@
 'use client';
 
 import { LoginDialog } from '@/components/dialogs/login-dialog';
+import { Button } from '@/components/ui/button';
+import { siteConfig } from '@/lib/sitemap';
 import { GithubIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Button } from '../ui/button';
 
 interface CTAButtonsProps {
   primaryLabel?: string;
-  secondaryHref?: string;
   secondaryLabel?: string;
 }
 
 export function CTAButtons({
   primaryLabel = 'Get Started',
-  secondaryHref = 'https://github.com/nabinkhair42/env-store',
   secondaryLabel = 'View Source',
 }: CTAButtonsProps) {
   const [loginOpen, setLoginOpen] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
 
-  const handlePrimaryClick = () => {
-    if (session) {
-      router.push('/dashboard');
-    } else {
-      setLoginOpen(true);
-    }
-  };
-
   return (
     <>
       <div className="flex flex-col items-center gap-3 sm:flex-row">
-        <Button onClick={handlePrimaryClick} size="lg">
+        <Button
+          size="lg"
+          onClick={() =>
+            session ? router.push('/dashboard') : setLoginOpen(true)
+          }
+        >
           {primaryLabel}
         </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          onClick={() => {
-            window.location.href = secondaryHref;
-          }}
-        >
-          <HugeiconsIcon icon={GithubIcon} size={16} />
-          {secondaryLabel}
+        <Button variant="outline" size="lg" asChild>
+          <Link href={siteConfig.repo}>
+            <HugeiconsIcon icon={GithubIcon} size={16} />
+            {secondaryLabel}
+          </Link>
         </Button>
       </div>
       <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />

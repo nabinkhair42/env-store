@@ -5,41 +5,41 @@ import {
   Copy01Icon,
   DatabaseIcon,
   Globe02Icon,
-  SecurityCheckIcon,
-  LockKeyIcon,
   GithubIcon,
+  Upload04Icon,
+  LockKeyIcon,
 } from '@hugeicons/core-free-icons';
 
 const features = [
   {
     title: 'Project-scoped storage',
-    desc: 'Keep keys grouped by project and environment (dev, staging, prod).',
+    desc: 'Group variables by project and environment — dev, staging, prod.',
     icon: DatabaseIcon,
   },
   {
     title: 'Fast copy & export',
-    desc: 'Copy values or export .env files instantly with one click.',
+    desc: 'Copy values or download .env files with one click.',
     icon: Copy01Icon,
   },
   {
     title: 'GitHub OAuth',
-    desc: 'Quick and secure access from any browser.',
+    desc: 'Sign in securely with your GitHub account. No passwords.',
     icon: GithubIcon,
   },
   {
     title: 'No CLI required',
-    desc: 'Simple web interface - just open, paste, and save.',
+    desc: 'Simple web interface — open, paste, save.',
     icon: Globe02Icon,
   },
   {
-    title: 'End-to-end encryption',
-    desc: 'All environment variables are encrypted before storage and decrypted only when you access them.',
-    icon: LockKeyIcon,
+    title: '.env file import',
+    desc: 'Upload or paste an existing .env file and it parses automatically.',
+    icon: Upload04Icon,
   },
   {
-    title: 'Secure by design',
-    desc: 'Your data stays private with industry-standard encryption and secure authentication.',
-    icon: SecurityCheckIcon,
+    title: 'Encrypted at rest',
+    desc: 'AES-256-GCM encryption with per-value salts. Your secrets stay secret.',
+    icon: LockKeyIcon,
   },
 ];
 

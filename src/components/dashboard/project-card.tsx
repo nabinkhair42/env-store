@@ -18,7 +18,7 @@ import {
   Download01Icon,
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { useState, type MouseEvent } from 'react';
+import { type MouseEvent, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 interface ProjectCardProps {
@@ -30,36 +30,11 @@ interface ProjectCardProps {
 export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const handleCopy = async (e: MouseEvent) => {
-    e.stopPropagation();
-    try {
-      const envContent = generateEnvFile(project.variables || []);
-      await navigator.clipboard.writeText(envContent);
-      toast.success('Environment variables copied to clipboard!');
-    } catch (error) {
-      console.error('Failed to copy environment variables:', error);
-      toast.error('Failed to copy environment variables');
-    }
-  };
+  const getEnvContent = () => generateEnvFile(project.variables || []);
 
-  const handleDownload = (e: MouseEvent) => {
+  const handleAction = (e: MouseEvent, action: () => void) => {
     e.stopPropagation();
-    try {
-      const envContent = generateEnvFile(project.variables || []);
-      downloadFile(envContent, `${project.name}.env`);
-    } catch (error) {
-      console.error('Failed to download environment file:', error);
-    }
-  };
-
-  const handleDelete = (e: MouseEvent) => {
-    e.stopPropagation();
-    setShowDeleteConfirm(true);
-  };
-
-  const confirmDelete = () => {
-    onDelete(project._id as string);
-    setShowDeleteConfirm(false);
+    action();
   };
 
   return (
@@ -80,24 +55,33 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
             <Button
               variant="outline"
               size="icon"
-              onClick={handleCopy}
-              title="Copy to clipboard"
+              onClick={(e) =>
+                handleAction(e, async () => {
+                  await navigator.clipboard.writeText(getEnvContent());
+                  toast.success('Copied to clipboard');
+                })
+              }
+              title="Copy"
             >
               <HugeiconsIcon icon={Copy01Icon} size={16} />
             </Button>
             <Button
               variant="outline"
               size="icon"
-              onClick={handleDownload}
-              title="Download .env file"
+              onClick={(e) =>
+                handleAction(e, () =>
+                  downloadFile(getEnvContent(), `${project.name}.env`)
+                )
+              }
+              title="Download"
             >
               <HugeiconsIcon icon={Download01Icon} size={16} />
             </Button>
             <Button
               variant="destructive"
               size="icon"
-              onClick={handleDelete}
-              title="Delete project"
+              onClick={(e) => handleAction(e, () => setShowDeleteConfirm(true))}
+              title="Delete"
             >
               <HugeiconsIcon icon={Delete02Icon} size={16} />
             </Button>
@@ -109,10 +93,13 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
         open={showDeleteConfirm}
         onOpenChange={setShowDeleteConfirm}
         title="Delete Project"
-        description={`Are you sure you want to delete "${project.name}"? This action cannot be undone and will permanently remove all environment variables in this project.`}
+        description={`Are you sure you want to delete "${project.name}"? This will permanently remove all variables.`}
         confirmText="Yes, Delete"
-        cancelText='No, Keep it'
-        onConfirm={confirmDelete}
+        cancelText="No, Keep it"
+        onConfirm={() => {
+          onDelete(project._id as string);
+          setShowDeleteConfirm(false);
+        }}
         variant="destructive"
       />
     </>
