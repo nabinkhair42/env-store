@@ -40,7 +40,7 @@ export function useEnvironmentManager(initialEnvironments: IEnvironment[]) {
     if (!names.includes(activeTab)) {
       setActiveTab(names[0] ?? DEFAULT_ENVIRONMENTS[0]);
     }
-  }, [initialEnvironments]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [initialEnvironments]);
 
   const activeVariables = useMemo(
     () => envMap.get(activeTab) ?? [],

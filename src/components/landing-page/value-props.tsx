@@ -45,24 +45,24 @@ const features = [
 
 export default function ValueProps() {
   return (
-    <section className="mx-auto w-full max-w-4xl px-6 py-20">
+    <section className="mx-auto w-full max-w-4xl px-6 py-24">
       <p className="text-xs font-medium text-muted-foreground">Features</p>
       <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
         Everything you need to manage environment variables
       </h2>
       <p className="mt-2 max-w-2xl text-muted-foreground">
-        Built for developers who need reliable, secure access to their project
-        configurations.
+        Built for teams that need reliable, secure access to their project
+        configurations across every environment.
       </p>
 
-      <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((item, i) => (
           <div key={i}>
-            <div className="mb-3 inline-flex size-10 items-center justify-center rounded-lg border text-muted-foreground">
+            <div className="mb-3 inline-flex size-10 items-center justify-center rounded-lg bg-muted border text-muted-foreground">
               <HugeiconsIcon icon={item.icon} size={18} strokeWidth={1.5} />
             </div>
             <h3 className="text-sm font-semibold">{item.title}</h3>
-            <p className="mt-1.5 text-sm text-muted-foreground">{item.desc}</p>
+            <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
           </div>
         ))}
       </div>

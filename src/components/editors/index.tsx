@@ -19,11 +19,10 @@ import {
   AlertCircleIcon,
   Cancel01Icon,
   Copy01Icon,
-  Delete02Icon,
   Download01Icon,
   SaveIcon,
   Tick01Icon,
-  Upload02Icon,
+  Upload02Icon
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import React, { useCallback, useRef, useState } from 'react';
