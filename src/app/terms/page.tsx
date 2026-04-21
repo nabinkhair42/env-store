@@ -11,7 +11,7 @@ export default function TermsPage() {
   return (
     <>
       <main className="mx-auto w-full max-w-4xl px-6 py-16">
-        <div className="prose prose-invert max-w-none">
+        <div>
           <h1 className="mb-2 text-4xl font-bold tracking-tight">
             Terms of Service
           </h1>

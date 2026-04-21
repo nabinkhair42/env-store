@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Logo } from '@/components/ui/logo';
 import { SignInButton } from '@/components/auth/sign-in-button';
+import { siteConfig } from '@/lib/sitemap';
 
 interface LoginDialogProps {
   open: boolean;
@@ -24,7 +25,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
             <Logo size="lg" />
           </div>
           <DialogTitle className="text-2xl font-medium text-center">
-            ENV Store
+            {siteConfig.name}
           </DialogTitle>
           <DialogDescription className="text-center">
             Sync your environment variables across devices securely

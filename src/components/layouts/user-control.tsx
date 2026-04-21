@@ -36,7 +36,7 @@ export function UserDropdown() {
       <DropdownMenu key={`${showSettingsDialog}-${showLogoutDialog}`}>
         {/* This key is used to force a re-render of the dropdown menu when the dialogs are closed */}
         <DropdownMenuTrigger asChild>
-          <button className="group relative cursor-pointer outline-none">
+          <button className="group relative cursor-pointer outline-none" aria-label="User menu">
             <Avatar className="h-8 w-8 border border-border transition-colors group-hover:border-foreground/20">
               <AvatarImage
                 src={session?.user?.image || ''}
@@ -56,15 +56,13 @@ export function UserDropdown() {
           </div>
 
           {!isPathnameDashboard && (
-            <>
-              <DropdownMenuItem
-                onClick={() => router.push('/dashboard')}
-                className="cursor-pointer"
-              >
-                <Logo size="sm" />
-                <span>Go to Dashboard</span>
-              </DropdownMenuItem>
-            </>
+            <DropdownMenuItem
+              onClick={() => router.push('/dashboard')}
+              className="cursor-pointer"
+            >
+              <Logo size="sm" />
+              <span>Go to Dashboard</span>
+            </DropdownMenuItem>
           )}
 
           <DropdownMenuItem

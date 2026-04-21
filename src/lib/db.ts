@@ -1,6 +1,6 @@
 // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
+import { env } from '@/schema/env';
 import { MongoClient, ServerApiVersion } from 'mongodb';
-import { env } from '@/env';
 
 const uri = env.MONGODB_URI;
 const options = {

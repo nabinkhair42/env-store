@@ -1,5 +1,5 @@
-import { env } from '@/env';
 import clientPromise from '@/lib/db';
+import { env } from '@/schema/env';
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import NextAuth from 'next-auth';
 import GitHub from 'next-auth/providers/github';

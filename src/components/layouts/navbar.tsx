@@ -4,13 +4,14 @@ import { LoginDialog } from '@/components/dialogs/login-dialog';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/logo';
 import { ModeSwitcher } from '@/components/ui/theme-toggle';
+import { siteConfig } from '@/lib/sitemap';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export function Navbar() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [loginOpen, setLoginOpen] = useState(false);
 
   return (
@@ -23,13 +24,15 @@ export function Navbar() {
           >
             <Logo size="md" />
             <span className="text-lg font-semibold tracking-tight">
-              ENV Store
+              {siteConfig.name}
             </span>
           </button>
 
           <div className="flex items-center gap-3">
             <ModeSwitcher />
-            {session ? (
+            {status === 'loading' ? (
+              <div className="size-8 rounded-full bg-muted animate-pulse" />
+            ) : session ? (
               <UserDropdown />
             ) : (
               <Button onClick={() => setLoginOpen(true)} size="sm">

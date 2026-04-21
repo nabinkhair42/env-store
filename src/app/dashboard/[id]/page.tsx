@@ -10,7 +10,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
-import LoaderScreen from '@/components/ui/loader';
+import { Spinner } from '@/components/ui/spinner';
 import { useProjects } from '@/hooks/use-project';
 import { IProject } from '@/types/projects';
 import { ArrowLeft01Icon } from '@hugeicons/core-free-icons';
@@ -49,35 +49,11 @@ export default function ProjectPage() {
     fetchProjects();
   };
 
-  if (loading || projectLoading) {
-    return <LoaderScreen />;
-  }
-
-  if (!project) {
-    return (
-      <div className="flex items-center justify-center py-20 mx-auto max-w-4xl">
-        <div className="text-center space-y-4">
-          <h1 className="text-2xl font-semibold text-foreground">
-            Project Not Found
-          </h1>
-          <p className="text-muted-foreground">
-            The project you&apos;re looking for doesn&apos;t exist or has been
-            deleted.
-          </p>
-          <Link href="/dashboard">
-            <Button>
-              <HugeiconsIcon icon={ArrowLeft01Icon} size={16} />
-              Back to Projects
-            </Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const isLoading = loading || projectLoading;
 
   return (
     <div>
-      {/* Breadcrumb */}
+      {/* Breadcrumb — always visible to prevent layout shift */}
       <div className="mx-auto w-full max-w-4xl px-6 py-4">
         <Breadcrumb>
           <BreadcrumbList>
@@ -88,13 +64,44 @@ export default function ProjectPage() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{project.name}</BreadcrumbPage>
+              {isLoading ? (
+                <div className="h-4 w-24 rounded bg-muted animate-pulse" />
+              ) : (
+                <BreadcrumbPage>
+                  {project?.name || 'Not Found'}
+                </BreadcrumbPage>
+              )}
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
 
-      <EnvEditor project={project} onUpdate={handleProjectUpdate} />
+      {/* Content */}
+      {isLoading ? (
+        <div className="mx-auto w-full max-w-4xl px-6 py-12">
+          <div className="flex items-center justify-center">
+            <Spinner className="size-5" />
+          </div>
+        </div>
+      ) : !project ? (
+        <div className="mx-auto max-w-4xl px-6 py-20 text-center">
+          <h1 className="text-2xl font-semibold">Project Not Found</h1>
+          <p className="mt-2 text-muted-foreground">
+            The project you&apos;re looking for doesn&apos;t exist or has been
+            deleted.
+          </p>
+          <div className="mt-4">
+            <Link href="/dashboard">
+              <Button>
+                <HugeiconsIcon icon={ArrowLeft01Icon} size={16} />
+                Back to Projects
+              </Button>
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <EnvEditor project={project} onUpdate={handleProjectUpdate} />
+      )}
     </div>
   );
 }

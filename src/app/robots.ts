@@ -1,3 +1,4 @@
+import { siteConfig } from '@/lib/sitemap';
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
@@ -9,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/dashboard/', '/_next/', '/static/'],
       },
     ],
-    sitemap: 'https://envstore.nabinkhair.com.np/sitemap.xml',
+    sitemap: `${siteConfig.url}/sitemap.xml`,
   };
 }

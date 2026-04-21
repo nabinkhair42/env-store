@@ -1,4 +1,7 @@
+import { siteConfig } from '@/lib/sitemap';
 import Link from 'next/link';
+
+const author = siteConfig.authors[0];
 
 export default function SiteFooter() {
   return (
@@ -6,20 +9,19 @@ export default function SiteFooter() {
       <div className="mx-auto w-full max-w-4xl px-6 py-10">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-sm font-semibold text-foreground">ENV Store</p>
+            <p className="text-sm font-semibold text-foreground">{siteConfig.name}</p>
             <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Securely manage and sync your environment variables across
-              devices.
+              {siteConfig.description}
             </p>
             <p className="mt-3 text-sm text-muted-foreground">
               Built by{' '}
               <Link
-                href="https://nabinkhair.com.np"
+                href={author.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium text-foreground hover:underline"
               >
-                Nabin Khair
+                {author.name}
               </Link>
             </p>
           </div>
@@ -32,7 +34,7 @@ export default function SiteFooter() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="https://github.com/nabinkhair42/env-store"
+                    href={siteConfig.repo}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-muted-foreground hover:text-foreground"
@@ -42,7 +44,7 @@ export default function SiteFooter() {
                 </li>
                 <li>
                   <Link
-                    href="https://github.com/nabinkhair42/env-store/issues"
+                    href={`${siteConfig.repo}/issues`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-muted-foreground hover:text-foreground"

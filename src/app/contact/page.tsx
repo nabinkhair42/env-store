@@ -13,6 +13,63 @@ export const metadata: Metadata = {
   description: 'Get in touch with ENV Store - Questions, feedback, or support.',
 };
 
+const links = [
+  {
+    href: 'mailto:nabinkhair12@gmail.com',
+    icon: Mail01Icon,
+    title: 'Email',
+    desc: 'Send me an email for any inquiries or support requests.',
+    label: 'nabinkhair12@gmail.com',
+  },
+  {
+    href: 'https://github.com/nabinkhair42',
+    icon: GithubIcon,
+    title: 'GitHub',
+    desc: 'Check out my projects, report issues, or contribute to ENV Store.',
+    label: '@nabinkhair42',
+    external: true,
+  },
+  {
+    href: 'https://nabinkhair.com.np',
+    icon: Globe02Icon,
+    title: 'Website',
+    desc: 'Visit my personal website to learn more about my work.',
+    label: 'nabinkhair.com.np',
+    external: true,
+  },
+  {
+    href: 'https://github.com/nabinkhair42/env-store/issues',
+    icon: LinkSquare02Icon,
+    title: 'Bug Reports',
+    desc: 'Found a bug? Open an issue on the GitHub repository.',
+    label: 'Report an Issue',
+    external: true,
+  },
+];
+
+const faqs = [
+  {
+    q: 'How secure is my data?',
+    a: 'All environment variables are encrypted at rest using AES-256-GCM encryption with PBKDF2 key derivation (100,000 iterations). Data is transmitted over HTTPS.',
+  },
+  {
+    q: 'Is ENV Store free to use?',
+    a: 'Yes, ENV Store is completely free and open source. There are no paid plans or premium features.',
+  },
+  {
+    q: 'Can I export my environment variables?',
+    a: 'Absolutely! You can export your variables to the standard .env format from any project in your dashboard.',
+  },
+  {
+    q: 'How do I delete my account?',
+    a: 'You can delete all your projects from the dashboard. To completely remove your account, please contact me via email.',
+  },
+  {
+    q: 'Can I contribute to ENV Store?',
+    a: 'Yes! ENV Store is open source. Check out the GitHub repository to get started. Pull requests are welcome!',
+  },
+];
+
 export default function ContactPage() {
   return (
     <>
@@ -21,168 +78,57 @@ export default function ContactPage() {
           <h1 className="mb-4 text-4xl font-bold tracking-tight">
             Get in Touch
           </h1>
-          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Have questions about ENV Store? Need help with your environment
-            variables? Want to report a bug or suggest a feature? I&apos;d love
-            to hear from you.
+          <p className="mx-auto max-w-2xl text-muted-foreground">
+            Have questions about ENV Store? Need help? I&apos;d love to hear
+            from you.
           </p>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2">
-          {/* Email */}
-          <a
-            href="mailto:nabinkhair12@gmail.com"
-            className="group flex flex-col gap-4 rounded-lg border border-white/[0.08] bg-white/[0.03] p-6 transition-colors hover:bg-white/[0.06]"
-          >
-            <div className="flex size-12 items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.04] text-white/60 transition-colors group-hover:text-white/90">
-              <HugeiconsIcon icon={Mail01Icon} size={20} />
-            </div>
-            <div>
-              <h2 className="mb-1 text-lg font-semibold">Email</h2>
-              <p className="text-sm text-muted-foreground">
-                Send me an email for any inquiries or support requests.
-              </p>
-              <p className="mt-2 text-sm text-primary">
-                nabinkhair12@gmail.com
-              </p>
-            </div>
-          </a>
-
-          {/* GitHub */}
-          <a
-            href="https://github.com/nabinkhair42"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex flex-col gap-4 rounded-lg border border-white/[0.08] bg-white/[0.03] p-6 transition-colors hover:bg-white/[0.06]"
-          >
-            <div className="flex size-12 items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.04] text-white/60 transition-colors group-hover:text-white/90">
-              <HugeiconsIcon icon={GithubIcon} size={20} />
-            </div>
-            <div>
-              <h2 className="mb-1 text-lg font-semibold">GitHub</h2>
-              <p className="text-sm text-muted-foreground">
-                Check out my projects, report issues, or contribute to ENV
-                Store.
-              </p>
-              <p className="mt-2 text-sm text-primary">@nabinkhair42</p>
-            </div>
-          </a>
-
-          {/* Website */}
-          <a
-            href="https://nabinkhair.com.np"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex flex-col gap-4 rounded-lg border border-white/[0.08] bg-white/[0.03] p-6 transition-colors hover:bg-white/[0.06]"
-          >
-            <div className="flex size-12 items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.04] text-white/60 transition-colors group-hover:text-white/90">
-              <HugeiconsIcon icon={Globe02Icon} size={20} />
-            </div>
-            <div>
-              <h2 className="mb-1 text-lg font-semibold">Website</h2>
-              <p className="text-sm text-muted-foreground">
-                Visit my personal website to learn more about my work.
-              </p>
-              <p className="mt-2 text-sm text-primary">nabinkhair.com.np</p>
-            </div>
-          </a>
-
-          {/* GitHub Issues */}
-          <a
-            href="https://github.com/nabinkhair42/env-store/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex flex-col gap-4 rounded-lg border border-white/[0.08] bg-white/[0.03] p-6 transition-colors hover:bg-white/[0.06]"
-          >
-            <div className="flex size-12 items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.04] text-white/60 transition-colors group-hover:text-white/90">
-              <HugeiconsIcon icon={LinkSquare02Icon} size={20} />
-            </div>
-            <div>
-              <h2 className="mb-1 text-lg font-semibold">Bug Reports</h2>
-              <p className="text-sm text-muted-foreground">
-                Found a bug? Open an issue on the GitHub repository.
-              </p>
-              <p className="mt-2 text-sm text-primary">Report an Issue</p>
-            </div>
-          </a>
+          {links.map((link) => (
+            <a
+              key={link.title}
+              href={link.href}
+              target={link.external ? '_blank' : undefined}
+              rel={link.external ? 'noopener noreferrer' : undefined}
+              className="group flex flex-col gap-4 rounded-lg border p-6 transition-colors hover:bg-muted/50"
+            >
+              <div className="flex size-10 items-center justify-center rounded-lg border text-muted-foreground transition-colors group-hover:text-foreground">
+                <HugeiconsIcon icon={link.icon} size={18} />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold">{link.title}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {link.desc}
+                </p>
+                <p className="mt-2 text-sm text-foreground">{link.label}</p>
+              </div>
+            </a>
+          ))}
         </div>
 
-        <div className="mt-12 rounded-lg border border-white/[0.08] bg-white/[0.03] p-8">
-          <h2 className="mb-4 text-2xl font-semibold">
+        <div className="mt-16">
+          <h2 className="mb-6 text-2xl font-bold tracking-tight">
             Frequently Asked Questions
           </h2>
-          <div className="space-y-6">
-            <div>
-              <h3 className="mb-2 text-lg font-semibold">
-                How secure is my data?
-              </h3>
-              <p className="leading-relaxed text-muted-foreground">
-                All environment variables are encrypted at rest using
-                AES-256-GCM encryption with PBKDF2 key derivation (100,000
-                iterations). Data is transmitted over HTTPS and we implement
-                industry-standard security practices. Read our{' '}
-                <a href="/privacy" className="text-primary hover:underline">
-                  Privacy Policy
-                </a>{' '}
-                for more details.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="mb-2 text-lg font-semibold">
-                Is ENV Store free to use?
-              </h3>
-              <p className="leading-relaxed text-muted-foreground">
-                Yes, ENV Store is completely free and open source. There are no
-                paid plans or premium features.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="mb-2 text-lg font-semibold">
-                Can I export my environment variables?
-              </h3>
-              <p className="leading-relaxed text-muted-foreground">
-                Absolutely! You can export your variables to the standard .env
-                format from any project in your dashboard.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="mb-2 text-lg font-semibold">
-                How do I delete my account?
-              </h3>
-              <p className="leading-relaxed text-muted-foreground">
-                You can delete all your projects from the dashboard. To
-                completely remove your account, please contact me via email.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="mb-2 text-lg font-semibold">
-                Can I contribute to ENV Store?
-              </h3>
-              <p className="leading-relaxed text-muted-foreground">
-                Yes! ENV Store is open source. Check out the{' '}
-                <a
-                  href="https://github.com/nabinkhair42/env-store"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  GitHub repository
-                </a>{' '}
-                to get started. Pull requests are welcome!
-              </p>
-            </div>
+          <div className="divide-y border-t">
+            {faqs.map((faq) => (
+              <details key={faq.q} className="group">
+                <summary className="flex cursor-pointer items-center justify-between py-5 text-sm font-semibold select-none">
+                  {faq.q}
+                  <span className="ml-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <p className="pb-5 text-sm text-muted-foreground">{faq.a}</p>
+              </details>
+            ))}
           </div>
         </div>
 
-        <div className="mt-12 text-center">
-          <p className="text-sm text-muted-foreground">
-            Response time: Usually within 24-48 hours
-          </p>
-        </div>
+        <p className="mt-12 text-center text-sm text-muted-foreground">
+          Response time: Usually within 24-48 hours
+        </p>
       </main>
       <SiteFooter />
     </>

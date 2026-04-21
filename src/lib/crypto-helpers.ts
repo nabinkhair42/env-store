@@ -1,6 +1,6 @@
-import Cryptr from 'cryptr';
-import { env } from '@/env';
 import { EnvVariable } from '@/schema';
+import { env } from '@/schema/env';
+import Cryptr from 'cryptr';
 
 export interface DecryptResult {
   variables: EnvVariable[];

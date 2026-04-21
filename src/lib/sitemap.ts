@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 
-// Internal site configuration (not part of the public API)
-const siteConfig = {
+export const siteConfig = {
   name: 'ENV Store',
   description:
     'Securely manage and sync your environment variables across devices. Never lose your .env again.',
@@ -27,30 +26,44 @@ const siteConfig = {
     },
   ],
   creator: 'Nabin Khair',
+  twitter: '@nabinkhair42',
+  github: 'https://github.com/nabinkhair42',
+  repo: 'https://github.com/nabinkhair42/env-store',
+};
+
+const title = `${siteConfig.name} - Environment Variable Manager`;
+
+export const metadata: Metadata = {
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  authors: siteConfig.authors,
+  creator: siteConfig.creator,
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://envstore.nabinkhair.com.np',
-    title: 'ENV Store - Environment Variable Manager',
-    description:
-      'Securely manage and sync your environment variables across devices. Never lose your .env again.',
-    siteName: 'ENV Store',
+    url: siteConfig.url,
+    title,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
     images: [
       {
-        url: '/og.png',
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: 'ENV Store - Environment Variable Manager',
+        alt: title,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ENV Store - Environment Variable Manager',
-    description:
-      'Securely manage and sync your environment variables across devices. Never lose your .env again.',
-    images: ['/og.png'],
-    creator: '@nabinkhair42',
+    title,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
+    creator: siteConfig.twitter,
   },
   robots: {
     index: true,
@@ -63,24 +76,8 @@ const siteConfig = {
       'max-snippet': -1,
     },
   },
-};
-
-export const metadata: Metadata = {
-  title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  keywords: siteConfig.keywords,
-  authors: siteConfig.authors,
-  creator: siteConfig.creator,
-  openGraph: siteConfig.openGraph,
-  twitter: siteConfig.twitter,
-  robots: siteConfig.robots,
   metadataBase: new URL(siteConfig.url),
-  alternates: {
-    canonical: '/',
-  },
+  alternates: { canonical: '/' },
   icons: {
     icon: siteConfig.logo,
     shortcut: siteConfig.logo,
@@ -90,17 +87,9 @@ export const metadata: Metadata = {
 };
 
 export function generateSitemap() {
-  const baseUrl = siteConfig.url;
-
-  // Only include publicly accessible pages
-  // Exclude auth-required pages (/dashboard, /dashboard/[id])
   const routes = ['', '/privacy', '/terms', '/contact'];
-
   return routes.map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
-    // Removed deprecated changeFrequency and priority (ignored by Google since 2024)
+    url: `${siteConfig.url}${route}`,
+    lastModified: new Date().toISOString().split('T')[0],
   }));
 }
-
-// robots.txt is implemented in app/robots.ts; keep sitemap utilities here-only

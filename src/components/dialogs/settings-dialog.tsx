@@ -10,8 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import LoaderScreen from '@/components/ui/loader';
 import { Separator } from '@/components/ui/separator';
+import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useProjects } from '@/hooks/use-project';
 import { IProject } from '@/types/projects';
@@ -145,7 +145,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             </div>
             <Separator />
             {loading ? (
-              <LoaderScreen />
+              <div className="flex items-center justify-center py-6">
+                <Spinner className="size-5" />
+              </div>
             ) : error ? (
               <div className="text-center py-6">
                 <p className="text-sm text-destructive mb-3">

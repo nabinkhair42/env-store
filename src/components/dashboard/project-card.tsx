@@ -18,21 +18,19 @@ import {
   Download01Icon,
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
-import type React from 'react';
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 import { toast } from 'react-hot-toast';
 
 interface ProjectCardProps {
   project: IProject;
   onSelect: (project: IProject) => void;
-  onEdit?: (project: IProject) => void;
   onDelete: (projectId: string) => void;
 }
 
 export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const handleCopy = async (e: React.MouseEvent) => {
+  const handleCopy = async (e: MouseEvent) => {
     e.stopPropagation();
     try {
       const envContent = generateEnvFile(project.variables || []);
@@ -44,7 +42,7 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
     }
   };
 
-  const handleDownload = (e: React.MouseEvent) => {
+  const handleDownload = (e: MouseEvent) => {
     e.stopPropagation();
     try {
       const envContent = generateEnvFile(project.variables || []);
@@ -54,7 +52,7 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
     }
   };
 
-  const handleDelete = (e: React.MouseEvent) => {
+  const handleDelete = (e: MouseEvent) => {
     e.stopPropagation();
     setShowDeleteConfirm(true);
   };

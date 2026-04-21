@@ -1,10 +1,10 @@
 import { auth } from '@/auth';
-import { env } from '@/env';
 import {
     safeDecryptVariables,
     safeEncryptVariables,
 } from '@/lib/crypto-helpers';
 import { client } from '@/lib/db';
+import { env } from '@/schema/env';
 import { ProjectSchema } from '@/schema/project';
 import { IProject } from '@/types/projects';
 import { NextRequest, NextResponse } from 'next/server';

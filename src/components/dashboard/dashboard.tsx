@@ -4,8 +4,8 @@ import { ProjectCard } from '@/components/dashboard/project-card';
 import { ProjectForm } from '@/components/dashboard/project-form';
 import { Button } from '@/components/ui/button';
 import { ItemGroup } from '@/components/ui/item';
-import LoaderScreen from '@/components/ui/loader';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Spinner } from '@/components/ui/spinner';
 import { useAppContext } from '@/contexts/app-context';
 import { useProjects } from '@/hooks/use-project';
 import { IProject } from '@/types/projects';
@@ -40,14 +40,10 @@ export function Dashboard() {
     }
   };
 
-  if (loading) {
-    return <LoaderScreen />;
-  }
-
   return (
     <>
       <div className="mx-auto w-full max-w-4xl px-6">
-        {/* Header */}
+        {/* Header — always visible */}
         <div className="flex flex-col gap-4 py-8 md:flex-row md:items-start md:justify-between">
           <div>
             <p className="text-xs font-medium text-muted-foreground">
@@ -60,7 +56,7 @@ export function Dashboard() {
               Manage environment variables by project
             </p>
           </div>
-          {projects.length > 0 && (
+          {!loading && projects.length > 0 && (
             <Button
               onClick={() => setShowProjectForm(true)}
               className="w-full md:w-auto"
@@ -72,7 +68,11 @@ export function Dashboard() {
         </div>
 
         {/* Content */}
-        {projects.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Spinner className="size-5" />
+          </div>
+        ) : projects.length === 0 ? (
           <div className="py-20 text-center">
             <p className="text-sm text-muted-foreground">
               No projects yet. Create one to get started.
@@ -92,7 +92,6 @@ export function Dashboard() {
                   <ProjectCard
                     project={project}
                     onSelect={handleProjectSelected}
-                    onEdit={handleProjectSelected}
                     onDelete={handleProjectDeleted}
                   />
                 </div>

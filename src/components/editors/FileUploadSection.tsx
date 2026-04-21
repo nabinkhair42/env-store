@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { parseEnvFile } from '@/lib/utils/env-parser';
 import { EnvVariable } from '@/schema/environment-variable';
 import { Upload02Icon } from '@hugeicons/core-free-icons';
@@ -99,9 +100,10 @@ export const FileUploadSection = memo(function FileUploadSection({
     <div className="mt-6 pb-6">
       {hiddenInput}
       <div
-        className={`rounded-lg border border-dashed p-4 transition-colors cursor-pointer text-center ${
+        className={cn(
+          'rounded-lg border border-dashed p-4 transition-colors cursor-pointer text-center',
           dragActive ? 'border-primary bg-muted/50' : 'hover:bg-muted/20'
-        }`}
+        )}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
