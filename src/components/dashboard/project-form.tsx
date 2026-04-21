@@ -10,35 +10,47 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useCreateProject } from '@/hooks/use-projects';
+import { useCreateProject, useUpdateProject } from '@/hooks/use-projects';
 import { ProjectInput, ProjectSchema } from '@/schema';
+import { IProject } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 interface ProjectFormProps {
+  project?: IProject;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
-export function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
-  const { mutateAsync: createProject, isPending } = useCreateProject();
+export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) {
+  const isEditing = !!project;
+  const { mutateAsync: createProject, isPending: isCreating } = useCreateProject();
+  const { mutateAsync: updateProject, isPending: isUpdating } = useUpdateProject();
+  const isPending = isCreating || isUpdating;
 
   const form = useForm<ProjectInput>({
     resolver: zodResolver(ProjectSchema),
     defaultValues: {
-      name: '',
-      description: '',
-      variables: [],
+      name: project?.name ?? '',
+      description: project?.description ?? '',
+      variables: project?.variables ?? [],
     },
   });
 
   const onSubmit = async (data: ProjectInput) => {
     try {
-      await createProject(data);
+      if (isEditing) {
+        await updateProject({
+          id: project._id as string,
+          data: { name: data.name, description: data.description },
+        });
+      } else {
+        await createProject(data);
+      }
       onSuccess();
       form.reset();
     } catch {
-      // Error toast is handled in the mutation hook
+      // Error toast handled in hooks
     }
   };
 
@@ -46,7 +58,7 @@ export function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
     <Dialog open={true} onOpenChange={onCancel}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Create New Project</DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit Project' : 'Create New Project'}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -91,7 +103,9 @@ export function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               Cancel
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Creating...' : 'Create Project'}
+              {isPending
+                ? isEditing ? 'Saving...' : 'Creating...'
+                : isEditing ? 'Save Changes' : 'Create Project'}
             </Button>
           </div>
         </form>

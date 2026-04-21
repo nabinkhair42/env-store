@@ -63,7 +63,14 @@ export function Dashboard() {
             </div>
           </div>
         ) : (
+          <div className="relative">
+            {/* Top fade */}
+            <div className="pointer-events-none absolute top-0 left-0 right-0 z-10 h-6 bg-gradient-to-b from-background to-transparent" />
+            {/* Bottom fade */}
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-16 bg-gradient-to-t from-background to-transparent" />
+
           <ScrollArea className="h-[calc(100svh-220px)]">
+            <div className="py-4">
             {/* My Projects */}
             {projects.length > 0 && (
               <div>
@@ -107,7 +114,9 @@ export function Dashboard() {
                 </ItemGroup>
               </div>
             )}
+            </div>
           </ScrollArea>
+          </div>
         )}
       </div>
 
