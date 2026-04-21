@@ -34,7 +34,9 @@ export function ProjectCard({ project, role, onSelect, onDelete }: ProjectCardPr
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const isOwner = role === 'owner';
 
-  const getEnvContent = () => generateEnvFile(project.variables || []);
+  // Use first environment's variables for quick copy/download
+  const defaultVars = project.environments?.[0]?.variables ?? project.variables ?? [];
+  const getEnvContent = () => generateEnvFile(defaultVars);
 
   const handleAction = (e: MouseEvent, action: () => void) => {
     e.stopPropagation();

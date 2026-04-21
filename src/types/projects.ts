@@ -7,6 +7,11 @@ export interface IEnvVariable {
   description?: string;
 }
 
+export interface IEnvironment {
+  name: string;
+  variables: IEnvVariable[];
+}
+
 export interface IProjectMember {
   name: string | null;
   image: string | null;
@@ -17,6 +22,8 @@ export interface IProject {
   name: string;
   description?: string;
   userId: string;
+  environments: IEnvironment[];
+  /** @deprecated Present only on unmigrated documents */
   variables?: IEnvVariable[];
   createdAt: Date;
   updatedAt: Date;

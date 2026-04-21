@@ -7,6 +7,7 @@ export {
   projectKeys,
 } from './use-projects';
 export { useVariableManager } from './use-variables';
+export { useEnvironmentManager } from './use-environment-manager';
 export {
   useMembers,
   useInviteMember,

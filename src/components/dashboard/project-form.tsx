@@ -10,6 +10,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { DEFAULT_ENVIRONMENTS } from '@/config/app-data';
 import { useCreateProject, useUpdateProject } from '@/hooks/use-projects';
 import { ProjectInput, ProjectSchema } from '@/schema';
 import { IProject } from '@/types';
@@ -33,7 +34,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
     defaultValues: {
       name: project?.name ?? '',
       description: project?.description ?? '',
-      variables: project?.variables ?? [],
+      environments: project?.environments ?? DEFAULT_ENVIRONMENTS.map((name) => ({ name, variables: [] })),
     },
   });
 

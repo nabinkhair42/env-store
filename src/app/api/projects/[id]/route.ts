@@ -1,12 +1,14 @@
 import { auth } from '@/auth';
 import { checkProjectAccess } from '@/lib/access-control';
 import {
-  safeDecryptVariables,
-  safeEncryptVariables,
+  safeDecryptEnvironments,
+  safeEncryptEnvironments,
 } from '@/lib/crypto-helpers';
 import { client } from '@/lib/db';
+import { migrateProjectToEnvironments } from '@/lib/migration';
 import { env } from '@/schema/env';
 import { UpdateProjectSchema } from '@/schema';
+import { IProject } from '@/types';
 import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -24,13 +26,20 @@ export async function GET(
     if (!access.allowed)
       return NextResponse.json({ error: access.error }, { status: access.status });
 
-    const { variables, failedKeys } = safeDecryptVariables(access.project.variables);
-    const decryptedProject = { ...access.project, variables, memberRole: access.role };
+    const environments = migrateProjectToEnvironments(access.project);
+    const { environments: decrypted, failedKeys } = safeDecryptEnvironments(environments);
+
+    const decryptedProject = {
+      ...access.project,
+      environments: decrypted,
+      variables: undefined,
+      memberRole: access.role,
+    };
 
     return NextResponse.json({
       project: decryptedProject,
       ...(failedKeys.length > 0 && {
-        warning: `Failed to decrypt variables: ${failedKeys.join(', ')}. Check that ENCRYPTION_SECRET matches the key used to encrypt this data.`,
+        warning: `Failed to decrypt variables: ${failedKeys.join(', ')}.`,
       }),
     });
   } catch (error) {
@@ -50,7 +59,6 @@ export async function PUT(
 
     const [body, { id }] = await Promise.all([request.json(), params]);
 
-    // Editors and owners can update
     const access = await checkProjectAccess(id, session.user.id, 'editor');
     if (!access.allowed)
       return NextResponse.json({ error: access.error }, { status: access.status });
@@ -59,7 +67,6 @@ export async function PUT(
 
     const collection = client.db(env.DATABASE_NAME).collection('projects');
 
-    // Name conflict check (only if name is changing)
     if (validatedData.name && validatedData.name !== access.project.name) {
       const nameConflict = await collection.findOne({
         userId: access.project.userId,
@@ -79,23 +86,27 @@ export async function PUT(
       updatedAt: new Date(),
     };
 
-    if (fieldsToUpdate.variables) {
-      updateData.variables = safeEncryptVariables(fieldsToUpdate.variables);
+    if (fieldsToUpdate.environments) {
+      updateData.environments = safeEncryptEnvironments(fieldsToUpdate.environments);
     }
 
     const result = await collection.findOneAndUpdate(
       { _id: new ObjectId(id) },
-      { $set: updateData },
+      {
+        $set: updateData,
+        $unset: { variables: '' },
+      },
       { returnDocument: 'after' },
     );
 
     if (!result)
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
 
-    const { variables: decryptedVars, failedKeys } = safeDecryptVariables(result.variables);
+    const envs = migrateProjectToEnvironments(result as unknown as IProject);
+    const { environments: decryptedEnvs, failedKeys } = safeDecryptEnvironments(envs);
 
     return NextResponse.json({
-      project: { ...result, variables: decryptedVars, memberRole: access.role },
+      project: { ...result, environments: decryptedEnvs, variables: undefined, memberRole: access.role },
       message: 'Project updated successfully',
       ...(failedKeys.length > 0 && {
         warning: `Failed to decrypt variables: ${failedKeys.join(', ')}.`,
@@ -119,15 +130,12 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { id } = await params;
-
-    // Only owner can delete
     const access = await checkProjectAccess(id, session.user.id, 'owner');
     if (!access.allowed)
       return NextResponse.json({ error: access.error }, { status: access.status });
 
     const db = client.db(env.DATABASE_NAME);
 
-    // Delete project and clean up members + notifications
     await Promise.all([
       db.collection('projects').deleteOne({ _id: new ObjectId(id) }),
       db.collection('members').deleteMany({ projectId: id }),

@@ -1,10 +1,16 @@
 import { PBKDF2_ITERATIONS, SALT_LENGTH } from '@/config/app-data';
 import { EnvVariable } from '@/schema';
 import { env } from '@/schema/env';
+import { IEnvironment } from '@/types';
 import Cryptr from 'cryptr';
 
 export interface DecryptResult {
   variables: EnvVariable[];
+  failedKeys: string[];
+}
+
+export interface DecryptEnvironmentsResult {
+  environments: IEnvironment[];
   failedKeys: string[];
 }
 
@@ -39,4 +45,25 @@ export function safeDecryptVariables(
   });
 
   return { variables: decrypted, failedKeys };
+}
+
+export function safeEncryptEnvironments(
+  environments: IEnvironment[],
+): IEnvironment[] {
+  return environments.map((e) => ({
+    ...e,
+    variables: safeEncryptVariables(e.variables),
+  }));
+}
+
+export function safeDecryptEnvironments(
+  environments: IEnvironment[],
+): DecryptEnvironmentsResult {
+  const allFailedKeys: string[] = [];
+  const decrypted = environments.map((e) => {
+    const { variables, failedKeys } = safeDecryptVariables(e.variables);
+    allFailedKeys.push(...failedKeys);
+    return { ...e, variables };
+  });
+  return { environments: decrypted, failedKeys: allFailedKeys };
 }
