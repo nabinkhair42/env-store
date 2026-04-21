@@ -3,8 +3,9 @@
 import { ProjectCard } from '@/components/dashboard/project-card';
 import { ProjectForm } from '@/components/dashboard/project-form';
 import { Button } from '@/components/ui/button';
-import { ItemGroup, ItemSeparator } from '@/components/ui/item';
+import { ItemGroup } from '@/components/ui/item';
 import LoaderScreen from '@/components/ui/loader';
+import { Separator } from '@/components/ui/separator';
 import { useAppContext } from '@/contexts/app-context';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
@@ -73,7 +74,7 @@ export function Dashboard() {
         </div>
 
         {/* Projects List */}
-        <div className="border-t border-border" />
+        <Separator />
 
         {projects.length === 0 ? (
           <div className="mx-auto w-full max-w-4xl px-6 mt-6">

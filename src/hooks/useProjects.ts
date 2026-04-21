@@ -31,8 +31,9 @@ export function useProjects(): UseProjectsState & UseProjectsActions {
   const fetchProjects = useCallback(async () => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
     try {
-      const { projects } = await projectsApi.getProjects();
+      const { projects, warning } = await projectsApi.getProjects();
       setState((prev) => ({ ...prev, projects, loading: false }));
+      if (warning) toast.error(warning, { duration: 8000 });
     } catch (error) {
       const errorMessage =
         error instanceof ApiError ? error.message : 'Failed to fetch projects';
@@ -84,7 +85,7 @@ export function useProjects(): UseProjectsState & UseProjectsActions {
       }));
 
       try {
-        const { project } = await projectsApi.updateProject(id, data);
+        const { project, warning } = await projectsApi.updateProject(id, data);
 
         // Update with server response
         setState((prev) => ({
@@ -93,6 +94,7 @@ export function useProjects(): UseProjectsState & UseProjectsActions {
         }));
 
         toast.success('Project updated successfully');
+        if (warning) toast.error(warning, { duration: 8000 });
         return project;
       } catch (error) {
         // Revert optimistic update on error

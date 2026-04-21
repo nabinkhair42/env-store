@@ -16,13 +16,11 @@ const notes = [
 export default function SecurityNotes() {
   return (
     <section className="mx-auto w-full max-w-4xl px-6 py-20">
-      <p className="text-xs font-medium  text-muted-foreground">
-        Security
-      </p>
+      <p className="text-xs font-medium text-muted-foreground">Security</p>
       <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
         Built with security at every layer
       </h2>
-      <p className="mt-2 max-w-2xl text-base text-muted-foreground">
+      <p className="mt-2 max-w-2xl text-muted-foreground">
         Your environment variables contain sensitive information. ENV Store uses
         industry-standard encryption to keep your data private and secure.
       </p>
@@ -35,9 +33,7 @@ export default function SecurityNotes() {
               size={18}
               className="text-muted-foreground shrink-0 mt-0.5"
             />
-            <span className="text-sm leading-relaxed text-muted-foreground">
-              {note}
-            </span>
+            <p className="text-sm text-muted-foreground">{note}</p>
           </div>
         ))}
       </div>

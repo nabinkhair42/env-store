@@ -1,24 +1,9 @@
-'use client';
+import { Spinner } from '@/components/ui/spinner';
 
-import { cn } from '@/lib/utils';
-
-type LoaderProps = {
-  className?: string;
-};
-
-const LoaderScreen = ({ className }: LoaderProps) => {
+export default function LoaderScreen() {
   return (
     <div className="flex min-h-svh items-center justify-center">
-      <span
-        role="status"
-        aria-label="Loading"
-        className={cn(
-          'inline-block size-8 animate-spin rounded-full border-2 border-muted-foreground/40 border-t-foreground',
-          className
-        )}
-      />
+      <Spinner className="size-6" />
     </div>
   );
-};
-
-export default LoaderScreen;
+}

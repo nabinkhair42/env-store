@@ -68,44 +68,31 @@ export function decrypt(
     throw new Error('Encryption secret is not configured');
   }
 
-  try {
-    // Check if the text is encrypted (contains our format)
-    if (!encryptedText.includes(':')) {
-      // Backward compatibility: return as-is if not encrypted
-      return encryptedText;
-    }
-
-    const parts = encryptedText.split(':');
-    if (parts.length !== 4) {
-      // Not in expected format, return as-is for backward compatibility
-      return encryptedText;
-    }
-
-    const [saltHex, ivHex, encrypted, authTagHex] = parts;
-
-    // Convert hex strings back to buffers
-    const salt = Buffer.from(saltHex, 'hex');
-    const iv = Buffer.from(ivHex, 'hex');
-    const authTag = Buffer.from(authTagHex, 'hex');
-
-    // Derive the same key using the salt
-    const key = deriveKey(encryptionSecret, salt);
-
-    // Create decipher
-    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-    decipher.setAuthTag(authTag);
-
-    // Decrypt the text
-    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-
-    return decrypted;
-  } catch (error) {
-    console.error('Decryption error:', error);
-    // Backward compatibility: if decryption fails, it might be unencrypted legacy data
-    // In production, you might want to handle this differently
+  // Use isEncrypted() for proper format validation before attempting decryption.
+  // This avoids mistakenly trying to decrypt plaintext that happens to contain colons.
+  if (!isEncrypted(encryptedText)) {
     return encryptedText;
   }
+
+  const [saltHex, ivHex, encrypted, authTagHex] = encryptedText.split(':');
+
+  // Convert hex strings back to buffers
+  const salt = Buffer.from(saltHex, 'hex');
+  const iv = Buffer.from(ivHex, 'hex');
+  const authTag = Buffer.from(authTagHex, 'hex');
+
+  // Derive the same key using the salt
+  const key = deriveKey(encryptionSecret, salt);
+
+  // Create decipher
+  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+  decipher.setAuthTag(authTag);
+
+  // Decrypt the text
+  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+
+  return decrypted;
 }
 
 /**

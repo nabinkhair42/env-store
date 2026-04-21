@@ -32,12 +32,15 @@ export async function GET(
     }
 
     // Decrypt variables before sending to client
-    const decryptedProject = {
-      ...project,
-      variables: safeDecryptVariables(project.variables),
-    };
+    const { variables, failedKeys } = safeDecryptVariables(project.variables);
+    const decryptedProject = { ...project, variables };
 
-    return NextResponse.json({ project: decryptedProject });
+    return NextResponse.json({
+      project: decryptedProject,
+      ...(failedKeys.length > 0 && {
+        warning: `Failed to decrypt variables: ${failedKeys.join(', ')}. Check that ENCRYPTION_SECRET matches the key used to encrypt this data.`,
+      }),
+    });
   } catch (error) {
     console.error('Error fetching project:', error);
     return NextResponse.json(
@@ -96,13 +99,15 @@ export async function PUT(
     }
 
     // Encrypt variables if they are being updated
+    // Destructure to exclude `id` — it's from the URL param, not a document field
+    const { id: _id, ...fieldsToUpdate } = validatedData;
     const updateData: Record<string, unknown> = {
-      ...validatedData,
+      ...fieldsToUpdate,
       updatedAt: new Date(),
     };
 
-    if (validatedData.variables) {
-      updateData.variables = safeEncryptVariables(validatedData.variables);
+    if (fieldsToUpdate.variables) {
+      updateData.variables = safeEncryptVariables(fieldsToUpdate.variables);
     }
 
     const result = await collection.findOneAndUpdate(
@@ -116,14 +121,16 @@ export async function PUT(
     }
 
     // Decrypt variables before sending to client
-    const decryptedResult = {
-      ...result,
-      variables: safeDecryptVariables(result.variables),
-    };
+    const { variables: decryptedVars, failedKeys: updateFailedKeys } =
+      safeDecryptVariables(result.variables);
+    const decryptedResult = { ...result, variables: decryptedVars };
 
     return NextResponse.json({
       project: decryptedResult,
       message: 'Project updated successfully',
+      ...(updateFailedKeys.length > 0 && {
+        warning: `Failed to decrypt variables: ${updateFailedKeys.join(', ')}. Check that ENCRYPTION_SECRET matches the key used to encrypt this data.`,
+      }),
     });
   } catch (error) {
     console.error('Error updating project:', error);

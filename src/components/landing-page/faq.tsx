@@ -32,17 +32,15 @@ const faqs = [
 export default function FAQ() {
   return (
     <section className="mx-auto w-full max-w-4xl px-6 py-20">
-      <p className="text-xs font-medium  text-muted-foreground">
-        FAQ
-      </p>
+      <p className="text-xs font-medium text-muted-foreground">FAQ</p>
       <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
         Frequently asked questions
       </h2>
-      <p className="mt-2 max-w-2xl text-base text-muted-foreground">
+      <p className="mt-2 max-w-2xl text-muted-foreground">
         Common questions about ENV Store and how it works.
       </p>
 
-      <div className="mt-10 divide-y divide-border border-t border-border">
+      <div className="mt-10 divide-y border-t">
         {faqs.map((item, i) => (
           <details key={i} className="group">
             <summary className="flex cursor-pointer items-center justify-between py-5 text-sm font-semibold select-none">
@@ -51,9 +49,7 @@ export default function FAQ() {
                 +
               </span>
             </summary>
-            <p className="pb-5 text-sm leading-relaxed text-muted-foreground">
-              {item.a}
-            </p>
+            <p className="pb-5 text-sm text-muted-foreground">{item.a}</p>
           </details>
         ))}
       </div>

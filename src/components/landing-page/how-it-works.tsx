@@ -28,30 +28,23 @@ const steps = [
 export default function HowItWorks() {
   return (
     <section className="mx-auto w-full max-w-4xl px-6 py-20">
-      <p className="text-xs font-medium  text-muted-foreground">
-        How it works
-      </p>
+      <p className="text-xs font-medium text-muted-foreground">How it works</p>
       <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
         From setup to recovery in four steps
       </h2>
-      <p className="mt-2 max-w-2xl text-base text-muted-foreground">
+      <p className="mt-2 max-w-2xl text-muted-foreground">
         Simple workflow designed for developers who need quick access to their
         configs.
       </p>
 
-      <div className="mt-10 grid sm:grid-cols-2 divide-y sm:divide-y-0 divide-border">
+      <div className="mt-10 grid gap-6 sm:grid-cols-2">
         {steps.map((step, i) => (
-          <div
-            key={i}
-            className={`p-6 ${i % 2 !== 0 ? 'sm:border-l sm:border-border' : ''} ${i >= 2 ? 'sm:border-t sm:border-border' : ''}`}
-          >
+          <div key={i} className="space-y-2">
             <span className="text-2xl font-bold text-muted-foreground/30 tabular-nums">
               {step.number}
             </span>
-            <h3 className="mt-3 text-sm font-semibold">{step.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {step.description}
-            </p>
+            <h3 className="text-sm font-semibold">{step.title}</h3>
+            <p className="text-sm text-muted-foreground">{step.description}</p>
           </div>
         ))}
       </div>

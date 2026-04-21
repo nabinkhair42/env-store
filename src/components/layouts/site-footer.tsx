@@ -26,7 +26,7 @@ export default function SiteFooter() {
 
           <div className="flex gap-16">
             <div>
-              <p className="mb-3 text-xs font-semibold  text-muted-foreground">
+              <p className="mb-3 text-xs font-semibold text-muted-foreground">
                 Resources
               </p>
               <ul className="space-y-2">
@@ -62,7 +62,7 @@ export default function SiteFooter() {
             </div>
 
             <div>
-              <p className="mb-3 text-xs font-semibold  text-muted-foreground">
+              <p className="mb-3 text-xs font-semibold text-muted-foreground">
                 Legal
               </p>
               <ul className="space-y-2">

@@ -1,29 +1,28 @@
 import { env } from '@/env';
 import { EnvVariable } from '@/lib/zod';
-import { decrypt, encrypt } from './encryption';
+import { decrypt, encrypt, isEncrypted } from './encryption';
+
+export interface DecryptResult {
+  variables: EnvVariable[];
+  failedKeys: string[];
+}
 
 /**
- * Encrypts all variable values in an array
+ * Encrypts all variable values in an array.
+ * Skips values that are already encrypted to prevent double-encryption.
  */
 export function encryptVariables(variables: EnvVariable[]): EnvVariable[] {
   return variables.map((variable) => ({
     ...variable,
-    value: encrypt(variable.value, env.ENCRYPTION_SECRET),
+    value: isEncrypted(variable.value)
+      ? variable.value
+      : encrypt(variable.value, env.ENCRYPTION_SECRET),
   }));
 }
 
 /**
- * Decrypts all variable values in an array
- */
-export function decryptVariables(variables: EnvVariable[]): EnvVariable[] {
-  return variables.map((variable) => ({
-    ...variable,
-    value: decrypt(variable.value, env.ENCRYPTION_SECRET),
-  }));
-}
-
-/**
- * Safely encrypts variables, handling edge cases
+ * Safely encrypts variables, handling edge cases.
+ * Prevents double-encryption by checking if values are already encrypted.
  */
 export function safeEncryptVariables(
   variables: EnvVariable[] | undefined
@@ -43,21 +42,38 @@ export function safeEncryptVariables(
 }
 
 /**
- * Safely decrypts variables, handling edge cases
+ * Safely decrypts variables with per-variable error isolation.
+ *
+ * On failure, the encrypted value is preserved as-is (safe because
+ * encryptVariables guards against double-encryption). The key is
+ * collected in failedKeys so the API can warn the client.
  */
 export function safeDecryptVariables(
   variables: EnvVariable[] | undefined
-): EnvVariable[] {
+): DecryptResult {
   if (!variables || !Array.isArray(variables)) {
-    return [];
+    return { variables: [], failedKeys: [] };
   }
 
-  try {
-    return decryptVariables(variables);
-  } catch (error) {
-    console.error('Error decrypting variables:', error);
-    // Return as-is on decryption error for backward compatibility
-    // In production, you might want to handle this differently
-    return variables;
-  }
+  const failedKeys: string[] = [];
+
+  const decrypted = variables.map((variable) => {
+    try {
+      return {
+        ...variable,
+        value: decrypt(variable.value, env.ENCRYPTION_SECRET),
+      };
+    } catch (error) {
+      console.error(
+        `Failed to decrypt variable "${variable.key}":`,
+        error
+      );
+      failedKeys.push(variable.key);
+      // Preserve the encrypted value as-is — the double-encryption
+      // guard in encryptVariables prevents corruption on re-save.
+      return variable;
+    }
+  });
+
+  return { variables: decrypted, failedKeys };
 }

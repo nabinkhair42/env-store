@@ -33,12 +33,19 @@ export async function GET() {
       .toArray();
 
     // Decrypt variables before sending to client
-    const decryptedProjects = projects.map((project) => ({
-      ...project,
-      variables: safeDecryptVariables(project.variables),
-    }));
+    const allFailedKeys: string[] = [];
+    const decryptedProjects = projects.map((project) => {
+      const { variables, failedKeys } = safeDecryptVariables(project.variables);
+      allFailedKeys.push(...failedKeys);
+      return { ...project, variables };
+    });
 
-    return NextResponse.json({ projects: decryptedProjects });
+    return NextResponse.json({
+      projects: decryptedProjects,
+      ...(allFailedKeys.length > 0 && {
+        warning: `Failed to decrypt variables: ${allFailedKeys.join(', ')}. Check that ENCRYPTION_SECRET matches the key used to encrypt this data.`,
+      }),
+    });
   } catch (error) {
     console.error('Error fetching projects:', error);
     return NextResponse.json(
@@ -93,11 +100,11 @@ export async function POST(request: NextRequest) {
 
     const result = await collection.insertOne(project);
 
-    // Decrypt for response
+    // Return plaintext variables in response (no need to decrypt what we just encrypted)
     const createdProject = {
       ...project,
       _id: result.insertedId,
-      variables: safeDecryptVariables(encryptedVariables),
+      variables: validatedData.variables || [],
     };
 
     return NextResponse.json(

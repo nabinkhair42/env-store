@@ -1,11 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { Loading03Icon } from '@hugeicons/core-free-icons';
+import { GithubIcon } from '@hugeicons/core-free-icons';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
-import { FaGithub } from 'react-icons/fa6';
 
 export function SignInButton() {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,21 +24,17 @@ export function SignInButton() {
     <Button
       onClick={handleSignIn}
       disabled={isLoading}
-      className="w-full flex items-center justify-center gap-2"
+      className="w-full"
       size="lg"
     >
       {isLoading ? (
         <>
-          <HugeiconsIcon
-            icon={Loading03Icon}
-            size={20}
-            className="animate-spin"
-          />{' '}
+          <Spinner />
           Signing In
         </>
       ) : (
         <>
-          <FaGithub className="h-5 w-5" />
+          <HugeiconsIcon icon={GithubIcon} size={18} />
           Continue with GitHub
         </>
       )}

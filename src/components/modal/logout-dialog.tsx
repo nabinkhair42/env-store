@@ -8,8 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Logout01Icon, Loading03Icon } from '@hugeicons/core-free-icons';
+import { Spinner } from '@/components/ui/spinner';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 
@@ -35,10 +34,7 @@ export function LogOutDialog({ open, onOpenChange }: LogOutDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <HugeiconsIcon icon={Logout01Icon} size={20} />
-            Sign Out
-          </DialogTitle>
+          <DialogTitle>Sign Out</DialogTitle>
           <DialogDescription>
             Are you sure you want to sign out? You will need to log in again to
             access your projects.
@@ -52,22 +48,14 @@ export function LogOutDialog({ open, onOpenChange }: LogOutDialogProps) {
             variant="destructive"
             onClick={handleLogOut}
             disabled={isLoading}
-            className="flex items-center gap-2"
           >
             {isLoading ? (
               <>
-                <HugeiconsIcon
-                  icon={Loading03Icon}
-                  size={20}
-                  className="animate-spin"
-                />{' '}
+                <Spinner />
                 Signing Out
               </>
             ) : (
-              <>
-                <HugeiconsIcon icon={Logout01Icon} size={20} />
-                Sign Out
-              </>
+              'Sign Out'
             )}
           </Button>
         </DialogFooter>

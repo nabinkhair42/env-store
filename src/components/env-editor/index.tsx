@@ -2,26 +2,27 @@
 
 import { ConfirmDialog } from '@/components/modal/confirm-dialog';
 import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
+import { Separator } from '@/components/ui/separator';
+import { Spinner } from '@/components/ui/spinner';
 import { useProjects } from '@/hooks/useProjects';
 import { useVariableManager } from '@/hooks/useVariables';
 import { useVisibilityToggle } from '@/hooks/useVisibilityToggle';
 import { IProject } from '@/lib/types';
 import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
 import { EnvVariable } from '@/lib/zod';
-import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  AlertCircleIcon,
   Alert01Icon,
-  Tick01Icon,
+  AlertCircleIcon,
   Copy01Icon,
   Download01Icon,
-  Loading03Icon,
   SaveIcon,
+  Tick01Icon,
 } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 import { useCallback, useMemo, useState } from 'react';
 import { FileUploadSection } from './FileUploadSection';
 import { VariablesList } from './VariablesList';
-import { ButtonGroup } from '@/components/ui/button-group';
 // Local component-only types
 type DeleteConfirmState = { open: boolean; index: number; varName: string };
 
@@ -184,7 +185,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
       <div className="mx-auto w-full max-w-4xl px-6 py-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1">
-            <h1 className="text-xl font-bold uppercase tracking-tight">
+            <h1 className="text-xl font-bold">
               {project.name}
             </h1>
             <p className="text-sm text-muted-foreground">
@@ -226,11 +227,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
             >
               {saveStatus === 'saving' && (
                 <>
-                  <HugeiconsIcon
-                    icon={Loading03Icon}
-                    size={16}
-                    className="animate-spin"
-                  />
+                  <Spinner />
                   Saving
                 </>
               )}
@@ -257,7 +254,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
         </div>
       </div>
 
-      <div className="border-t border-border" />
+      <Separator />
 
       <VariablesList
         variables={variables}
@@ -269,7 +266,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
         onSmartPaste={handleSmartPaste}
       />
 
-      <div className="border-t border-border" />
+      <Separator />
 
       <FileUploadSection onFileVariables={handleFileVariables} />
 

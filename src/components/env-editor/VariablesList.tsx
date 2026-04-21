@@ -2,12 +2,9 @@
 
 import { memo, useRef, useEffect } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
-import {
-  Add01Icon,
-  File02Icon,
-  KeyboardIcon,
-} from '@hugeicons/core-free-icons';
+import { Add01Icon, KeyboardIcon } from '@hugeicons/core-free-icons';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import {
   HoverCard,
   HoverCardContent,
@@ -69,11 +66,8 @@ export const VariablesList = memo(function VariablesList({
     return (
       <div>
         <div className="mx-auto w-full max-w-4xl px-6 py-8">
-          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-            <div className="space-y-2">
-              <p className="text-xs font-medium  text-muted-foreground">
-                Variables
-              </p>
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
               <h2 className="text-lg font-bold tracking-tight">
                 Environment Variables
               </h2>
@@ -88,22 +82,17 @@ export const VariablesList = memo(function VariablesList({
           </div>
         </div>
 
-        <div className="border-t border-border" />
+        <Separator />
 
         <div className="mx-auto w-full max-w-4xl px-6">
-          <div className="flex min-h-[300px] items-center justify-center py-16">
-            <div className="space-y-6 text-center">
-              <div className="mx-auto inline-flex size-14 items-center justify-center rounded-xl border border-border text-muted-foreground">
-                <HugeiconsIcon icon={File02Icon} size={28} />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-base font-semibold ">
-                  No Variables Configured
-                </h3>
-                <p className="mx-auto max-w-sm text-sm text-muted-foreground">
-                  Start by adding your first environment variable
-                </p>
-              </div>
+          <div className="flex min-h-60 items-center justify-center py-16">
+            <div className="space-y-4 text-center">
+              <h3 className="text-base font-semibold">
+                No Variables Configured
+              </h3>
+              <p className="mx-auto max-w-sm text-sm text-muted-foreground">
+                Start by adding your first environment variable
+              </p>
               <Button onClick={onAddVariable} variant="outline">
                 <HugeiconsIcon icon={Add01Icon} size={16} />
                 Add Variable
@@ -118,72 +107,48 @@ export const VariablesList = memo(function VariablesList({
   return (
     <div>
       <div className="mx-auto w-full max-w-4xl px-6 py-6">
-        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-          <div className="space-y-2">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
             <div className="flex items-center gap-2">
-              <p className="text-xs font-medium  text-muted-foreground">
-                Variables
-              </p>
+              <h2 className="text-lg font-bold tracking-tight">
+                Environment Variables
+              </h2>
               <HoverCard>
                 <HoverCardTrigger asChild>
                   <Button
                     variant="ghost"
-                    size="sm"
-                    className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground"
+                    size="icon-xs"
+                    className="text-muted-foreground"
                     aria-label="Show keyboard shortcuts"
                   >
                     <HugeiconsIcon icon={KeyboardIcon} size={14} />
                   </Button>
                 </HoverCardTrigger>
-                <HoverCardContent className="w-80">
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-sm flex items-center gap-2">
-                      <HugeiconsIcon icon={KeyboardIcon} size={16} />
-                      Keyboard Shortcuts
-                    </h4>
-                    <div className="space-y-1 text-xs">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">
-                          Tab / Enter
-                        </span>
-                        <span>Navigate to next field</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">
-                          Shift + Tab
-                        </span>
-                        <span>Navigate to previous field</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">
-                          Arrow Right
-                        </span>
-                        <span>Next field (at end of input)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">
-                          Arrow Left
-                        </span>
-                        <span>Previous field (at start)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Escape</span>
-                        <span>Clear focus</span>
-                      </div>
+                <HoverCardContent className="w-72">
+                  <h4 className="font-semibold text-sm mb-2">
+                    Keyboard Shortcuts
+                  </h4>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Tab / Enter</span>
+                      <span>Next field</span>
                     </div>
-                    <div className="border-t pt-2 mt-2">
-                      <p className="text-xs text-muted-foreground">
-                        <strong>Tip:</strong> Paste multiple variables at once.
-                        Supports .env, JSON, and YAML formats.
-                      </p>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Shift + Tab</span>
+                      <span>Previous field</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Escape</span>
+                      <span>Clear focus</span>
                     </div>
                   </div>
+                  <Separator className="my-2" />
+                  <p className="text-xs text-muted-foreground">
+                    Paste multiple variables at once (.env, JSON, YAML).
+                  </p>
                 </HoverCardContent>
               </HoverCard>
             </div>
-            <h2 className="text-lg font-bold tracking-tight">
-              Environment Variables
-            </h2>
             <p className="text-sm text-muted-foreground">
               Manage your application&apos;s environment configuration
             </p>
@@ -195,34 +160,30 @@ export const VariablesList = memo(function VariablesList({
         </div>
       </div>
 
-      <div className="border-t border-border" />
+      <Separator />
 
       <div className="mx-auto w-full max-w-4xl px-6 py-4">
-        <div className="space-y-0">
-          {variables.map((variable, index) => (
-            <div key={index}>
-              {index > 0 && (
-                <div className="h-px bg-border my-3" aria-hidden="true" />
-              )}
-              <VariableRow
-                ref={(el) => {
-                  rowRefs.current[index] = el;
-                }}
-                variable={variable}
-                index={index}
-                isValueVisible={visibleValues.has(index)}
-                onUpdate={(field, value) =>
-                  onUpdateVariable(index, field, value)
-                }
-                onToggleVisibility={() => onToggleVisibility(index)}
-                onDelete={() => onDeleteVariable(index)}
-                onSmartPaste={onSmartPaste}
-                onNavigateToNext={() => handleNavigateToNext(index)}
-                onNavigateToPrevious={() => handleNavigateToPrevious(index)}
-              />
-            </div>
-          ))}
-        </div>
+        {variables.map((variable, index) => (
+          <div key={index}>
+            {index > 0 && <Separator className="my-3" />}
+            <VariableRow
+              ref={(el) => {
+                rowRefs.current[index] = el;
+              }}
+              variable={variable}
+              index={index}
+              isValueVisible={visibleValues.has(index)}
+              onUpdate={(field, value) =>
+                onUpdateVariable(index, field, value)
+              }
+              onToggleVisibility={() => onToggleVisibility(index)}
+              onDelete={() => onDeleteVariable(index)}
+              onSmartPaste={onSmartPaste}
+              onNavigateToNext={() => handleNavigateToNext(index)}
+              onNavigateToPrevious={() => handleNavigateToPrevious(index)}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

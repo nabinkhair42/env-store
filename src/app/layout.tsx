@@ -29,7 +29,7 @@ export default function RootLayout({
       className={cn('font-sans', geist.variable)}
     >
       <body
-        className={`antialiased ${geist.variable} ${jetbrainsMono.variable} font-sans`}
+        className={cn('antialiased font-sans', geist.variable, jetbrainsMono.variable)}
         suppressHydrationWarning
       >
         <StructuredData />

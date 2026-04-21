@@ -23,7 +23,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
 export const projectsApi = {
   // Get all projects for the current user
-  async getProjects(): Promise<{ projects: IProject[] }> {
+  async getProjects(): Promise<{ projects: IProject[]; warning?: string }> {
     const response = await fetch('/api/projects', {
       cache: 'no-store', // Disable cache for fresh data
     });
@@ -31,7 +31,7 @@ export const projectsApi = {
   },
 
   // Get a single project by ID
-  async getProject(id: string): Promise<{ project: IProject }> {
+  async getProject(id: string): Promise<{ project: IProject; warning?: string }> {
     const response = await fetch(`/api/projects/${id}`, {
       cache: 'no-store', // Disable cache for fresh data
     });
@@ -57,7 +57,7 @@ export const projectsApi = {
   async updateProject(
     id: string,
     data: Partial<UpdateProjectInput>
-  ): Promise<{ project: IProject; message: string }> {
+  ): Promise<{ project: IProject; message: string; warning?: string }> {
     const response = await fetch(`/api/projects/${id}`, {
       method: 'PUT',
       headers: {

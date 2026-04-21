@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import LoaderScreen from '@/components/ui/loader';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
+import { Separator } from '@/components/ui/separator';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowLeft01Icon } from '@hugeicons/core-free-icons';
 import Link from 'next/link';
@@ -94,7 +95,7 @@ export default function ProjectPage() {
         </Breadcrumb>
       </div>
 
-      <div className="border-t border-border" />
+      <Separator />
 
       <EnvEditor project={project} onUpdate={handleProjectUpdate} />
     </div>
