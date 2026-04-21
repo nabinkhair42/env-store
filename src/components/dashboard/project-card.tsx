@@ -10,7 +10,7 @@ import {
   ItemDescription,
   ItemTitle,
 } from '@/components/ui/item';
-import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
+import { downloadFile, generateEnvFile } from '@/lib/env-parser';
 import type { IProject } from '@/types/projects';
 import {
   Copy01Icon,
@@ -110,7 +110,8 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
         onOpenChange={setShowDeleteConfirm}
         title="Delete Project"
         description={`Are you sure you want to delete "${project.name}"? This action cannot be undone and will permanently remove all environment variables in this project.`}
-        confirmText="Delete Project"
+        confirmText="Yes, Delete"
+        cancelText='No, Keep it'
         onConfirm={confirmDelete}
         variant="destructive"
       />

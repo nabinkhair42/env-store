@@ -2,8 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { parseEnvFile } from '@/lib/utils/env-parser';
+import { parseEnvFile } from '@/lib/env-parser';
 import { EnvVariable } from '@/schema/environment-variable';
 import { ViewIcon, ViewOffIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -30,7 +29,6 @@ interface SmartVariableInputProps {
   isVisibleRequired?: boolean;
   isValueVisible?: boolean;
   onToggleVisibility?: () => void;
-  label?: string;
 }
 
 export interface SmartVariableInputRef {
@@ -55,7 +53,6 @@ export const SmartVariableInput = forwardRef<
     isVisibleRequired = false,
     isValueVisible = true,
     onToggleVisibility,
-    label,
   },
   ref
 ) {
@@ -76,7 +73,6 @@ export const SmartVariableInput = forwardRef<
 
       const lines = text.split('\n').filter((l) => l.trim());
 
-      // Single line KEY=VALUE pasted into key field — split it
       if (lines.length === 1 && field === 'key' && text.includes('=')) {
         const match = text.match(/^([^=]+)=(.*)$/);
         if (match) {
@@ -87,23 +83,19 @@ export const SmartVariableInput = forwardRef<
         }
       }
 
-      // Multi-line or JSON — try bulk parse
       const isMultiLine = lines.length > 1;
       const isJson = text.startsWith('{') && text.endsWith('}');
-
-      if (!isMultiLine && !isJson) return; // let browser handle normal paste
+      if (!isMultiLine && !isJson) return;
 
       e.preventDefault();
       let parsed: EnvVariable[] = [];
 
-      // Try env format first
       try {
         parsed = parseEnvFile(text).map((v) => ({ key: v.key, value: v.value }));
       } catch {
         // ignore
       }
 
-      // Fall back to JSON
       if (parsed.length === 0 && isJson) {
         try {
           const obj = JSON.parse(text);
@@ -147,26 +139,7 @@ export const SmartVariableInput = forwardRef<
   );
 
   return (
-    <div className="flex flex-col w-full gap-1.5">
-      {label && (
-        <div className="flex items-center justify-between">
-          <Label>{label}</Label>
-          {isVisibleRequired && onToggleVisibility && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-xs"
-              onClick={onToggleVisibility}
-              aria-label={isValueVisible ? 'Hide value' : 'Show value'}
-            >
-              <HugeiconsIcon
-                icon={isValueVisible ? ViewOffIcon : ViewIcon}
-                size={14}
-              />
-            </Button>
-          )}
-        </div>
-      )}
+    <div className="relative w-full">
       <Input
         ref={inputRef}
         id={`${field}-${index}`}
@@ -178,6 +151,21 @@ export const SmartVariableInput = forwardRef<
         placeholder={placeholder}
         className={className}
       />
+      {isVisibleRequired && onToggleVisibility && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-xs"
+          onClick={onToggleVisibility}
+          className="absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground"
+          aria-label={isValueVisible ? 'Hide value' : 'Show value'}
+        >
+          <HugeiconsIcon
+            icon={isValueVisible ? ViewOffIcon : ViewIcon}
+            size={14}
+          />
+        </Button>
+      )}
     </div>
   );
 });

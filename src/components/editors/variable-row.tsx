@@ -56,12 +56,11 @@ export const VariableRow = memo(
             variable={variable}
             index={index}
             field="key"
-            placeholder="API_KEY"
+            placeholder="KEY"
             onUpdate={onUpdate}
             onSmartPaste={onSmartPaste}
             onNavigateNext={() => valueInputRef.current?.focus()}
             autoFocus={index === 0 && !variable.key}
-            label="Key"
           />
         </div>
         <div className="flex-1">
@@ -78,7 +77,6 @@ export const VariableRow = memo(
             isVisibleRequired={true}
             isValueVisible={isValueVisible}
             onToggleVisibility={onToggleVisibility}
-            label="Value"
           />
         </div>
         <Button

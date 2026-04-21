@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react';
 export function useVariableManager(initialVariables: EnvVariable[] = []) {
   const [variables, setVariables] = useState<EnvVariable[]>(initialVariables);
 
-  // Sync with external changes (e.g., after successful save)
   useEffect(() => {
     setVariables(initialVariables);
   }, [initialVariables]);
@@ -16,9 +15,7 @@ export function useVariableManager(initialVariables: EnvVariable[] = []) {
   const updateVariable = useCallback(
     (index: number, field: keyof EnvVariable, value: string) => {
       setVariables((prev) =>
-        prev.map((variable, i) =>
-          i === index ? { ...variable, [field]: value } : variable
-        )
+        prev.map((v, i) => (i === index ? { ...v, [field]: value } : v))
       );
     },
     []
@@ -28,30 +25,21 @@ export function useVariableManager(initialVariables: EnvVariable[] = []) {
     setVariables((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
-  const bulkAddVariables = useCallback((newVariables: EnvVariable[]) => {
+  const bulkAddVariables = useCallback((newVars: EnvVariable[]) => {
     setVariables((prev) => {
-      const updatedVariables = [...prev];
-
-      newVariables.forEach((newVar) => {
-        if (!newVar.key.trim()) return; // Skip empty keys
-
-        // Find existing variable with same key (case-insensitive)
-        const existingIndex = updatedVariables.findIndex(
-          (existing) =>
-            existing.key.trim().toLowerCase() ===
-            newVar.key.trim().toLowerCase()
+      const result = [...prev];
+      for (const v of newVars) {
+        if (!v.key.trim()) continue;
+        const idx = result.findIndex(
+          (existing) => existing.key.toLowerCase() === v.key.toLowerCase()
         );
-
-        if (existingIndex >= 0) {
-          // Overwrite existing variable with new value
-          updatedVariables[existingIndex] = { ...newVar };
+        if (idx >= 0) {
+          result[idx] = v;
         } else {
-          // Add new variable
-          updatedVariables.push({ ...newVar });
+          result.push(v);
         }
-      });
-
-      return updatedVariables;
+      }
+      return result;
     });
   }, []);
 
@@ -61,7 +49,6 @@ export function useVariableManager(initialVariables: EnvVariable[] = []) {
 
   return {
     variables,
-    setVariables,
     addVariable,
     updateVariable,
     deleteVariable,

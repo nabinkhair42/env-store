@@ -1,8 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { parseEnvFile } from '@/lib/env-parser';
 import { cn } from '@/lib/utils';
-import { parseEnvFile } from '@/lib/utils/env-parser';
 import { EnvVariable } from '@/schema/environment-variable';
 import { Upload02Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';

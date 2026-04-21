@@ -1,80 +1,49 @@
 import { ProjectInput, UpdateProjectInput } from '@/schema/project';
 import { IProject } from '@/types/projects';
 
-export class ApiError extends Error {
-  constructor(
-    public status: number,
-    message: string
-  ) {
-    super(message);
-    this.name = 'ApiError';
-  }
-}
-
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    const error = await response
-      .json()
-      .catch(() => ({ error: 'Unknown error' }));
-    throw new ApiError(response.status, error.error || 'Request failed');
+    const body = await response.json().catch(() => ({ error: 'Request failed' }));
+    throw new Error(body.error || 'Request failed');
   }
   return response.json();
 }
 
 export const projectsApi = {
-  // Get all projects for the current user
   async getProjects(): Promise<{ projects: IProject[]; warning?: string }> {
-    const response = await fetch('/api/projects', {
-      cache: 'no-store', // Disable cache for fresh data
-    });
-    return handleResponse(response);
+    return handleResponse(await fetch('/api/projects', { cache: 'no-store' }));
   },
 
-  // Get a single project by ID
   async getProject(id: string): Promise<{ project: IProject; warning?: string }> {
-    const response = await fetch(`/api/projects/${id}`, {
-      cache: 'no-store', // Disable cache for fresh data
-    });
-    return handleResponse(response);
+    return handleResponse(await fetch(`/api/projects/${id}`, { cache: 'no-store' }));
   },
 
-  // Create a new project
-  async createProject(
-    data: ProjectInput
-  ): Promise<{ project: IProject; message: string }> {
-    const response = await fetch('/api/projects', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      cache: 'no-store',
-    });
-    return handleResponse(response);
+  async createProject(data: ProjectInput): Promise<{ project: IProject; message: string }> {
+    return handleResponse(
+      await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+    );
   },
 
-  // Update an existing project
   async updateProject(
     id: string,
     data: Partial<UpdateProjectInput>
   ): Promise<{ project: IProject; message: string; warning?: string }> {
-    const response = await fetch(`/api/projects/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      cache: 'no-store',
-    });
-    return handleResponse(response);
+    return handleResponse(
+      await fetch(`/api/projects/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+    );
   },
 
-  // Delete a project
   async deleteProject(id: string): Promise<{ message: string }> {
-    const response = await fetch(`/api/projects/${id}`, {
-      method: 'DELETE',
-      cache: 'no-store',
-    });
-    return handleResponse(response);
+    return handleResponse(
+      await fetch(`/api/projects/${id}`, { method: 'DELETE' })
+    );
   },
 };

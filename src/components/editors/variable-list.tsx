@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { EnvVariable } from '@/schema/environment-variable';
 import { Add01Icon } from '@hugeicons/core-free-icons';
@@ -33,7 +34,6 @@ export const VariablesList = memo(function VariablesList({
 }: VariablesListProps) {
   const rowRefs = useRef<(VariableRowRef | null)[]>([]);
 
-  // Navigate to the next row's key field, or add a new variable if at the top
   const handleNavigateToNext = (fromIndex: number) => {
     if (fromIndex === 0) {
       onAddVariable();
@@ -54,10 +54,17 @@ export const VariablesList = memo(function VariablesList({
         </Button>
       </div>
 
-      <div>
+      {/* Column headers */}
+      <div className="hidden sm:flex items-center gap-2 pb-2 text-xs font-medium text-muted-foreground">
+        <div className="flex-1">Key</div>
+        <div className="flex-1">Value</div>
+        <div className="w-8" />
+      </div>
+
+      <ScrollArea className="h-[calc(100svh-320px)]">
         {variables.map((variable, index) => (
           <div key={index}>
-            {index > 0 && <Separator className="my-3" />}
+            {index > 0 && <Separator className="my-2" />}
             <VariableRow
               ref={(el) => {
                 rowRefs.current[index] = el;
@@ -75,7 +82,7 @@ export const VariablesList = memo(function VariablesList({
             />
           </div>
         ))}
-      </div>
+      </ScrollArea>
     </div>
   );
 });

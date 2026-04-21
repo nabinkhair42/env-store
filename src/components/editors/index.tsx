@@ -6,7 +6,8 @@ import { ButtonGroup } from '@/components/ui/button-group';
 import { Spinner } from '@/components/ui/spinner';
 import { useProjects } from '@/hooks/use-project';
 import { useVariableManager } from '@/hooks/use-variables';
-import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
+import { downloadFile, generateEnvFile, parseEnvFile } from '@/lib/env-parser';
+import { cn } from '@/lib/utils';
 import { EnvVariable } from '@/schema/environment-variable';
 import { IProject } from '@/types/projects';
 import {
@@ -16,10 +17,11 @@ import {
   Download01Icon,
   SaveIcon,
   Tick01Icon,
+  Upload02Icon,
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { useCallback, useMemo, useState } from 'react';
-import { FileUploadSection } from './fie-upload-section';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { VariablesList } from './variable-list';
 
 type DeleteConfirmState = { open: boolean; index: number; varName: string };
@@ -36,6 +38,8 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   >('idle');
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     variables,
@@ -51,7 +55,8 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   const toggleVisibility = useCallback((index: number) => {
     setHiddenValues((prev) => {
       const next = new Set(prev);
-      next.has(index) ? next.delete(index) : next.add(index);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
       return next;
     });
   }, []);
@@ -70,8 +75,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   const handleAddVariable = useCallback(() => {
     addVariable();
     setHasUnsavedChanges(true);
-    shiftIndices(1);
-  }, [addVariable, shiftIndices]);
+  }, [addVariable]);
 
   const handleDeleteVariable = useCallback(
     (index: number) => {
@@ -100,23 +104,19 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   );
 
   const formatLastSaved = (date: Date) => {
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
+    const diffMins = Math.floor((Date.now() - date.getTime()) / 60000);
     if (diffMins < 1) return 'just now';
     if (diffMins < 60) return `${diffMins}m ago`;
-    const diffHours = Math.floor(diffMins / 60);
-    if (diffHours < 24) return `${diffHours}h ago`;
-    return date.toLocaleString();
+    return `${Math.floor(diffMins / 60)}h ago`;
   };
 
   const saveProject = useCallback(async () => {
     setSaveStatus('saving');
     try {
-      const updatedProject = await updateProject(project._id as string, {
+      const result = await updateProject(project._id as string, {
         variables: validVariables,
       });
-      if (updatedProject) {
+      if (result) {
         setSaveStatus('saved');
         setLastSaved(new Date());
         setHasUnsavedChanges(false);
@@ -126,58 +126,113 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
         throw new Error('Update failed');
       }
     } catch (error) {
-      console.error('Failed to save project:', error);
+      console.error('Failed to save:', error);
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
     }
   }, [updateProject, project._id, validVariables, onUpdate]);
 
-  const handleSmartPaste = useCallback(
+  const handleBulkAdd = useCallback(
     (newVariables: EnvVariable[]) => {
       if (newVariables.length > 0) {
         bulkAddVariables(newVariables);
-        shiftIndices(newVariables.length);
+        setHasUnsavedChanges(true);
       }
     },
-    [bulkAddVariables, shiftIndices]
-  );
-
-  const handleFileVariables = useCallback(
-    (newVariables: EnvVariable[]) => {
-      if (newVariables.length > 0) {
-        bulkAddVariables(newVariables);
-        shiftIndices(newVariables.length);
-      }
-    },
-    [bulkAddVariables, shiftIndices]
+    [bulkAddVariables]
   );
 
   const handleDownload = useCallback(() => {
     try {
-      const envContent = generateEnvFile(validVariables);
-      downloadFile(envContent, `${project.name}.env`);
+      downloadFile(generateEnvFile(validVariables), `${project.name}.env`);
     } catch (error) {
-      console.error(
-        error instanceof Error
-          ? `Failed to download: ${error.message}`
-          : 'Failed to download'
-      );
+      console.error('Failed to download:', error);
     }
   }, [validVariables, project.name]);
 
   const copyToClipboard = useCallback(async () => {
     try {
-      const envContent = generateEnvFile(validVariables);
-      await navigator.clipboard.writeText(envContent);
+      await navigator.clipboard.writeText(generateEnvFile(validVariables));
+      toast.success('Copied to clipboard');
     } catch (error) {
       console.error('Failed to copy:', error);
     }
   }, [validVariables]);
 
+  // File drop handling — entire editor is a drop zone
+  const processFile = useCallback(
+    (file: File) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        try {
+          const parsed = parseEnvFile(content).map((v) => ({
+            key: v.key,
+            value: v.value,
+          }));
+          if (parsed.length === 0) {
+            toast.error('No valid variables found');
+            return;
+          }
+          handleBulkAdd(parsed);
+          toast.success(`Imported ${parsed.length} variable${parsed.length !== 1 ? 's' : ''}`);
+        } catch {
+          toast.error('Failed to parse file');
+        }
+      };
+      reader.readAsText(file);
+    },
+    [handleBulkAdd]
+  );
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(e.type === 'dragenter' || e.type === 'dragover');
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files?.[0]) processFile(e.dataTransfer.files[0]);
+  };
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) processFile(e.target.files[0]);
+  };
+
   const hasVariables = variables.length > 0;
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-6">
+    <div
+      className={cn(
+        'mx-auto w-full max-w-4xl px-6 relative',
+        dragActive && 'ring-2 ring-primary ring-inset rounded-lg'
+      )}
+      onDragEnter={handleDrag}
+      onDragLeave={handleDrag}
+      onDragOver={handleDrag}
+      onDrop={handleDrop}
+    >
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept=".env,.txt,.json,.yml,.yaml"
+        onChange={handleFileInput}
+        className="hidden"
+      />
+
+      {/* Drag overlay */}
+      {dragActive && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/90 border-2 border-dashed border-primary">
+          <div className="text-center">
+            <HugeiconsIcon icon={Upload02Icon} size={32} className="mx-auto mb-2 text-primary" />
+            <p className="text-sm font-medium">Drop your .env file here</p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -244,23 +299,31 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
 
       {/* Content */}
       {hasVariables ? (
-        <>
-          <VariablesList
-            variables={variables}
-            hiddenValues={hiddenValues}
-            onAddVariable={handleAddVariable}
-            onUpdateVariable={handleUpdateVariable}
-            onToggleVisibility={toggleVisibility}
-            onDeleteVariable={handleDeleteVariable}
-            onSmartPaste={handleSmartPaste}
-          />
-          <FileUploadSection onFileVariables={handleFileVariables} />
-        </>
-      ) : (
-        <EmptyState
+        <VariablesList
+          variables={variables}
+          hiddenValues={hiddenValues}
           onAddVariable={handleAddVariable}
-          onFileVariables={handleFileVariables}
+          onUpdateVariable={handleUpdateVariable}
+          onToggleVisibility={toggleVisibility}
+          onDeleteVariable={handleDeleteVariable}
+          onSmartPaste={handleBulkAdd}
         />
+      ) : (
+        <div className="py-20 text-center">
+          <p className="text-sm text-muted-foreground">
+            No variables yet. Add one, paste content, or drop a file anywhere.
+          </p>
+          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Button onClick={handleAddVariable}>Add Variable</Button>
+            <Button
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <HugeiconsIcon icon={Upload02Icon} size={16} />
+              Import File
+            </Button>
+          </div>
+        </div>
       )}
 
       <ConfirmDialog
@@ -268,30 +331,11 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
         onOpenChange={(open) => setDeleteConfirm((prev) => ({ ...prev, open }))}
         title="Delete Environment Variable"
         description={`Are you sure you want to delete the variable "${deleteConfirm.varName}"? This action cannot be undone.`}
-        confirmText="Delete Variable"
+        confirmText="Yes, Delete"
+        cancelText="No, Keep it"
         onConfirm={confirmDeleteVariable}
         variant="destructive"
       />
-    </div>
-  );
-}
-
-function EmptyState({
-  onAddVariable,
-  onFileVariables,
-}: {
-  onAddVariable: () => void;
-  onFileVariables: (variables: EnvVariable[]) => void;
-}) {
-  return (
-    <div className="py-20 text-center">
-      <p className="text-sm text-muted-foreground">
-        No variables yet. Get started by adding one or importing a file.
-      </p>
-      <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-        <Button onClick={onAddVariable}>Add Variable</Button>
-        <FileUploadSection onFileVariables={onFileVariables} inline />
-      </div>
     </div>
   );
 }
