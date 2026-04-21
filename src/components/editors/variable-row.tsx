@@ -8,7 +8,7 @@ import { forwardRef, memo, useImperativeHandle, useRef } from 'react';
 import {
   SmartVariableInput,
   SmartVariableInputRef,
-} from './SmartVariableInput';
+} from './smart-variable-input';
 
 export interface VariableRowRef {
   focusKey: () => void;
@@ -24,7 +24,6 @@ interface VariableRowProps {
   onDelete: () => void;
   onSmartPaste: (variables: EnvVariable[]) => void;
   onNavigateToNext?: () => void;
-  onNavigateToPrevious?: () => void;
 }
 
 export const VariableRow = memo(
@@ -38,7 +37,6 @@ export const VariableRow = memo(
       onDelete,
       onSmartPaste,
       onNavigateToNext,
-      onNavigateToPrevious,
     },
     ref
   ) {
@@ -49,26 +47,6 @@ export const VariableRow = memo(
       focusKey: () => keyInputRef.current?.focus(),
       focusValue: () => valueInputRef.current?.focus(),
     }));
-
-    const handleNavigateFromKey = () => {
-      valueInputRef.current?.focus();
-    };
-
-    const handleNavigateFromValue = () => {
-      if (onNavigateToNext) {
-        onNavigateToNext();
-      }
-    };
-
-    const handleNavigateToKey = () => {
-      keyInputRef.current?.focus();
-    };
-
-    const handleNavigateToPreviousRow = () => {
-      if (onNavigateToPrevious) {
-        onNavigateToPrevious();
-      }
-    };
 
     return (
       <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
@@ -81,8 +59,7 @@ export const VariableRow = memo(
             placeholder="API_KEY"
             onUpdate={onUpdate}
             onSmartPaste={onSmartPaste}
-            onNavigateNext={handleNavigateFromKey}
-            onNavigatePrevious={handleNavigateToPreviousRow}
+            onNavigateNext={() => valueInputRef.current?.focus()}
             autoFocus={index === 0 && !variable.key}
             label="Key"
           />
@@ -94,11 +71,10 @@ export const VariableRow = memo(
             index={index}
             field="value"
             type="text"
-            placeholder="your-secret-value"
+            placeholder="value"
             onUpdate={onUpdate}
             onSmartPaste={onSmartPaste}
-            onNavigateNext={handleNavigateFromValue}
-            onNavigatePrevious={handleNavigateToKey}
+            onNavigateNext={onNavigateToNext}
             isVisibleRequired={true}
             isValueVisible={isValueVisible}
             onToggleVisibility={onToggleVisibility}

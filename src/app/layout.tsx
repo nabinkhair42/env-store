@@ -1,5 +1,5 @@
 import { Navbar } from '@/components/layouts/navbar';
-import { StructuredData } from '@/components/StructuredData';
+import { StructuredData } from '@/components/structured-data';
 import { metadata } from '@/lib/sitemap';
 import { Providers } from '@/providers/root-provider';
 import { Geist, JetBrains_Mono } from 'next/font/google';

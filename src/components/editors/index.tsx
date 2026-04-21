@@ -6,7 +6,6 @@ import { ButtonGroup } from '@/components/ui/button-group';
 import { Spinner } from '@/components/ui/spinner';
 import { useProjects } from '@/hooks/use-project';
 import { useVariableManager } from '@/hooks/use-variables';
-import { useVisibilityToggle } from '@/hooks/use-visibility-toggle';
 import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
 import { EnvVariable } from '@/schema/environment-variable';
 import { IProject } from '@/types/projects';
@@ -20,8 +19,8 @@ import {
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { useCallback, useMemo, useState } from 'react';
-import { FileUploadSection } from './FileUploadSection';
-import { VariablesList } from './VariablesList';
+import { FileUploadSection } from './fie-upload-section';
+import { VariablesList } from './variable-list';
 
 type DeleteConfirmState = { open: boolean; index: number; varName: string };
 
@@ -47,8 +46,15 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
     getValidVariables,
   } = useVariableManager(project.variables || []);
 
-  const { hiddenValues, toggleVisibility, shiftIndices } =
-    useVisibilityToggle();
+  const [hiddenValues, setHiddenValues] = useState<Set<number>>(new Set());
+
+  const toggleVisibility = useCallback((index: number) => {
+    setHiddenValues((prev) => {
+      const next = new Set(prev);
+      next.has(index) ? next.delete(index) : next.add(index);
+      return next;
+    });
+  }, []);
 
   const [deleteConfirm, setDeleteConfirm] = useState<DeleteConfirmState>({
     open: false,

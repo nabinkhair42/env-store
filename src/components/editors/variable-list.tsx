@@ -5,8 +5,8 @@ import { Separator } from '@/components/ui/separator';
 import { EnvVariable } from '@/schema/environment-variable';
 import { Add01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { memo, useEffect, useRef } from 'react';
-import { VariableRow, VariableRowRef } from './VariableRow';
+import { memo, useRef } from 'react';
+import { VariableRow, VariableRowRef } from './variable-row';
 
 interface VariablesListProps {
   variables: EnvVariable[];
@@ -33,27 +33,12 @@ export const VariablesList = memo(function VariablesList({
 }: VariablesListProps) {
   const rowRefs = useRef<(VariableRowRef | null)[]>([]);
 
-  useEffect(() => {
-    rowRefs.current = rowRefs.current.slice(0, variables.length);
-  }, [variables.length]);
-
+  // Navigate to the next row's key field, or add a new variable if at the top
   const handleNavigateToNext = (fromIndex: number) => {
     if (fromIndex === 0) {
       onAddVariable();
     } else {
-      const targetIndex = fromIndex - 1;
-      setTimeout(() => {
-        rowRefs.current[targetIndex]?.focusKey();
-      }, 50);
-    }
-  };
-
-  const handleNavigateToPrevious = (fromIndex: number) => {
-    const targetIndex = fromIndex + 1;
-    if (targetIndex < variables.length) {
-      setTimeout(() => {
-        rowRefs.current[targetIndex]?.focusValue();
-      }, 50);
+      rowRefs.current[fromIndex - 1]?.focusKey();
     }
   };
 
@@ -87,7 +72,6 @@ export const VariablesList = memo(function VariablesList({
               onDelete={() => onDeleteVariable(index)}
               onSmartPaste={onSmartPaste}
               onNavigateToNext={() => handleNavigateToNext(index)}
-              onNavigateToPrevious={() => handleNavigateToPrevious(index)}
             />
           </div>
         ))}
