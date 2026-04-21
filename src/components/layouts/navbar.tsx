@@ -1,12 +1,12 @@
 'use client';
-import { ModeSwitcher } from '@/components/ui/theme-toggle';
-import { UserDropdown } from '@/components/ui/user-dropdown';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { UserDropdown } from '@/components/layouts/user-control';
+import { LoginDialog } from '@/components/dialogs/login-dialog';
 import { Button } from '@/components/ui/button';
-import { LoginDialog } from '@/components/modal/login-dialog';
-import { useState } from 'react';
 import { Logo } from '@/components/ui/logo';
+import { ModeSwitcher } from '@/components/ui/theme-toggle';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export function Navbar() {
   const router = useRouter();

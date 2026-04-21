@@ -1,6 +1,6 @@
 'use client';
 
-import { EnvEditor } from '@/components/env-editor/index';
+import { EnvEditor } from '@/components/editors/index';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,11 +11,10 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import LoaderScreen from '@/components/ui/loader';
-import { useProjects } from '@/hooks/useProjects';
-import { IProject } from '@/lib/types';
-import { Separator } from '@/components/ui/separator';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { useProjects } from '@/hooks/use-project';
+import { IProject } from '@/types/projects';
 import { ArrowLeft01Icon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -56,7 +55,7 @@ export default function ProjectPage() {
 
   if (!project) {
     return (
-      <div className="flex items-center justify-center min-h-svh mx-auto max-w-4xl">
+      <div className="flex items-center justify-center py-20 mx-auto max-w-4xl">
         <div className="text-center space-y-4">
           <h1 className="text-2xl font-semibold text-foreground">
             Project Not Found
@@ -77,7 +76,7 @@ export default function ProjectPage() {
   }
 
   return (
-    <div className="min-h-svh">
+    <div>
       {/* Breadcrumb */}
       <div className="mx-auto w-full max-w-4xl px-6 py-4">
         <Breadcrumb>
@@ -94,8 +93,6 @@ export default function ProjectPage() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-
-      <Separator />
 
       <EnvEditor project={project} onUpdate={handleProjectUpdate} />
     </div>

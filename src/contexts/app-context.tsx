@@ -1,6 +1,6 @@
 'use client';
 
-import { IProject } from '@/lib/types';
+import { IProject } from '@/types/projects';
 import { createContext, ReactNode, useContext, useState } from 'react';
 
 interface AppContextType {

@@ -1,10 +1,6 @@
-import { z } from 'zod';
+import { EnvVariableSchema } from "@/schema";
+import z from "zod";
 
-const EnvVariableSchema = z.object({
-  key: z.string(),
-  value: z.string(),
-  description: z.string().optional(),
-});
 
 export const ProjectSchema = z.object({
   name: z
@@ -22,6 +18,5 @@ export const UpdateProjectSchema = ProjectSchema.partial().extend({
   id: z.string().min(1, 'Project ID is required'),
 });
 
-export type EnvVariable = z.infer<typeof EnvVariableSchema>;
 export type ProjectInput = z.infer<typeof ProjectSchema>;
 export type UpdateProjectInput = z.infer<typeof UpdateProjectSchema>;

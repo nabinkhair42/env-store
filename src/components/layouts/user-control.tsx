@@ -6,20 +6,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Logout01Icon, Settings01Icon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Logo } from './logo';
+import { Logo } from '../ui/logo';
 const SettingsDialog = dynamic(
   () =>
-    import('@/components/modal/settings-dialog').then((m) => m.SettingsDialog),
+    import('@/components/dialogs/settings-dialog').then((m) => m.SettingsDialog),
   { ssr: false }
 );
 const LogOutDialog = dynamic(
-  () => import('@/components/modal/logout-dialog').then((m) => m.LogOutDialog),
+  () => import('@/components/dialogs/logout-dialog').then((m) => m.LogOutDialog),
   { ssr: false }
 );
 

@@ -10,17 +10,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Separator } from '@/components/ui/separator';
 import LoaderScreen from '@/components/ui/loader';
+import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useProjects } from '@/hooks/useProjects';
-import { IProject } from '@/lib/types';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { useProjects } from '@/hooks/use-project';
+import { IProject } from '@/types/projects';
 import {
   Download01Icon,
   GithubIcon,
   Mail01Icon,
 } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 import { useSession } from 'next-auth/react';
 import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -55,9 +55,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `env-store-backup-${
-        new Date().toISOString().split('T')[0]
-      }.json`;
+      a.download = `env-store-backup-${new Date().toISOString().split('T')[0]
+        }.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

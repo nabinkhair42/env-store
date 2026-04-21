@@ -1,6 +1,6 @@
 import { ApiError, projectsApi } from '@/lib/api/projects';
-import { IProject } from '@/lib/types';
-import { ProjectInput } from '@/lib/zod';
+import { ProjectInput } from '@/schema/project';
+import { IProject } from '@/types/projects';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 

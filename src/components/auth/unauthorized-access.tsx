@@ -1,6 +1,6 @@
 'use client';
 
-import { LoginDialog } from '@/components/modal/login-dialog';
+import { LoginDialog } from '@/components/dialogs/login-dialog';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 

@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import { EnvVariable } from '@/lib/zod';
+import { EnvVariable } from '@/schema';
+import { useCallback, useEffect, useState } from 'react';
 
 export function useVariableManager(initialVariables: EnvVariable[] = []) {
   const [variables, setVariables] = useState<EnvVariable[]>(initialVariables);

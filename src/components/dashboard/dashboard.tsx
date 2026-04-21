@@ -5,12 +5,12 @@ import { ProjectForm } from '@/components/dashboard/project-form';
 import { Button } from '@/components/ui/button';
 import { ItemGroup } from '@/components/ui/item';
 import LoaderScreen from '@/components/ui/loader';
-import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAppContext } from '@/contexts/app-context';
-import { useProjects } from '@/hooks/useProjects';
-import { IProject } from '@/lib/types';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { useProjects } from '@/hooks/use-project';
+import { IProject } from '@/types/projects';
 import { Add01Icon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -46,54 +46,46 @@ export function Dashboard() {
 
   return (
     <>
-      <div className="min-h-svh">
+      <div className="mx-auto w-full max-w-4xl px-6">
         {/* Header */}
-        <div className="mx-auto w-full max-w-4xl px-6 py-8">
-          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-            <div className="space-y-2">
-              <p className="text-xs font-medium text-muted-foreground">
-                Dashboard
-              </p>
-              <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-                Your Projects
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Manage environment variables by project
-              </p>
-            </div>
-            {projects.length > 0 && (
-              <Button
-                onClick={() => setShowProjectForm(true)}
-                className="w-full md:w-auto"
-              >
-                <HugeiconsIcon icon={Add01Icon} size={16} />
-                New Project
-              </Button>
-            )}
+        <div className="flex flex-col gap-4 py-8 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-xs font-medium text-muted-foreground">
+              Dashboard
+            </p>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
+              Your Projects
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Manage environment variables by project
+            </p>
           </div>
+          {projects.length > 0 && (
+            <Button
+              onClick={() => setShowProjectForm(true)}
+              className="w-full md:w-auto"
+            >
+              <HugeiconsIcon icon={Add01Icon} size={16} />
+              New Project
+            </Button>
+          )}
         </div>
 
-        {/* Projects List */}
-        <Separator />
-
+        {/* Content */}
         {projects.length === 0 ? (
-          <div className="mx-auto w-full max-w-4xl px-6 mt-6">
-            <div className="flex min-h-100 items-center justify-center py-16">
-              <div className="space-y-4 text-center">
-                <h3 className="text-base font-semibold">No Projects Yet</h3>
-                <p className="mx-auto max-w-sm text-sm text-muted-foreground">
-                  Create your first project to start managing environment
-                  variables
-                </p>
-                <Button onClick={() => setShowProjectForm(true)}>
-                  <HugeiconsIcon icon={Add01Icon} size={16} />
-                  Create Project
-                </Button>
-              </div>
+          <div className="py-20 text-center">
+            <p className="text-sm text-muted-foreground">
+              No projects yet. Create one to get started.
+            </p>
+            <div className="mt-4">
+              <Button onClick={() => setShowProjectForm(true)}>
+                <HugeiconsIcon icon={Add01Icon} size={16} />
+                Create Project
+              </Button>
             </div>
           </div>
         ) : (
-          <div className="mx-auto w-full max-w-4xl px-6 mt-6">
+          <ScrollArea className="h-[calc(100svh-220px)]">
             <ItemGroup>
               {projects.map((project) => (
                 <div key={project._id as string}>
@@ -106,7 +98,7 @@ export function Dashboard() {
                 </div>
               ))}
             </ItemGroup>
-          </div>
+          </ScrollArea>
         )}
       </div>
 

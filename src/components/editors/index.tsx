@@ -1,16 +1,15 @@
 'use client';
 
-import { ConfirmDialog } from '@/components/modal/confirm-dialog';
+import { ConfirmDialog } from '@/components/dialogs/confirm-dialog';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
-import { useProjects } from '@/hooks/useProjects';
-import { useVariableManager } from '@/hooks/useVariables';
-import { useVisibilityToggle } from '@/hooks/useVisibilityToggle';
-import { IProject } from '@/lib/types';
+import { useProjects } from '@/hooks/use-project';
+import { useVariableManager } from '@/hooks/use-variables';
+import { useVisibilityToggle } from '@/hooks/use-visibility-toggle';
 import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
-import { EnvVariable } from '@/lib/zod';
+import { EnvVariable } from '@/schema/environment-variable';
+import { IProject } from '@/types/projects';
 import {
   Alert01Icon,
   AlertCircleIcon,
@@ -23,7 +22,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { useCallback, useMemo, useState } from 'react';
 import { FileUploadSection } from './FileUploadSection';
 import { VariablesList } from './VariablesList';
-// Local component-only types
+
 type DeleteConfirmState = { open: boolean; index: number; varName: string };
 
 interface EnvEditorProps {
@@ -39,7 +38,6 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  // Custom hooks for state management
   const {
     variables,
     addVariable,
@@ -49,23 +47,20 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
     getValidVariables,
   } = useVariableManager(project.variables || []);
 
-  const { visibleValues, toggleVisibility, shiftIndices } =
+  const { hiddenValues, toggleVisibility, shiftIndices } =
     useVisibilityToggle();
 
-  // Delete confirmation state
   const [deleteConfirm, setDeleteConfirm] = useState<DeleteConfirmState>({
     open: false,
     index: -1,
     varName: '',
   });
 
-  // Memoized values
   const validVariables = useMemo(
     () => getValidVariables(),
     [getValidVariables]
   );
 
-  // Handlers
   const handleAddVariable = useCallback(() => {
     addVariable();
     setHasUnsavedChanges(true);
@@ -102,15 +97,10 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / 60000);
-
     if (diffMins < 1) return 'just now';
-    if (diffMins === 1) return '1 minute ago';
-    if (diffMins < 60) return `${diffMins} minutes ago`;
-
+    if (diffMins < 60) return `${diffMins}m ago`;
     const diffHours = Math.floor(diffMins / 60);
-    if (diffHours === 1) return '1 hour ago';
-    if (diffHours < 24) return `${diffHours} hours ago`;
-
+    if (diffHours < 24) return `${diffHours}h ago`;
     return date.toLocaleString();
   };
 
@@ -120,7 +110,6 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
       const updatedProject = await updateProject(project._id as string, {
         variables: validVariables,
       });
-
       if (updatedProject) {
         setSaveStatus('saved');
         setLastSaved(new Date());
@@ -164,8 +153,8 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
     } catch (error) {
       console.error(
         error instanceof Error
-          ? `Failed to download environment file: ${error.message}`
-          : 'Failed to download environment file: Unknown error'
+          ? `Failed to download: ${error.message}`
+          : 'Failed to download'
       );
     }
   }, [validVariables, project.name]);
@@ -175,48 +164,41 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
       const envContent = generateEnvFile(validVariables);
       await navigator.clipboard.writeText(envContent);
     } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
+      console.error('Failed to copy:', error);
     }
   }, [validVariables]);
 
+  const hasVariables = variables.length > 0;
+
   return (
-    <div>
-      {/* Project Header */}
-      <div className="mx-auto w-full max-w-4xl px-6 py-6">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-          <div className="space-y-1">
-            <h1 className="text-xl font-bold">
-              {project.name}
-            </h1>
+    <div className="mx-auto w-full max-w-4xl px-6">
+      {/* Header */}
+      <div className="flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-xl font-bold">{project.name}</h1>
+          <div className="flex items-center gap-3 mt-1">
             <p className="text-sm text-muted-foreground">
-              {project.description ||
-                'Manage environment variables for this project'}
+              {project.description || 'Environment variables'}
             </p>
             {lastSaved && (
-              <p className="text-xs text-muted-foreground/70">
-                Last saved: {formatLastSaved(lastSaved)}
-              </p>
-            )}
-            {hasUnsavedChanges && saveStatus === 'idle' && (
-              <p className="text-xs font-semibold text-destructive flex items-center gap-1">
-                <HugeiconsIcon icon={Alert01Icon} size={12} /> Unsaved changes
-              </p>
+              <span className="text-xs text-muted-foreground/60">
+                Saved {formatLastSaved(lastSaved)}
+              </span>
             )}
           </div>
+          {hasUnsavedChanges && saveStatus === 'idle' && (
+            <p className="text-xs text-destructive mt-1 flex items-center gap-1">
+              <HugeiconsIcon icon={Alert01Icon} size={12} /> Unsaved changes
+            </p>
+          )}
+        </div>
+        {hasVariables && (
           <ButtonGroup>
-            <Button
-              variant="outline"
-              onClick={copyToClipboard}
-              title="Copy to clipboard"
-            >
+            <Button variant="outline" onClick={copyToClipboard} title="Copy">
               <HugeiconsIcon icon={Copy01Icon} size={16} />
               Copy
             </Button>
-            <Button
-              variant="outline"
-              onClick={handleDownload}
-              title="Export as .env file"
-            >
+            <Button variant="outline" onClick={handleDownload} title="Export">
               <HugeiconsIcon icon={Download01Icon} size={16} />
               Export
             </Button>
@@ -251,26 +233,30 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
               )}
             </Button>
           </ButtonGroup>
-        </div>
+        )}
       </div>
 
-      <Separator />
+      {/* Content */}
+      {hasVariables ? (
+        <>
+          <VariablesList
+            variables={variables}
+            hiddenValues={hiddenValues}
+            onAddVariable={handleAddVariable}
+            onUpdateVariable={handleUpdateVariable}
+            onToggleVisibility={toggleVisibility}
+            onDeleteVariable={handleDeleteVariable}
+            onSmartPaste={handleSmartPaste}
+          />
+          <FileUploadSection onFileVariables={handleFileVariables} />
+        </>
+      ) : (
+        <EmptyState
+          onAddVariable={handleAddVariable}
+          onFileVariables={handleFileVariables}
+        />
+      )}
 
-      <VariablesList
-        variables={variables}
-        visibleValues={visibleValues}
-        onAddVariable={handleAddVariable}
-        onUpdateVariable={handleUpdateVariable}
-        onToggleVisibility={toggleVisibility}
-        onDeleteVariable={handleDeleteVariable}
-        onSmartPaste={handleSmartPaste}
-      />
-
-      <Separator />
-
-      <FileUploadSection onFileVariables={handleFileVariables} />
-
-      {/* Variable Delete Confirmation Dialog */}
       <ConfirmDialog
         open={deleteConfirm.open}
         onOpenChange={(open) => setDeleteConfirm((prev) => ({ ...prev, open }))}
@@ -280,6 +266,26 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
         onConfirm={confirmDeleteVariable}
         variant="destructive"
       />
+    </div>
+  );
+}
+
+function EmptyState({
+  onAddVariable,
+  onFileVariables,
+}: {
+  onAddVariable: () => void;
+  onFileVariables: (variables: EnvVariable[]) => void;
+}) {
+  return (
+    <div className="py-20 text-center">
+      <p className="text-sm text-muted-foreground">
+        No variables yet. Get started by adding one or importing a file.
+      </p>
+      <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+        <Button onClick={onAddVariable}>Add Variable</Button>
+        <FileUploadSection onFileVariables={onFileVariables} inline />
+      </div>
     </div>
   );
 }

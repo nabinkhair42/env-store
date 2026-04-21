@@ -1,12 +1,12 @@
 import { auth } from '@/auth';
 import { env } from '@/env';
-import { client } from '@/lib/db';
-import { IProject } from '@/lib/types';
-import { ProjectSchema } from '@/lib/zod';
 import {
-  safeDecryptVariables,
-  safeEncryptVariables,
+    safeDecryptVariables,
+    safeEncryptVariables,
 } from '@/lib/crypto-helpers';
+import { client } from '@/lib/db';
+import { ProjectSchema } from '@/schema/project';
+import { IProject } from '@/types/projects';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET() {

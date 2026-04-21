@@ -1,11 +1,11 @@
 'use client';
 
-import { LoginDialog } from '@/components/modal/login-dialog';
+import { LoginDialog } from '@/components/dialogs/login-dialog';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function CTASection() {
   const [loginOpen, setLoginOpen] = useState(false);

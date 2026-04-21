@@ -1,26 +1,26 @@
 'use client';
 
-import { ConfirmDialog } from '@/components/modal/confirm-dialog';
+import { ConfirmDialog } from '@/components/dialogs/confirm-dialog';
 import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
 import {
   Item,
-  ItemContent,
-  ItemTitle,
-  ItemDescription,
   ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
 } from '@/components/ui/item';
-import type { IProject } from '@/lib/types';
 import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
-import { HugeiconsIcon } from '@hugeicons/react';
+import type { IProject } from '@/types/projects';
 import {
   Copy01Icon,
-  Download01Icon,
   Delete02Icon,
+  Download01Icon,
 } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { ButtonGroup } from '@/components/ui/button-group';
 
 interface ProjectCardProps {
   project: IProject;

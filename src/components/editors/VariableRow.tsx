@@ -1,9 +1,9 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { EnvVariable } from '@/lib/zod';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { EnvVariable } from '@/schema/environment-variable';
 import { RemoveCircleIcon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 import { forwardRef, memo, useImperativeHandle, useRef } from 'react';
 import {
   SmartVariableInput,

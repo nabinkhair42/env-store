@@ -1,5 +1,5 @@
-import { IProject } from '@/lib/types';
-import { ProjectInput, UpdateProjectInput } from '@/lib/zod';
+import { ProjectInput, UpdateProjectInput } from '@/schema/project';
+import { IProject } from '@/types/projects';
 
 export class ApiError extends Error {
   constructor(

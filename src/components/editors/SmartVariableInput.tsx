@@ -1,13 +1,12 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { parseEnvFile } from '@/lib/utils/env-parser';
-import { EnvVariable } from '@/lib/zod';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { EnvVariable } from '@/schema/environment-variable';
 import { ViewIcon, ViewOffIcon } from '@hugeicons/core-free-icons';
-import { toast } from 'react-hot-toast';
+import { HugeiconsIcon } from '@hugeicons/react';
 import React, {
   forwardRef,
   useCallback,
@@ -15,6 +14,7 @@ import React, {
   useImperativeHandle,
   useRef,
 } from 'react';
+import { toast } from 'react-hot-toast';
 
 interface SmartVariableInputProps {
   variable: EnvVariable;

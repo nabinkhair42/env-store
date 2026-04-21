@@ -1,8 +1,8 @@
 'use client';
 
-import { LoginDialog } from '@/components/modal/login-dialog';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { LoginDialog } from '@/components/dialogs/login-dialog';
 import { GithubIcon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
