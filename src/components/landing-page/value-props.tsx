@@ -5,36 +5,36 @@ import {
   Copy01Icon,
   DatabaseIcon,
   Globe02Icon,
-  GithubIcon,
-  Upload04Icon,
+  Layers01Icon,
   LockKeyIcon,
+  UserMultiple02Icon,
 } from '@hugeicons/core-free-icons';
 
 const features = [
   {
+    title: 'Multi-environment support',
+    desc: 'Dev, staging, production — each with its own variables. Switch with tabs.',
+    icon: Layers01Icon,
+  },
+  {
+    title: 'Team sharing',
+    desc: 'Invite members by GitHub username. Assign editor or viewer roles.',
+    icon: UserMultiple02Icon,
+  },
+  {
     title: 'Project-scoped storage',
-    desc: 'Group variables by project and environment — dev, staging, prod.',
+    desc: 'Group variables by project. Organize across all your applications.',
     icon: DatabaseIcon,
   },
   {
     title: 'Fast copy & export',
-    desc: 'Copy values or download .env files with one click.',
+    desc: 'Copy values or download .env files per environment with one click.',
     icon: Copy01Icon,
   },
   {
-    title: 'GitHub OAuth',
-    desc: 'Sign in securely with your GitHub account. No passwords.',
-    icon: GithubIcon,
-  },
-  {
     title: 'No CLI required',
-    desc: 'Simple web interface — open, paste, save.',
+    desc: 'Simple web interface — open, paste, save. Import .env files instantly.',
     icon: Globe02Icon,
-  },
-  {
-    title: '.env file import',
-    desc: 'Upload or paste an existing .env file and it parses automatically.',
-    icon: Upload04Icon,
   },
   {
     title: 'Encrypted at rest',

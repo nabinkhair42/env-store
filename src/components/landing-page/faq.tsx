@@ -1,3 +1,10 @@
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+
 const faqs = [
   {
     q: 'How is my data protected?',
@@ -9,7 +16,7 @@ const faqs = [
   },
   {
     q: 'How do I export my variables?',
-    a: 'Open any project and click Export. You get a standard .env file. You can also copy individual values or the entire file to clipboard.',
+    a: 'Open any project and click Export. You get a standard .env file per environment. You can also copy individual values or the entire file to clipboard.',
   },
   {
     q: 'Is ENV Store free?',
@@ -17,7 +24,11 @@ const faqs = [
   },
   {
     q: 'Can I share variables with my team?',
-    a: 'Currently each account manages its own projects. To share, export a .env file and send it through a secure channel. Team collaboration is on the roadmap.',
+    a: 'Yes. Invite team members by GitHub username or email. Assign them as editors (full access) or viewers (read-only). They get in-app and email notifications.',
+  },
+  {
+    q: 'How do environments work?',
+    a: 'Each project comes with development, staging, and production environments by default. Switch between them with tabs. You can add custom environments like QA or preview. Each environment has its own set of variables.',
   },
 ];
 
@@ -29,18 +40,17 @@ export default function FAQ() {
         Frequently asked questions
       </h2>
 
-      <div className="mt-10 divide-y border-t">
-        {faqs.map((item, i) => (
-          <details key={i} className="group">
-            <summary className="flex cursor-pointer items-center justify-between py-5 text-sm font-semibold select-none">
-              {item.q}
-              <span className="ml-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-45">
-                +
-              </span>
-            </summary>
-            <p className="pb-5 text-sm text-muted-foreground">{item.a}</p>
-          </details>
-        ))}
+      <div className="mt-10">
+        <Accordion type="single" collapsible>
+          {faqs.map((item, i) => (
+            <AccordionItem key={i} value={`faq-${i}`}>
+              <AccordionTrigger>{item.q}</AccordionTrigger>
+              <AccordionContent>
+                <p className="text-muted-foreground">{item.a}</p>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </section>
   );
