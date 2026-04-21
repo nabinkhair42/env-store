@@ -2,21 +2,25 @@
 
 import { ProjectCard } from '@/components/dashboard/project-card';
 import { ProjectForm } from '@/components/dashboard/project-form';
+import { DashboardSkeleton } from '@/components/loaders';
 import { Button } from '@/components/ui/button';
 import { ItemGroup } from '@/components/ui/item';
-import { DashboardSkeleton } from '@/components/loaders';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAppContext } from '@/contexts/app-context';
-import { useProjects, useDeleteProject } from '@/hooks/use-projects';
+import { useDeleteProject, useProjects } from '@/hooks/use-projects';
 import { Add01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { useRouter } from 'next/navigation';
 
 export function Dashboard() {
-  const { data: projects, isLoading } = useProjects();
+  const { data, isLoading } = useProjects();
   const { mutate: deleteProject } = useDeleteProject();
   const { showProjectForm, setShowProjectForm } = useAppContext();
   const router = useRouter();
+
+  const projects = data?.projects ?? [];
+  const sharedProjects = data?.sharedProjects ?? [];
+  const hasProjects = projects.length > 0 || sharedProjects.length > 0;
 
   return (
     <>
@@ -33,7 +37,7 @@ export function Dashboard() {
               Manage environment variables by project
             </p>
           </div>
-          {!isLoading && projects && projects.length > 0 && (
+          {!isLoading && hasProjects && (
             <Button
               onClick={() => setShowProjectForm(true)}
               className="w-full md:w-auto"
@@ -46,7 +50,7 @@ export function Dashboard() {
 
         {isLoading ? (
           <DashboardSkeleton />
-        ) : !projects || projects.length === 0 ? (
+        ) : !hasProjects ? (
           <div className="py-20 text-center">
             <p className="text-sm text-muted-foreground">
               No projects yet. Create one to get started.
@@ -60,17 +64,49 @@ export function Dashboard() {
           </div>
         ) : (
           <ScrollArea className="h-[calc(100svh-220px)]">
-            <ItemGroup>
-              {projects.map((project) => (
-                <div key={project._id as string}>
-                  <ProjectCard
-                    project={project}
-                    onSelect={(p) => router.push(`/dashboard/${p._id}`)}
-                    onDelete={(id) => deleteProject(id)}
-                  />
-                </div>
-              ))}
-            </ItemGroup>
+            {/* My Projects */}
+            {projects.length > 0 && (
+              <div>
+                {sharedProjects.length > 0 && (
+                  <p className="mb-3 text-xs font-medium text-muted-foreground">
+                    My Projects
+                  </p>
+                )}
+                <ItemGroup>
+                  {projects.map((project) => (
+                    <div key={project._id as string}>
+                      <ProjectCard
+                        project={project}
+                        role="owner"
+                        onSelect={(p) => router.push(`/dashboard/${p._id}`)}
+                        onDelete={(id) => deleteProject(id)}
+                      />
+                    </div>
+                  ))}
+                </ItemGroup>
+              </div>
+            )}
+
+            {/* Shared with Me */}
+            {sharedProjects.length > 0 && (
+              <div className={projects.length > 0 ? 'mt-8' : ''}>
+                <p className="mb-3 text-xs font-medium text-muted-foreground">
+                  Shared with Me
+                </p>
+                <ItemGroup>
+                  {sharedProjects.map((project) => (
+                    <div key={project._id as string}>
+                      <ProjectCard
+                        project={project}
+                        role={project.memberRole ?? 'viewer'}
+                        onSelect={(p) => router.push(`/dashboard/${p._id}`)}
+                        onDelete={(id) => deleteProject(id)}
+                      />
+                    </div>
+                  ))}
+                </ItemGroup>
+              </div>
+            )}
           </ScrollArea>
         )}
       </div>

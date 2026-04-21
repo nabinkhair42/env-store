@@ -29,7 +29,8 @@ interface SettingsDialogProps {
 }
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
-  const { data: projects = [] } = useProjects();
+  const { data } = useProjects();
+  const projects = data?.projects ?? [];
   const { data: session } = useSession();
   const [exporting, setExporting] = useState(false);
 

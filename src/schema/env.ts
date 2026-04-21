@@ -10,6 +10,7 @@ const EnvSchema = z.object({
   ENCRYPTION_SECRET: z
     .string()
     .min(MIN_ENCRYPTION_SECRET_LENGTH, `Encryption secret must be at least ${MIN_ENCRYPTION_SECRET_LENGTH} characters`),
+  RESEND_API_KEY: z.string().min(1).optional(),
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
@@ -31,6 +32,7 @@ const raw = STRICT_VALIDATION
       NODE_ENV: process.env.NODE_ENV,
       DATABASE_NAME: process.env.DATABASE_NAME,
       ENCRYPTION_SECRET: process.env.ENCRYPTION_SECRET,
+      RESEND_API_KEY: process.env.RESEND_API_KEY,
     }
   : {
       AUTH_SECRET: process.env.AUTH_SECRET ?? 'dev-secret',
@@ -42,6 +44,7 @@ const raw = STRICT_VALIDATION
       ENCRYPTION_SECRET:
         process.env.ENCRYPTION_SECRET ??
         'dev-encryption-secret-min-32-chars-long',
+      RESEND_API_KEY: process.env.RESEND_API_KEY,
     };
 
 const parsed = EnvSchema.safeParse(raw);

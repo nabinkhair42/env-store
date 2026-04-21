@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { projectService } from '@/services/project.service';
-import { IProject } from '@/types';
 import { ProjectInput, UpdateProjectInput } from '@/schema';
 import { toast } from 'react-hot-toast';
 
@@ -18,7 +17,7 @@ export function useProjects() {
     queryFn: async () => {
       const res = await projectService.getAll();
       if (res.warning) toast.error(res.warning, { duration: 8000 });
-      return res.projects;
+      return { projects: res.projects, sharedProjects: res.sharedProjects };
     },
   });
 }
@@ -41,10 +40,8 @@ export function useCreateProject() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: ProjectInput) => projectService.create(data),
-    onSuccess: ({ project, message }) => {
-      qc.setQueryData<IProject[]>(projectKeys.list(), (old) =>
-        old ? [project, ...old] : [project],
-      );
+    onSuccess: ({ message }) => {
+      qc.invalidateQueries({ queryKey: projectKeys.list() });
       toast.success(message ?? 'Project created');
     },
     onError: (err: Error) => toast.error(err.message),

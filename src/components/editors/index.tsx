@@ -29,9 +29,10 @@ type DeleteConfirmState = { open: boolean; index: number; varName: string };
 interface EnvEditorProps {
   project: IProject;
   onUpdate: () => void;
+  readOnly?: boolean;
 }
 
-export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
+export function EnvEditor({ project, onUpdate, readOnly = false }: EnvEditorProps) {
   const { mutateAsync: updateProject } = useUpdateProject();
   const [saveStatus, setSaveStatus] = useState<
     'idle' | 'saving' | 'saved' | 'error'
@@ -259,36 +260,38 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
               <HugeiconsIcon icon={Download01Icon} size={16} />
               Export
             </Button>
-            <Button
-              onClick={saveProject}
-              disabled={saveStatus === 'saving'}
-              variant={saveStatus === 'error' ? 'destructive' : 'default'}
-            >
-              {saveStatus === 'saving' && (
-                <>
-                  <Spinner />
-                  Saving
-                </>
-              )}
-              {saveStatus === 'saved' && (
-                <>
-                  <HugeiconsIcon icon={Tick01Icon} size={16} />
-                  Saved!
-                </>
-              )}
-              {saveStatus === 'error' && (
-                <>
-                  <HugeiconsIcon icon={AlertCircleIcon} size={16} />
-                  Retry
-                </>
-              )}
-              {saveStatus === 'idle' && (
-                <>
-                  <HugeiconsIcon icon={SaveIcon} size={16} />
-                  Save
-                </>
-              )}
-            </Button>
+            {!readOnly && (
+              <Button
+                onClick={saveProject}
+                disabled={saveStatus === 'saving'}
+                variant={saveStatus === 'error' ? 'destructive' : 'default'}
+              >
+                {saveStatus === 'saving' && (
+                  <>
+                    <Spinner />
+                    Saving
+                  </>
+                )}
+                {saveStatus === 'saved' && (
+                  <>
+                    <HugeiconsIcon icon={Tick01Icon} size={16} />
+                    Saved!
+                  </>
+                )}
+                {saveStatus === 'error' && (
+                  <>
+                    <HugeiconsIcon icon={AlertCircleIcon} size={16} />
+                    Retry
+                  </>
+                )}
+                {saveStatus === 'idle' && (
+                  <>
+                    <HugeiconsIcon icon={SaveIcon} size={16} />
+                    Save
+                  </>
+                )}
+              </Button>
+            )}
           </ButtonGroup>
         )}
       </div>
@@ -307,18 +310,22 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
       ) : (
         <div className="py-20 text-center">
           <p className="text-sm text-muted-foreground">
-            No variables yet. Add one, paste content, or drop a file anywhere.
+            {readOnly
+              ? 'No variables in this project.'
+              : 'No variables yet. Add one, paste content, or drop a file anywhere.'}
           </p>
-          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Button onClick={handleAddVariable}>Add Variable</Button>
-            <Button
-              variant="outline"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <HugeiconsIcon icon={Upload02Icon} size={16} />
-              Import File
-            </Button>
-          </div>
+          {!readOnly && (
+            <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <Button onClick={handleAddVariable}>Add Variable</Button>
+              <Button
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <HugeiconsIcon icon={Upload02Icon} size={16} />
+                Import File
+              </Button>
+            </div>
+          )}
         </div>
       )}
 

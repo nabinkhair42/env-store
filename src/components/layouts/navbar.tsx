@@ -1,6 +1,7 @@
 'use client';
 import { UserDropdown } from '@/components/layouts/user-control';
 import { LoginDialog } from '@/components/dialogs/login-dialog';
+import { NotificationBell } from '@/components/notifications';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/logo';
 import { ModeSwitcher } from '@/components/ui/theme-toggle';
@@ -33,7 +34,10 @@ export function Navbar() {
             {status === 'loading' ? (
               <div className="size-8 rounded-full bg-muted animate-pulse" />
             ) : session ? (
-              <UserDropdown />
+              <>
+                <NotificationBell />
+                <UserDropdown />
+              </>
             ) : (
               <Button onClick={() => setLoginOpen(true)} size="sm">
                 Login

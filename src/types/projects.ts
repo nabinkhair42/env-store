@@ -1,9 +1,15 @@
 import { ObjectId } from 'mongodb';
+import { MemberRole } from './members';
 
 export interface IEnvVariable {
   key: string;
   value: string;
   description?: string;
+}
+
+export interface IProjectMember {
+  name: string | null;
+  image: string | null;
 }
 
 export interface IProject {
@@ -14,6 +20,8 @@ export interface IProject {
   variables?: IEnvVariable[];
   createdAt: Date;
   updatedAt: Date;
+  memberRole?: MemberRole;
+  members?: IProjectMember[];
 }
 
 export interface IProjectResponse {
@@ -24,5 +32,6 @@ export interface IProjectResponse {
 
 export interface IProjectListResponse {
   projects: IProject[];
+  sharedProjects: IProject[];
   warning?: string;
 }

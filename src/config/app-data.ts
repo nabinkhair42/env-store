@@ -15,5 +15,14 @@ export const STALE_TIME_MS = 5 * 60 * 1000; // 5 minutes
 export const GC_TIME_MS = 30 * 60 * 1000; // 30 minutes
 export const QUERY_RETRY_COUNT = 2;
 
+// --- Members ---
+export const MEMBER_ROLES = ['editor', 'viewer'] as const;
+export const INVITE_STATUSES = ['pending', 'accepted', 'declined'] as const;
+export const ROLE_HIERARCHY: Record<string, number> = {
+  owner: 3,
+  editor: 2,
+  viewer: 1,
+};
+
 // --- Database ---
 export const DEFAULT_DATABASE_NAME = 'env-store';
