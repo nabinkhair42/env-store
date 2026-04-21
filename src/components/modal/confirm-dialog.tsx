@@ -44,9 +44,7 @@ export function ConfirmDialog({
           </Button>
           <Button
             onClick={onConfirm}
-            className={
-              variant === 'destructive' ? 'bg-red-600 hover:bg-red-700' : ''
-            }
+            variant={variant === 'destructive' ? 'destructive' : 'default'}
           >
             {confirmText}
           </Button>

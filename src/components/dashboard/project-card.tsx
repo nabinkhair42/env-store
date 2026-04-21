@@ -2,6 +2,13 @@
 
 import { ConfirmDialog } from '@/components/modal/confirm-dialog';
 import { Button } from '@/components/ui/button';
+import {
+  Item,
+  ItemContent,
+  ItemTitle,
+  ItemDescription,
+  ItemActions,
+} from '@/components/ui/item';
 import type { IProject } from '@/lib/types';
 import { downloadFile, generateEnvFile } from '@/lib/utils/env-parser';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -13,6 +20,7 @@ import {
 import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { ButtonGroup } from '@/components/ui/button-group';
 
 interface ProjectCardProps {
   project: IProject;
@@ -58,58 +66,46 @@ export function ProjectCard({ project, onSelect, onDelete }: ProjectCardProps) {
 
   return (
     <>
-      <div className="group transition-colors hover:bg-muted/20">
-        <div
-          onClick={() => onSelect(project)}
-          className="w-full cursor-pointer px-6 text-left transition-colors hover:bg-muted/30 flex items-start justify-between flex-col lg:flex-row gap-1 py-4"
-        >
-          {/* Project Content */}
-          <div className="flex items-start justify-between flex-col gap-1">
-            <div className="min-w-0 flex-1">
-              <h3 className="mt-1 text-lg font-bold tracking-tight text-foreground">
-                {project.name}
-              </h3>
-            </div>
-            {project.description && (
-              <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-                {project.description}
-              </p>
-            )}
-          </div>
-          {/* Project Actions */}
-          <div className="mt-4 flex items-center justify-end gap-2">
+      <Item
+        className="cursor-pointer"
+        variant="outline"
+        onClick={() => onSelect(project)}
+      >
+        <ItemContent>
+          <ItemTitle>{project.name}</ItemTitle>
+          {project.description && (
+            <ItemDescription>{project.description}</ItemDescription>
+          )}
+        </ItemContent>
+        <ItemActions>
+          <ButtonGroup>
             <Button
-              variant="ghost"
-              size={'icon'}
+              variant="outline"
+              size="icon"
               onClick={handleCopy}
-              className="flex-1 rounded-none hover:bg-primary/10 hover:text-primary"
               title="Copy to clipboard"
             >
               <HugeiconsIcon icon={Copy01Icon} size={16} />
             </Button>
-
             <Button
-              variant="ghost"
-              size={'icon'}
+              variant="outline"
+              size="icon"
               onClick={handleDownload}
-              className="flex-1 rounded-none hover:bg-primary/10 hover:text-primary"
               title="Download .env file"
             >
               <HugeiconsIcon icon={Download01Icon} size={16} />
             </Button>
-
             <Button
-              variant="ghost"
-              size={'icon'}
+              variant="destructive"
+              size="icon"
               onClick={handleDelete}
-              className="flex-1 rounded-none hover:bg-destructive/10 hover:text-destructive"
               title="Delete project"
             >
               <HugeiconsIcon icon={Delete02Icon} size={16} />
             </Button>
-          </div>
-        </div>
-      </div>
+          </ButtonGroup>
+        </ItemActions>
+      </Item>
 
       <ConfirmDialog
         open={showDeleteConfirm}

@@ -27,7 +27,6 @@ export const FileUploadSection = memo(function FileUploadSection({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
 
-  // Handle file upload
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -72,7 +71,6 @@ export const FileUploadSection = memo(function FileUploadSection({
     reader.readAsText(file);
   };
 
-  // Handle drag and drop
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -95,103 +93,94 @@ export const FileUploadSection = memo(function FileUploadSection({
   };
 
   return (
-    <div className="rail-bounded">
-      <div className="mx-auto w-full max-w-6xl px-6 py-6">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <HugeiconsIcon
-              icon={Upload02Icon}
-              size={20}
-              className="text-primary"
-            />
-            <h2 className="text-lg font-bold tracking-tight">
-              Import from File
-            </h2>
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground"
-                  aria-label="Show supported file formats"
-                >
-                  <HugeiconsIcon icon={InformationCircleIcon} size={14} />
-                </Button>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-80">
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-sm">Supported Formats</h4>
-                  <div className="space-y-2 text-xs">
-                    <div>
-                      <strong>.env files:</strong>
-                      <pre className="mt-1 p-2 bg-muted text-[10px]">
-                        API_KEY=secret{'\n'}
-                        DATABASE_URL=postgres://...
-                      </pre>
-                    </div>
-                    <div>
-                      <strong>.json files:</strong>
-                      <pre className="mt-1 p-2 bg-muted text-[10px]">
-                        {`{\n  "API_KEY": "secret",\n  "DATABASE_URL": "..."\n}`}
-                      </pre>
-                    </div>
-                    <div>
-                      <strong>.yml files:</strong>
-                      <pre className="mt-1 p-2 bg-muted text-[10px]">
-                        API_KEY: secret{'\n'}
-                        DATABASE_URL: postgres://...
-                      </pre>
-                    </div>
+    <div className="mx-auto w-full max-w-4xl px-6 py-6">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <HugeiconsIcon
+            icon={Upload02Icon}
+            size={20}
+            className="text-foreground"
+          />
+          <h2 className="text-lg font-bold tracking-tight">
+            Import from File
+          </h2>
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground"
+                aria-label="Show supported file formats"
+              >
+                <HugeiconsIcon icon={InformationCircleIcon} size={14} />
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80">
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm">Supported Formats</h4>
+                <div className="space-y-2 text-xs">
+                  <div>
+                    <strong>.env files:</strong>
+                    <pre className="mt-1 p-2 bg-muted rounded-md text-[10px]">
+                      API_KEY=secret{'\n'}
+                      DATABASE_URL=postgres://...
+                    </pre>
+                  </div>
+                  <div>
+                    <strong>.json files:</strong>
+                    <pre className="mt-1 p-2 bg-muted rounded-md text-[10px]">
+                      {`{\n  "API_KEY": "secret",\n  "DATABASE_URL": "..."\n}`}
+                    </pre>
+                  </div>
+                  <div>
+                    <strong>.yml files:</strong>
+                    <pre className="mt-1 p-2 bg-muted rounded-md text-[10px]">
+                      API_KEY: secret{'\n'}
+                      DATABASE_URL: postgres://...
+                    </pre>
                   </div>
                 </div>
-              </HoverCardContent>
-            </HoverCard>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Upload environment variable files (.env, .json, .yml) or drag & drop
-          </p>
-
-          <div className="space-y-3 pt-2">
-            <Label className="text-sm font-medium">
-              Upload File or Drag & Drop
-            </Label>
-            <div
-              className={`border border-dashed border-border p-6 transition-all duration-200 cursor-pointer
-                ${
-                  dragActive
-                    ? 'border-primary bg-primary/10 dark:bg-primary/20'
-                    : 'hover:bg-muted/50'
-                }`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept=".env,.txt,.json,.yml,.yaml"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-              <div className="text-center">
-                <HugeiconsIcon
-                  icon={Upload02Icon}
-                  size={32}
-                  className={`mx-auto mb-4 transition-colors
-                  ${dragActive ? 'text-primary' : 'text-muted-foreground'}
-                `}
-                />
-                <Button variant="outline" className="mb-2" type="button">
-                  <span className="text-xs uppercase tracking-wide">
-                    Choose file
-                  </span>
-                </Button>
-                <p className="text-xs text-muted-foreground">
-                  Supports .env, .txt, .json, .yml files or drag & drop here
-                </p>
               </div>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          Upload environment variable files (.env, .json, .yml) or drag & drop
+        </p>
+
+        <div className="space-y-3 pt-2">
+          <Label className="text-sm font-medium">
+            Upload File or Drag & Drop
+          </Label>
+          <div
+            className={`rounded-lg border border-dashed border-border p-6 transition-colors cursor-pointer ${
+              dragActive ? 'border-primary bg-muted/50' : 'hover:bg-muted/30'
+            }`}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept=".env,.txt,.json,.yml,.yaml"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+            <div className="text-center">
+              <HugeiconsIcon
+                icon={Upload02Icon}
+                size={32}
+                className={`mx-auto mb-4 ${dragActive ? 'text-foreground' : 'text-muted-foreground'}`}
+              />
+              <Button variant="outline" className="mb-2" type="button">
+                Choose file
+              </Button>
+              <p className="text-xs text-muted-foreground">
+                Supports .env, .txt, .json, .yml files or drag & drop here
+              </p>
             </div>
           </div>
         </div>

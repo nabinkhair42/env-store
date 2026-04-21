@@ -9,19 +9,12 @@ import SiteFooter from '../layouts/site-footer';
 export default function LandingShell() {
   return (
     <>
-      <div className="page-rails flex flex-col">
-        <Hero />
-        <div className="section-divider" aria-hidden="true" />
-        <HowItWorks />
-        <div className="section-divider" aria-hidden="true" />
-        <ValueProps />
-        <div className="section-divider" aria-hidden="true" />
-        <SecurityNotes />
-        <div className="section-divider" aria-hidden="true" />
-        <FAQ />
-        <div className="section-divider" aria-hidden="true" />
-        <CTASection />
-      </div>
+      <Hero />
+      <HowItWorks />
+      <ValueProps />
+      <SecurityNotes />
+      <FAQ />
+      <CTASection />
       <SiteFooter />
     </>
   );

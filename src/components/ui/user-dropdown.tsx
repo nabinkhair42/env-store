@@ -46,29 +46,17 @@ export function UserDropdown() {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
-          {/* User Info Section */}
-          <div className="px-3 py-3 border-b border-border">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10 border border-border">
-                <AvatarImage
-                  src={session?.user?.image || ''}
-                  alt={session?.user?.name || ''}
-                />
-              </Avatar>
-              <div className="flex flex-col overflow-hidden">
-                <span className="text-sm font-semibold truncate">
-                  {session?.user?.name}
-                </span>
-                <span className="text-xs text-muted-foreground truncate">
-                  {session?.user?.email}
-                </span>
-              </div>
-            </div>
+          <div className="px-3 py-2.5">
+            <p className="text-sm font-semibold truncate">
+              {session?.user?.name}
+            </p>
+            <p className="text-xs text-muted-foreground truncate">
+              {session?.user?.email}
+            </p>
           </div>
 
-          {/* Navigation Items */}
           {!isPathnameDashboard && (
-            <div className="py-1">
+            <>
               <DropdownMenuItem
                 onClick={() => router.push('/dashboard')}
                 className="cursor-pointer"
@@ -76,31 +64,28 @@ export function UserDropdown() {
                 <Logo size="sm" />
                 <span>Go to Dashboard</span>
               </DropdownMenuItem>
-            </div>
+            </>
           )}
 
-          {/* Settings & Logout */}
-          <div className="border-t border-border py-1">
-            <DropdownMenuItem
-              onClick={() => {
-                setShowSettingsDialog(true);
-                setShowLogoutDialog(false);
-              }}
-              className="cursor-pointer hover:bg-muted"
-            >
-              <HugeiconsIcon icon={Settings01Icon} size={16} />
-              <span>Settings</span>
-            </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              setShowSettingsDialog(true);
+              setShowLogoutDialog(false);
+            }}
+            className="cursor-pointer"
+          >
+            <HugeiconsIcon icon={Settings01Icon} size={16} />
+            <span>Settings</span>
+          </DropdownMenuItem>
 
-            <DropdownMenuItem
-              onClick={() => setShowLogoutDialog(true)}
-              className="cursor-pointer hover:bg-muted"
-              variant="destructive"
-            >
-              <HugeiconsIcon icon={Logout01Icon} size={16} />
-              <span>Logout</span>
-            </DropdownMenuItem>
-          </div>
+          <DropdownMenuItem
+            onClick={() => setShowLogoutDialog(true)}
+            className="cursor-pointer"
+            variant="destructive"
+          >
+            <HugeiconsIcon icon={Logout01Icon} size={16} />
+            <span>Logout</span>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

@@ -10,19 +10,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
 import LoaderScreen from '@/components/ui/loader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useProjects } from '@/hooks/useProjects';
 import { IProject } from '@/lib/types';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  ActivityIcon,
-  DatabaseIcon,
   Download01Icon,
-  File02Icon,
   GithubIcon,
   Mail01Icon,
-  UserIcon,
 } from '@hugeicons/core-free-icons';
 import { useSession } from 'next-auth/react';
 import { useMemo, useState } from 'react';
@@ -81,219 +78,130 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       0
     );
 
-    const mostRecent =
-      projects.length > 0
-        ? projects.sort((a, b) => {
-            const dateA = new Date(a.updatedAt || a.createdAt || 0);
-            const dateB = new Date(b.updatedAt || b.createdAt || 0);
-            return dateB.getTime() - dateA.getTime();
-          })[0]
-        : null;
-
-    return { totalVariables, mostRecent };
+    return { totalVariables };
   }, [projects]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-base font-bold uppercase tracking-wide">
-            <HugeiconsIcon icon={ActivityIcon} size={16} />
-            Settings
-          </DialogTitle>
-          <DialogDescription className="font-mono text-xs text-muted-foreground">
-            Manage your account, projects, and application preferences
+          <DialogTitle>Settings</DialogTitle>
+          <DialogDescription>
+            Manage your account, projects, and data
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="flex gap-0 w-full justify-start p-0 bg-transparent border-y border-border">
-            <TabsTrigger
-              value="profile"
-              className="font-mono uppercase text-xs tracking-wide data-[state=active]:bg-muted/50"
-            >
-              Profile
-            </TabsTrigger>
-            <TabsTrigger
-              value="projects"
-              className="font-mono uppercase text-xs tracking-wide data-[state=active]:bg-muted/50"
-            >
-              Projects
-            </TabsTrigger>
-            <TabsTrigger
-              value="data"
-              className="font-mono uppercase text-xs tracking-wide data-[state=active]:bg-muted/50"
-            >
-              Data
-            </TabsTrigger>
+        <Tabs defaultValue="profile">
+          <TabsList>
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="projects">Projects</TabsTrigger>
+            <TabsTrigger value="data">Data</TabsTrigger>
           </TabsList>
 
-          {/* Profile Tab */}
           <TabsContent value="profile" className="space-y-4">
-            <div className="border border-border bg-muted/10">
-              <div className="border-b border-border bg-muted/20 px-6 py-4">
-                <h3 className="flex items-center gap-2 font-bold uppercase tracking-wide text-sm">
-                  <HugeiconsIcon icon={UserIcon} size={16} />
-                  Profile Information
-                </h3>
-                <p className="text-xs text-muted-foreground font-mono mt-1">
-                  Your account is connected via GitHub OAuth
-                </p>
-              </div>
-
-              <div className="p-6">
-                {/* Avatar and Basic Info */}
-                <div className="flex items-start gap-4">
-                  <Avatar className="h-20 w-20 border border-border">
-                    <AvatarImage src={session?.user?.image || ''} />
-                    <AvatarFallback className="bg-muted font-bold text-lg">
-                      {session?.user?.name?.charAt(0) ||
-                        session?.user?.email?.charAt(0) ||
-                        'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 space-y-3">
-                    <div>
-                      <div className="text-lg font-bold">
-                        {session?.user?.name || 'Unknown User'}
-                      </div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <HugeiconsIcon
-                          icon={Mail01Icon}
-                          size={12}
-                          className="text-muted-foreground"
-                        />
-                        <span className="text-sm text-muted-foreground font-mono">
-                          {session?.user?.email || 'N/A'}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <HugeiconsIcon icon={GithubIcon} size={16} />
-                      <Badge
-                        variant="outline"
-                        className="font-mono text-xs border-border"
-                      >
-                        GitHub Connected
-                      </Badge>
-                    </div>
-                  </div>
+            <div>
+              <h3 className="text-sm font-medium">Profile Information</h3>
+              <p className="text-sm text-muted-foreground">
+                Your account is connected via GitHub OAuth
+              </p>
+            </div>
+            <Separator />
+            <div className="flex items-start gap-4">
+              <Avatar className="size-14">
+                <AvatarImage src={session?.user?.image || ''} />
+                <AvatarFallback>
+                  {session?.user?.name?.charAt(0) ||
+                    session?.user?.email?.charAt(0) ||
+                    'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 space-y-2">
+                <div>
+                  <p className="font-medium">
+                    {session?.user?.name || 'Unknown User'}
+                  </p>
+                  <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                    <HugeiconsIcon icon={Mail01Icon} size={14} />
+                    {session?.user?.email || 'N/A'}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <HugeiconsIcon
+                    icon={GithubIcon}
+                    size={14}
+                    className="text-muted-foreground"
+                  />
+                  <Badge variant="secondary">Connected</Badge>
                 </div>
               </div>
             </div>
           </TabsContent>
 
-          {/* Projects Tab */}
           <TabsContent value="projects" className="space-y-4">
-            <div className="border border-border bg-muted/10">
-              <div className="border-b border-border bg-muted/20 px-6 py-4">
-                <h3 className="flex items-center gap-2 font-bold uppercase tracking-wide text-sm">
-                  <HugeiconsIcon icon={DatabaseIcon} size={16} />
-                  Projects Overview
-                </h3>
-                <p className="text-xs text-muted-foreground font-mono mt-1">
-                  View your projects and their statistics
-                </p>
-              </div>
-
-              <div className="p-6">
-                {loading ? (
-                  <LoaderScreen />
-                ) : error ? (
-                  <div className="text-center p-6 border border-destructive bg-destructive/10">
-                    <p className="text-destructive mb-3 font-mono text-sm">
-                      Failed to load projects
-                    </p>
-                    <Button
-                      onClick={refreshProjects}
-                      variant="outline"
-                      size="sm"
-                      className="font-mono uppercase text-xs"
-                    >
-                      Retry
-                    </Button>
-                  </div>
-                ) : projects.length === 0 ? (
-                  <div className="text-center py-12 border border-dashed border-border bg-muted/20">
-                    <HugeiconsIcon
-                      icon={DatabaseIcon}
-                      size={48}
-                      className="mx-auto mb-3 text-muted-foreground/50"
-                    />
-                    <p className="font-mono text-sm text-muted-foreground">
-                      No projects found. Create your first project to get
-                      started!
-                    </p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-0 border border-border">
-                    <div className="p-6 border-r border-border bg-muted/20">
-                      <div className="flex items-center gap-3 mb-2">
-                        <HugeiconsIcon
-                          icon={DatabaseIcon}
-                          size={20}
-                          className="text-muted-foreground"
-                        />
-                        <span className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
-                          Total Projects
-                        </span>
-                      </div>
-                      <div className="text-3xl font-bold tabular-nums">
-                        {projects.length}
-                      </div>
-                    </div>
-                    <div className="p-6 bg-muted/20">
-                      <div className="flex items-center gap-3 mb-2">
-                        <HugeiconsIcon
-                          icon={File02Icon}
-                          size={20}
-                          className="text-muted-foreground"
-                        />
-                        <span className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
-                          Total Variables
-                        </span>
-                      </div>
-                      <div className="text-3xl font-bold tabular-nums">
-                        {stats.totalVariables}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+            <div>
+              <h3 className="text-sm font-medium">Projects Overview</h3>
+              <p className="text-sm text-muted-foreground">
+                Your projects and their statistics
+              </p>
             </div>
-          </TabsContent>
-
-          {/* Data Tab */}
-          <TabsContent value="data" className="space-y-4">
-            <div className="border border-border bg-muted/10">
-              <div className="border-b border-border bg-muted/20 px-6 py-4">
-                <h3 className="flex items-center gap-2 font-bold uppercase tracking-wide text-sm">
-                  <HugeiconsIcon icon={Download01Icon} size={16} />
-                  Export All Data
-                </h3>
-                <p className="text-xs text-muted-foreground font-mono mt-1">
-                  Download a JSON file containing all your projects and
-                  environment variables.
+            <Separator />
+            {loading ? (
+              <LoaderScreen />
+            ) : error ? (
+              <div className="text-center py-6">
+                <p className="text-sm text-destructive mb-3">
+                  Failed to load projects
                 </p>
-              </div>
-
-              <div className="p-6 space-y-6">
-                {/* Export Section */}
                 <Button
-                  onClick={handleExportAllData}
-                  disabled={exportLoading || loading || projects.length === 0}
-                  className="w-full font-mono uppercase tracking-wide text-xs"
+                  onClick={refreshProjects}
+                  variant="outline"
                   size="sm"
                 >
-                  <HugeiconsIcon
-                    icon={Download01Icon}
-                    size={16}
-                    className="mr-2"
-                  />
-                  {exportLoading ? 'Exporting...' : 'Export All Data'}
+                  Retry
                 </Button>
               </div>
+            ) : projects.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4">
+                No projects yet. Create your first project to get started.
+              </p>
+            ) : (
+              <div className="flex gap-8">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Projects</p>
+                  <p className="text-2xl font-semibold tabular-nums">
+                    {projects.length}
+                  </p>
+                </div>
+                <Separator orientation="vertical" className="h-auto" />
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">
+                    Variables
+                  </p>
+                  <p className="text-2xl font-semibold tabular-nums">
+                    {stats.totalVariables}
+                  </p>
+                </div>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="data" className="space-y-4">
+            <div>
+              <h3 className="text-sm font-medium">Export All Data</h3>
+              <p className="text-sm text-muted-foreground">
+                Download a JSON backup of all your projects and variables
+              </p>
             </div>
+            <Separator />
+            <Button
+              onClick={handleExportAllData}
+              disabled={exportLoading || loading || projects.length === 0}
+              variant="outline"
+              className="w-full"
+            >
+              <HugeiconsIcon icon={Download01Icon} size={16} />
+              {exportLoading ? 'Exporting...' : 'Export All Data'}
+            </Button>
           </TabsContent>
         </Tabs>
       </DialogContent>

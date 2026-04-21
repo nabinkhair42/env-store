@@ -41,17 +41,14 @@ export const VariablesList = memo(function VariablesList({
 }: VariablesListProps) {
   const rowRefs = useRef<(VariableRowRef | null)[]>([]);
 
-  // Update refs array when variables change
   useEffect(() => {
     rowRefs.current = rowRefs.current.slice(0, variables.length);
   }, [variables.length]);
 
   const handleNavigateToNext = (fromIndex: number) => {
     if (fromIndex === 0) {
-      // If we're on the first (newest) row, add a new variable
       onAddVariable();
     } else {
-      // Navigate to the previous row (newer in the list) - focus on key field
       const targetIndex = fromIndex - 1;
       setTimeout(() => {
         rowRefs.current[targetIndex]?.focusKey();
@@ -60,7 +57,6 @@ export const VariablesList = memo(function VariablesList({
   };
 
   const handleNavigateToPrevious = (fromIndex: number) => {
-    // Navigate to the next row (older in the list) - focus on value field
     const targetIndex = fromIndex + 1;
     if (targetIndex < variables.length) {
       setTimeout(() => {
@@ -68,13 +64,14 @@ export const VariablesList = memo(function VariablesList({
       }, 50);
     }
   };
+
   if (variables.length === 0) {
     return (
-      <div className="rail-bounded">
-        <div className="mx-auto w-full max-w-6xl px-6 py-8">
+      <div>
+        <div className="mx-auto w-full max-w-4xl px-6 py-8">
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div className="space-y-2">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <p className="text-xs font-medium  text-muted-foreground">
                 Variables
               </p>
               <h2 className="text-lg font-bold tracking-tight">
@@ -86,23 +83,21 @@ export const VariablesList = memo(function VariablesList({
             </div>
             <Button onClick={onAddVariable} className="w-full md:w-auto">
               <HugeiconsIcon icon={Add01Icon} size={16} />
-              <span className="text-xs uppercase tracking-wide">
-                Add Variable
-              </span>
+              Add Variable
             </Button>
           </div>
         </div>
 
-        <div className="section-divider" aria-hidden="true" />
+        <div className="border-t border-border" />
 
-        <div className="mx-auto w-full max-w-6xl px-6">
+        <div className="mx-auto w-full max-w-4xl px-6">
           <div className="flex min-h-[300px] items-center justify-center py-16">
             <div className="space-y-6 text-center">
-              <div className="mx-auto inline-flex size-14 items-center justify-center rounded-xl border text-muted-foreground">
+              <div className="mx-auto inline-flex size-14 items-center justify-center rounded-xl border border-border text-muted-foreground">
                 <HugeiconsIcon icon={File02Icon} size={28} />
               </div>
               <div className="space-y-2">
-                <h3 className="text-base font-semibold uppercase tracking-wide">
+                <h3 className="text-base font-semibold ">
                   No Variables Configured
                 </h3>
                 <p className="mx-auto max-w-sm text-sm text-muted-foreground">
@@ -111,9 +106,7 @@ export const VariablesList = memo(function VariablesList({
               </div>
               <Button onClick={onAddVariable} variant="outline">
                 <HugeiconsIcon icon={Add01Icon} size={16} />
-                <span className="text-xs uppercase tracking-wide">
-                  Add Variable
-                </span>
+                Add Variable
               </Button>
             </div>
           </div>
@@ -123,12 +116,12 @@ export const VariablesList = memo(function VariablesList({
   }
 
   return (
-    <div className="rail-bounded">
-      <div className="mx-auto w-full max-w-6xl px-6 py-6">
+    <div>
+      <div className="mx-auto w-full max-w-4xl px-6 py-6">
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <p className="text-xs font-medium  text-muted-foreground">
                 Variables
               </p>
               <HoverCard>
@@ -197,16 +190,14 @@ export const VariablesList = memo(function VariablesList({
           </div>
           <Button onClick={onAddVariable} className="w-full md:w-auto">
             <HugeiconsIcon icon={Add01Icon} size={16} />
-            <span className="text-xs uppercase tracking-wide">
-              Add Variable
-            </span>
+            Add Variable
           </Button>
         </div>
       </div>
 
-      <div className="section-divider" aria-hidden="true" />
+      <div className="border-t border-border" />
 
-      <div className="mx-auto w-full max-w-6xl px-6 py-4">
+      <div className="mx-auto w-full max-w-4xl px-6 py-4">
         <div className="space-y-0">
           {variables.map((variable, index) => (
             <div key={index}>

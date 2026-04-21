@@ -1,10 +1,11 @@
 'use client';
 
 import { LoginDialog } from '@/components/modal/login-dialog';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { GithubIcon } from '@hugeicons/core-free-icons';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { FaGithub } from 'react-icons/fa6';
 import { Button } from '../ui/button';
 
 interface CTAButtonsProps {
@@ -33,22 +34,18 @@ export function CTAButtons({
   return (
     <>
       <div className="flex flex-col items-center gap-3 sm:flex-row">
-        <Button
-          onClick={handlePrimaryClick}
-          size={'lg'}
-          className="cursor-pointer"
-        >
+        <Button onClick={handlePrimaryClick} size="lg">
           {primaryLabel}
         </Button>
         <Button
           variant="outline"
-          className="cursor-pointer"
-          size={'lg'}
+          size="lg"
           onClick={() => {
             window.location.href = secondaryHref;
           }}
         >
-          <FaGithub className="w-4 h-4" /> {secondaryLabel}
+          <HugeiconsIcon icon={GithubIcon} size={16} />
+          {secondaryLabel}
         </Button>
       </div>
       <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />

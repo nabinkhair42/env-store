@@ -35,7 +35,6 @@ export default function ProjectPage() {
     if (!loading && projects.length > 0) {
       const foundProject = projects.find((p) => p._id === projectId);
       if (foundProject) {
-        // Always update to latest from server
         setProject(foundProject);
       } else {
         setProject(null);
@@ -56,7 +55,7 @@ export default function ProjectPage() {
 
   if (!project) {
     return (
-      <div className="flex items-center justify-center min-h-svh max-w-4xl mx-auto border border-dashed border-t-0 border-b-0">
+      <div className="flex items-center justify-center min-h-svh mx-auto max-w-4xl">
         <div className="text-center space-y-4">
           <h1 className="text-2xl font-semibold text-foreground">
             Project Not Found
@@ -77,33 +76,26 @@ export default function ProjectPage() {
   }
 
   return (
-    <div className="page-rails min-h-svh">
-      {/* Breadcrumb Navigation */}
-      <div className="rail-bounded">
-        <div className="px-6 py-4">
-          <div className="mx-auto flex w-full max-w-6xl items-start justify-between gap-4">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link href="/dashboard" className="flex items-center gap-1">
-                      <span>Dashboard</span>
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{project.name}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </div>
+    <div className="min-h-svh">
+      {/* Breadcrumb */}
+      <div className="mx-auto w-full max-w-4xl px-6 py-4">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/dashboard">Dashboard</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{project.name}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
 
-      <div className="section-divider" aria-hidden="true" />
+      <div className="border-t border-border" />
 
-      {/* Environment Editor */}
       <EnvEditor project={project} onUpdate={handleProjectUpdate} />
     </div>
   );

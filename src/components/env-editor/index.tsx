@@ -21,6 +21,7 @@ import {
 import { useCallback, useMemo, useState } from 'react';
 import { FileUploadSection } from './FileUploadSection';
 import { VariablesList } from './VariablesList';
+import { ButtonGroup } from '@/components/ui/button-group';
 // Local component-only types
 type DeleteConfirmState = { open: boolean; index: number; varName: string };
 
@@ -67,7 +68,6 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   const handleAddVariable = useCallback(() => {
     addVariable();
     setHasUnsavedChanges(true);
-    // Shift all existing visibility indices by 1 since we added at the top
     shiftIndices(1);
   }, [addVariable, shiftIndices]);
 
@@ -124,11 +124,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
         setSaveStatus('saved');
         setLastSaved(new Date());
         setHasUnsavedChanges(false);
-
-        // Call onUpdate to refresh parent state
         onUpdate();
-
-        // Reset status after 2 seconds
         setTimeout(() => setSaveStatus('idle'), 2000);
       } else {
         throw new Error('Update failed');
@@ -136,8 +132,6 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
     } catch (error) {
       console.error('Failed to save project:', error);
       setSaveStatus('error');
-
-      // Reset status after 3 seconds
       setTimeout(() => setSaveStatus('idle'), 3000);
     }
   }, [updateProject, project._id, validVariables, onUpdate]);
@@ -146,7 +140,6 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
     (newVariables: EnvVariable[]) => {
       if (newVariables.length > 0) {
         bulkAddVariables(newVariables);
-        // Shift visibility indices for the new variables
         shiftIndices(newVariables.length);
       }
     },
@@ -157,7 +150,6 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
     (newVariables: EnvVariable[]) => {
       if (newVariables.length > 0) {
         bulkAddVariables(newVariables);
-        // Shift visibility indices for the new variables
         shiftIndices(newVariables.length);
       }
     },
@@ -189,102 +181,83 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   return (
     <div>
       {/* Project Header */}
-      <div className="rail-bounded">
-        <div className="px-6 py-6 bg-muted/20">
-          <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-            <div className="space-y-1">
-              <div className="space-y-1">
-                <h1 className="text-xl font-bold uppercase tracking-tight">
-                  {project.name}
-                </h1>
-              </div>
-              <div className="space-y-1.5">
-                <p className="text-sm text-muted-foreground">
-                  {project.description ||
-                    'Manage environment variables for this project'}
-                </p>
-                {lastSaved && (
-                  <p className="text-xs text-muted-foreground/70">
-                    Last saved: {formatLastSaved(lastSaved)}
-                  </p>
-                )}
-                {hasUnsavedChanges && saveStatus === 'idle' && (
-                  <p className="text-xs font-semibold text-amber-600 dark:text-amber-500 flex items-center gap-1">
-                    <HugeiconsIcon icon={Alert01Icon} size={12} /> Unsaved
-                    changes
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="flex items-stretch w-fit border border-border">
-              <div className="flex items-center">
-                <Button
-                  variant="outline"
-                  onClick={copyToClipboard}
-                  title="Copy to clipboard"
-                >
-                  <HugeiconsIcon icon={Copy01Icon} size={16} />
-                  <span className="text-xs uppercase tracking-wide">Copy</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleDownload}
-                  title="Export as .env file"
-                >
-                  <HugeiconsIcon icon={Download01Icon} size={16} />
-                  <span className="text-xs uppercase tracking-wide">
-                    Export
-                  </span>
-                </Button>
-                <Button
-                  onClick={saveProject}
-                  disabled={saveStatus === 'saving'}
-                  variant={saveStatus === 'error' ? 'destructive' : 'outline'}
-                >
-                  {saveStatus === 'saving' && (
-                    <>
-                      <HugeiconsIcon
-                        icon={Loading03Icon}
-                        size={16}
-                        className="animate-spin"
-                      />
-                      <span className="text-xs uppercase tracking-wide">
-                        Saving
-                      </span>
-                    </>
-                  )}
-                  {saveStatus === 'saved' && (
-                    <>
-                      <HugeiconsIcon icon={Tick01Icon} size={16} />
-                      <span className="text-xs uppercase tracking-wide">
-                        Saved!
-                      </span>
-                    </>
-                  )}
-                  {saveStatus === 'error' && (
-                    <>
-                      <HugeiconsIcon icon={AlertCircleIcon} size={16} />
-                      <span className="text-xs uppercase tracking-wide">
-                        Retry
-                      </span>
-                    </>
-                  )}
-                  {saveStatus === 'idle' && (
-                    <>
-                      <HugeiconsIcon icon={SaveIcon} size={16} />
-                      <span className="text-xs uppercase tracking-wide">
-                        Save
-                      </span>
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
+      <div className="mx-auto w-full max-w-4xl px-6 py-6">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-1">
+            <h1 className="text-xl font-bold uppercase tracking-tight">
+              {project.name}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {project.description ||
+                'Manage environment variables for this project'}
+            </p>
+            {lastSaved && (
+              <p className="text-xs text-muted-foreground/70">
+                Last saved: {formatLastSaved(lastSaved)}
+              </p>
+            )}
+            {hasUnsavedChanges && saveStatus === 'idle' && (
+              <p className="text-xs font-semibold text-destructive flex items-center gap-1">
+                <HugeiconsIcon icon={Alert01Icon} size={12} /> Unsaved changes
+              </p>
+            )}
           </div>
+          <ButtonGroup>
+            <Button
+              variant="outline"
+              onClick={copyToClipboard}
+              title="Copy to clipboard"
+            >
+              <HugeiconsIcon icon={Copy01Icon} size={16} />
+              Copy
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleDownload}
+              title="Export as .env file"
+            >
+              <HugeiconsIcon icon={Download01Icon} size={16} />
+              Export
+            </Button>
+            <Button
+              onClick={saveProject}
+              disabled={saveStatus === 'saving'}
+              variant={saveStatus === 'error' ? 'destructive' : 'default'}
+            >
+              {saveStatus === 'saving' && (
+                <>
+                  <HugeiconsIcon
+                    icon={Loading03Icon}
+                    size={16}
+                    className="animate-spin"
+                  />
+                  Saving
+                </>
+              )}
+              {saveStatus === 'saved' && (
+                <>
+                  <HugeiconsIcon icon={Tick01Icon} size={16} />
+                  Saved!
+                </>
+              )}
+              {saveStatus === 'error' && (
+                <>
+                  <HugeiconsIcon icon={AlertCircleIcon} size={16} />
+                  Retry
+                </>
+              )}
+              {saveStatus === 'idle' && (
+                <>
+                  <HugeiconsIcon icon={SaveIcon} size={16} />
+                  Save
+                </>
+              )}
+            </Button>
+          </ButtonGroup>
         </div>
       </div>
 
-      <div className="section-divider" aria-hidden="true" />
+      <div className="border-t border-border" />
 
       <VariablesList
         variables={variables}
@@ -296,7 +269,7 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
         onSmartPaste={handleSmartPaste}
       />
 
-      <div className="section-divider" aria-hidden="true" />
+      <div className="border-t border-border" />
 
       <FileUploadSection onFileVariables={handleFileVariables} />
 
