@@ -1,9 +1,10 @@
 import axios from 'axios';
+import { API_TIMEOUT_MS } from './app-data';
 
 const api = axios.create({
   baseURL: '/api',
   headers: { 'Content-Type': 'application/json' },
-  timeout: 15_000,
+  timeout: API_TIMEOUT_MS,
 });
 
 api.interceptors.response.use(

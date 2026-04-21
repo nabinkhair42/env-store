@@ -141,8 +141,8 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   const handleDownload = useCallback(() => {
     try {
       downloadFile(generateEnvFile(validVariables), `${project.name}.env`);
-    } catch (error) {
-      console.error('Failed to download:', error);
+    } catch {
+      toast.error('Failed to download');
     }
   }, [validVariables, project.name]);
 
@@ -150,8 +150,8 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
     try {
       await navigator.clipboard.writeText(generateEnvFile(validVariables));
       toast.success('Copied to clipboard');
-    } catch (error) {
-      console.error('Failed to copy:', error);
+    } catch {
+      toast.error('Failed to copy');
     }
   }, [validVariables]);
 

@@ -1,3 +1,4 @@
+import { PBKDF2_ITERATIONS, SALT_LENGTH } from '@/config/app-data';
 import { EnvVariable } from '@/schema';
 import { env } from '@/schema/env';
 import Cryptr from 'cryptr';
@@ -8,8 +9,8 @@ export interface DecryptResult {
 }
 
 const cryptr = new Cryptr(env.ENCRYPTION_SECRET, {
-  pbkdf2Iterations: 100_000,
-  saltLength: 64,
+  pbkdf2Iterations: PBKDF2_ITERATIONS,
+  saltLength: SALT_LENGTH,
 });
 
 export function safeEncryptVariables(

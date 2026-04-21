@@ -9,8 +9,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { EditorSkeleton } from '@/components/loaders';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
 import { useProject } from '@/hooks/use-projects';
 import { ArrowLeft01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -46,9 +46,7 @@ export default function ProjectPage() {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <Spinner className="size-5" />
-        </div>
+        <EditorSkeleton />
       ) : !project ? (
         <div className="mx-auto max-w-4xl px-6 py-20 text-center">
           <h1 className="text-2xl font-semibold">Project Not Found</h1>

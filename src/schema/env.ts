@@ -1,3 +1,4 @@
+import { DEFAULT_DATABASE_NAME, MIN_ENCRYPTION_SECRET_LENGTH } from '@/config/app-data';
 import { z } from 'zod';
 
 const EnvSchema = z.object({
@@ -5,10 +6,10 @@ const EnvSchema = z.object({
   AUTH_GITHUB_ID: z.string().min(1),
   AUTH_GITHUB_SECRET: z.string().min(1),
   MONGODB_URI: z.string().url().or(z.string().startsWith('mongodb')),
-  DATABASE_NAME: z.string().min(1).default('env-store'),
+  DATABASE_NAME: z.string().min(1).default(DEFAULT_DATABASE_NAME),
   ENCRYPTION_SECRET: z
     .string()
-    .min(32, 'Encryption secret must be at least 32 characters'),
+    .min(MIN_ENCRYPTION_SECRET_LENGTH, `Encryption secret must be at least ${MIN_ENCRYPTION_SECRET_LENGTH} characters`),
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),

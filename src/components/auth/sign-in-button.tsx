@@ -14,8 +14,7 @@ export function SignInButton() {
     setIsLoading(true);
     try {
       await signIn('github', { redirectTo: '/dashboard' });
-    } catch (error) {
-      console.error('Sign in error:', error);
+    } catch {
       setIsLoading(false);
     }
   };

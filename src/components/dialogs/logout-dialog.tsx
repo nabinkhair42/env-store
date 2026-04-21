@@ -24,8 +24,7 @@ export function LogOutDialog({ open, onOpenChange }: LogOutDialogProps) {
     setIsLoading(true);
     try {
       await signOut({ callbackUrl: '/' });
-    } catch (error) {
-      console.error('Logout error:', error);
+    } catch {
       setIsLoading(false);
     }
   };

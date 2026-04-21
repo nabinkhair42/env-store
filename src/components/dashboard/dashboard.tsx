@@ -4,8 +4,8 @@ import { ProjectCard } from '@/components/dashboard/project-card';
 import { ProjectForm } from '@/components/dashboard/project-form';
 import { Button } from '@/components/ui/button';
 import { ItemGroup } from '@/components/ui/item';
+import { DashboardSkeleton } from '@/components/loaders';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Spinner } from '@/components/ui/spinner';
 import { useAppContext } from '@/contexts/app-context';
 import { useProjects, useDeleteProject } from '@/hooks/use-projects';
 import { Add01Icon } from '@hugeicons/core-free-icons';
@@ -45,9 +45,7 @@ export function Dashboard() {
         </div>
 
         {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <Spinner className="size-5" />
-          </div>
+          <DashboardSkeleton />
         ) : !projects || projects.length === 0 ? (
           <div className="py-20 text-center">
             <p className="text-sm text-muted-foreground">

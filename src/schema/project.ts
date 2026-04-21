@@ -1,15 +1,15 @@
-import { EnvVariableSchema } from "@/schema";
-import z from "zod";
-
+import { MAX_DESCRIPTION_LENGTH, MAX_PROJECT_NAME_LENGTH } from '@/config/app-data';
+import { EnvVariableSchema } from '@/schema';
+import z from 'zod';
 
 export const ProjectSchema = z.object({
   name: z
     .string()
     .min(1, 'Project name is required')
-    .max(50, 'Project name must be less than 50 characters'),
+    .max(MAX_PROJECT_NAME_LENGTH, `Project name must be less than ${MAX_PROJECT_NAME_LENGTH} characters`),
   description: z
     .string()
-    .max(200, 'Description must be less than 200 characters')
+    .max(MAX_DESCRIPTION_LENGTH, `Description must be less than ${MAX_DESCRIPTION_LENGTH} characters`)
     .optional(),
   variables: z.array(EnvVariableSchema),
 });
