@@ -5,7 +5,7 @@ import {
 } from '@/lib/crypto-helpers';
 import { client } from '@/lib/db';
 import { env } from '@/schema/env';
-import { UpdateProjectSchema } from '@/schema/project';
+import { UpdateProjectSchema } from '@/schema';
 import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 

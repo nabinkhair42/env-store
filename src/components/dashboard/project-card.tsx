@@ -11,7 +11,7 @@ import {
   ItemTitle,
 } from '@/components/ui/item';
 import { downloadFile, generateEnvFile } from '@/lib/env-parser';
-import type { IProject } from '@/types/projects';
+import type { IProject } from '@/types';
 import {
   Copy01Icon,
   Delete02Icon,

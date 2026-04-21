@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { parseEnvFile } from '@/lib/env-parser';
-import { EnvVariable } from '@/schema/environment-variable';
+import { EnvVariable } from '@/schema';
 import { ViewIcon, ViewOffIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import React, {

@@ -4,12 +4,12 @@ import { ConfirmDialog } from '@/components/dialogs/confirm-dialog';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Spinner } from '@/components/ui/spinner';
-import { useProjects } from '@/hooks/use-project';
+import { useUpdateProject } from '@/hooks/use-projects';
 import { useVariableManager } from '@/hooks/use-variables';
 import { downloadFile, generateEnvFile, parseEnvFile } from '@/lib/env-parser';
 import { cn } from '@/lib/utils';
-import { EnvVariable } from '@/schema/environment-variable';
-import { IProject } from '@/types/projects';
+import { EnvVariable } from '@/schema';
+import { IProject } from '@/types';
 import {
   Alert01Icon,
   AlertCircleIcon,
@@ -32,7 +32,7 @@ interface EnvEditorProps {
 }
 
 export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
-  const { updateProject } = useProjects();
+  const { mutateAsync: updateProject } = useUpdateProject();
   const [saveStatus, setSaveStatus] = useState<
     'idle' | 'saving' | 'saved' | 'error'
   >('idle');
@@ -113,20 +113,16 @@ export function EnvEditor({ project, onUpdate }: EnvEditorProps) {
   const saveProject = useCallback(async () => {
     setSaveStatus('saving');
     try {
-      const result = await updateProject(project._id as string, {
-        variables: validVariables,
+      await updateProject({
+        id: project._id as string,
+        data: { variables: validVariables },
       });
-      if (result) {
-        setSaveStatus('saved');
-        setLastSaved(new Date());
-        setHasUnsavedChanges(false);
-        onUpdate();
-        setTimeout(() => setSaveStatus('idle'), 2000);
-      } else {
-        throw new Error('Update failed');
-      }
-    } catch (error) {
-      console.error('Failed to save:', error);
+      setSaveStatus('saved');
+      setLastSaved(new Date());
+      setHasUnsavedChanges(false);
+      onUpdate();
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch {
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
     }

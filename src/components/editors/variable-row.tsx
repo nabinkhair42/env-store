@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { EnvVariable } from '@/schema/environment-variable';
+import { EnvVariable } from '@/schema';
 import { RemoveCircleIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { forwardRef, memo, useImperativeHandle, useRef } from 'react';

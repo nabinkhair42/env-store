@@ -13,8 +13,8 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useProjects } from '@/hooks/use-project';
-import { IProject } from '@/types/projects';
+import { useProjects } from '@/hooks/use-projects';
+import { IProject } from '@/types';
 import {
   Download01Icon,
   GithubIcon,
@@ -31,7 +31,7 @@ interface SettingsDialogProps {
 }
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
-  const { projects, loading, error, fetchProjects } = useProjects();
+  const { data: projects = [], isLoading: loading, error, refetch: fetchProjects } = useProjects();
   const { data: session } = useSession();
   const [exportLoading, setExportLoading] = useState(false);
 
@@ -154,7 +154,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   Failed to load projects
                 </p>
                 <Button
-                  onClick={fetchProjects}
+                  onClick={() => fetchProjects()}
                   variant="outline"
                   size="sm"
                 >

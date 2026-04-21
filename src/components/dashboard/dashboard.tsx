@@ -7,13 +7,14 @@ import { ItemGroup } from '@/components/ui/item';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Spinner } from '@/components/ui/spinner';
 import { useAppContext } from '@/contexts/app-context';
-import { useProjects } from '@/hooks/use-project';
+import { useProjects, useDeleteProject } from '@/hooks/use-projects';
 import { Add01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { useRouter } from 'next/navigation';
 
 export function Dashboard() {
-  const { projects, loading, fetchProjects, deleteProject } = useProjects();
+  const { data: projects, isLoading } = useProjects();
+  const { mutate: deleteProject } = useDeleteProject();
   const { showProjectForm, setShowProjectForm } = useAppContext();
   const router = useRouter();
 
@@ -32,7 +33,7 @@ export function Dashboard() {
               Manage environment variables by project
             </p>
           </div>
-          {!loading && projects.length > 0 && (
+          {!isLoading && projects && projects.length > 0 && (
             <Button
               onClick={() => setShowProjectForm(true)}
               className="w-full md:w-auto"
@@ -43,11 +44,11 @@ export function Dashboard() {
           )}
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <Spinner className="size-5" />
           </div>
-        ) : projects.length === 0 ? (
+        ) : !projects || projects.length === 0 ? (
           <div className="py-20 text-center">
             <p className="text-sm text-muted-foreground">
               No projects yet. Create one to get started.
@@ -78,10 +79,7 @@ export function Dashboard() {
 
       {showProjectForm && (
         <ProjectForm
-          onSuccess={() => {
-            fetchProjects();
-            setShowProjectForm(false);
-          }}
+          onSuccess={() => setShowProjectForm(false)}
           onCancel={() => setShowProjectForm(false)}
         />
       )}

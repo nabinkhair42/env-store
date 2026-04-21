@@ -5,8 +5,8 @@ import {
 } from '@/lib/crypto-helpers';
 import { client } from '@/lib/db';
 import { env } from '@/schema/env';
-import { ProjectSchema } from '@/schema/project';
-import { IProject } from '@/types/projects';
+import { ProjectSchema } from '@/schema';
+import { IProject } from '@/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET() {

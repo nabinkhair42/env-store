@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
-import { useProjects } from '@/hooks/use-project';
+import { useProject } from '@/hooks/use-projects';
 import { ArrowLeft01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import Link from 'next/link';
@@ -19,10 +19,7 @@ import { useParams } from 'next/navigation';
 
 export default function ProjectPage() {
   const { id } = useParams<{ id: string }>();
-  const { projects, loading, fetchProjects } = useProjects();
-
-  const project = projects.find((p) => p._id === id) ?? null;
-  const isLoading = loading;
+  const { data: project, isLoading, refetch } = useProject(id);
 
   return (
     <div>
@@ -68,7 +65,7 @@ export default function ProjectPage() {
           </div>
         </div>
       ) : (
-        <EnvEditor project={project} onUpdate={fetchProjects} />
+        <EnvEditor project={project} onUpdate={() => refetch()} />
       )}
     </div>
   );

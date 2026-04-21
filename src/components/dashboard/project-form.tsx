@@ -10,8 +10,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useProjects } from '@/hooks/use-project';
-import { ProjectInput, ProjectSchema } from '@/schema/project';
+import { useCreateProject } from '@/hooks/use-projects';
+import { ProjectInput, ProjectSchema } from '@/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
@@ -21,7 +21,7 @@ interface ProjectFormProps {
 }
 
 export function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
-  const { createProject, loading } = useProjects();
+  const { mutateAsync: createProject, isPending } = useCreateProject();
 
   const form = useForm<ProjectInput>({
     resolver: zodResolver(ProjectSchema),
@@ -37,8 +37,8 @@ export function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
       await createProject(data);
       onSuccess();
       form.reset();
-    } catch (error) {
-      console.error('Failed to create project:', error);
+    } catch {
+      // Error toast is handled in the mutation hook
     }
   };
 
@@ -56,7 +56,7 @@ export function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               id="name"
               {...form.register('name')}
               placeholder="my-awesome-project"
-              disabled={loading}
+              disabled={isPending}
             />
             {form.formState.errors.name && (
               <p className="text-sm text-destructive">
@@ -72,7 +72,7 @@ export function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               {...form.register('description')}
               placeholder="Brief description of your project..."
               rows={3}
-              disabled={loading}
+              disabled={isPending}
             />
             {form.formState.errors.description && (
               <p className="text-sm text-destructive">
@@ -86,12 +86,12 @@ export function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
               type="button"
               variant="outline"
               onClick={onCancel}
-              disabled={loading}
+              disabled={isPending}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Project'}
+            <Button type="submit" disabled={isPending}>
+              {isPending ? 'Creating...' : 'Create Project'}
             </Button>
           </div>
         </form>
