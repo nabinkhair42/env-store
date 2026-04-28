@@ -15,6 +15,9 @@ export const STALE_TIME_MS = 5 * 60 * 1000; // 5 minutes
 export const GC_TIME_MS = 30 * 60 * 1000; // 30 minutes
 export const QUERY_RETRY_COUNT = 2;
 
+// --- Pagination ---
+export const PROJECTS_PER_PAGE = 10;
+
 // --- Environments ---
 export const DEFAULT_ENVIRONMENTS = ['development', 'staging', 'production'] as const;
 export const MAX_ENVIRONMENT_NAME_LENGTH = 30;

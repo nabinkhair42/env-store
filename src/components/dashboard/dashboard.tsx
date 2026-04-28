@@ -5,22 +5,51 @@ import { ProjectForm } from '@/components/dashboard/project-form';
 import { DashboardSkeleton } from '@/components/loaders';
 import { Button } from '@/components/ui/button';
 import { ItemGroup } from '@/components/ui/item';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import { useAppContext } from '@/contexts/app-context';
 import { useDeleteProject, useProjects } from '@/hooks/use-projects';
 import { Add01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+function buildPageList(current: number, total: number): (number | 'ellipsis')[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const pages: (number | 'ellipsis')[] = [1];
+  if (current > 3) pages.push('ellipsis');
+  for (let p = Math.max(2, current - 1); p <= Math.min(total - 1, current + 1); p++) {
+    pages.push(p);
+  }
+  if (current < total - 2) pages.push('ellipsis');
+  pages.push(total);
+  return pages;
+}
 
 export function Dashboard() {
-  const { data, isLoading } = useProjects();
+  const [page, setPage] = useState(1);
+  const { data, isLoading } = useProjects(page);
   const { mutate: deleteProject } = useDeleteProject();
   const { showProjectForm, setShowProjectForm } = useAppContext();
   const router = useRouter();
 
   const projects = data?.projects ?? [];
   const sharedProjects = data?.sharedProjects ?? [];
+  const pagination = data?.pagination;
   const hasProjects = projects.length > 0 || sharedProjects.length > 0;
+  const totalPages = pagination?.totalPages ?? 1;
+  const showPagination = totalPages > 1;
+
+  const goTo = (p: number) => {
+    if (p < 1 || p > totalPages) return;
+    setPage(p);
+  };
 
   return (
     <>
@@ -34,7 +63,9 @@ export function Dashboard() {
               Your Projects
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Manage environment variables by project
+              {pagination?.total
+                ? `${pagination.total} project${pagination.total !== 1 ? 's' : ''} · Manage environment variables by project`
+                : 'Manage environment variables by project'}
             </p>
           </div>
           {!isLoading && hasProjects && (
@@ -63,15 +94,7 @@ export function Dashboard() {
             </div>
           </div>
         ) : (
-          <div className="relative">
-            {/* Top fade */}
-            <div className="pointer-events-none absolute top-0 left-0 right-0 z-10 h-6 bg-gradient-to-b from-background to-transparent" />
-            {/* Bottom fade */}
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-16 bg-gradient-to-t from-background to-transparent" />
-
-          <ScrollArea className="h-[calc(100svh-220px)]">
-            <div className="py-4">
-            {/* My Projects */}
+          <div className="space-y-8 pb-12">
             {projects.length > 0 && (
               <div>
                 {sharedProjects.length > 0 && (
@@ -91,12 +114,70 @@ export function Dashboard() {
                     </div>
                   ))}
                 </ItemGroup>
+
+                {showPagination && (
+                  <div className="mt-6">
+                    <Pagination>
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationPrevious
+                            onClick={(e) => {
+                              e.preventDefault();
+                              goTo(page - 1);
+                            }}
+                            aria-disabled={page === 1}
+                            className={
+                              page === 1
+                                ? 'pointer-events-none opacity-50'
+                                : 'cursor-pointer'
+                            }
+                          />
+                        </PaginationItem>
+
+                        {buildPageList(page, totalPages).map((p, i) =>
+                          p === 'ellipsis' ? (
+                            <PaginationItem key={`e-${i}`}>
+                              <span className="px-2 text-muted-foreground">…</span>
+                            </PaginationItem>
+                          ) : (
+                            <PaginationItem key={p}>
+                              <PaginationLink
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  goTo(p);
+                                }}
+                                isActive={p === page}
+                                className="cursor-pointer"
+                              >
+                                {p}
+                              </PaginationLink>
+                            </PaginationItem>
+                          ),
+                        )}
+
+                        <PaginationItem>
+                          <PaginationNext
+                            onClick={(e) => {
+                              e.preventDefault();
+                              goTo(page + 1);
+                            }}
+                            aria-disabled={page === totalPages}
+                            className={
+                              page === totalPages
+                                ? 'pointer-events-none opacity-50'
+                                : 'cursor-pointer'
+                            }
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  </div>
+                )}
               </div>
             )}
 
-            {/* Shared with Me */}
             {sharedProjects.length > 0 && (
-              <div className={projects.length > 0 ? 'mt-8' : ''}>
+              <div>
                 <p className="mb-3 text-xs font-medium text-muted-foreground">
                   Shared with Me
                 </p>
@@ -114,8 +195,6 @@ export function Dashboard() {
                 </ItemGroup>
               </div>
             )}
-            </div>
-          </ScrollArea>
           </div>
         )}
       </div>

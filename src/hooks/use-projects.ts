@@ -1,24 +1,31 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { projectService } from '@/services/project.service';
 import { ProjectInput, UpdateProjectInput } from '@/schema';
+import { PROJECTS_PER_PAGE } from '@/config/app-data';
 import { toast } from 'react-hot-toast';
 
 export const projectKeys = {
   all: ['projects'] as const,
-  list: () => [...projectKeys.all, 'list'] as const,
+  list: (page = 1, limit = PROJECTS_PER_PAGE) =>
+    [...projectKeys.all, 'list', { page, limit }] as const,
   detail: (id: string) => [...projectKeys.all, 'detail', id] as const,
 };
 
 // --- Queries ---
 
-export function useProjects() {
+export function useProjects(page = 1, limit = PROJECTS_PER_PAGE) {
   return useQuery({
-    queryKey: projectKeys.list(),
+    queryKey: projectKeys.list(page, limit),
     queryFn: async () => {
-      const res = await projectService.getAll();
+      const res = await projectService.getAll({ page, limit });
       if (res.warning) toast.error(res.warning, { duration: 8000 });
-      return { projects: res.projects, sharedProjects: res.sharedProjects };
+      return {
+        projects: res.projects,
+        sharedProjects: res.sharedProjects,
+        pagination: res.pagination,
+      };
     },
+    placeholderData: keepPreviousData,
   });
 }
 

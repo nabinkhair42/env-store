@@ -17,12 +17,12 @@ const notes = [
   {
     icon: ShieldKeyIcon,
     title: 'PBKDF2 key derivation',
-    desc: '100,000 iterations with a unique random salt per value. Brute-force resistant.',
+    desc: '100,000 iterations with a unique random salt per value. Resistant to brute-force attacks.',
   },
   {
     icon: GithubIcon,
     title: 'GitHub OAuth',
-    desc: 'No passwords stored. Authentication delegated to GitHub.',
+    desc: 'No passwords stored. Authentication is delegated to GitHub.',
   },
   {
     icon: UserMultiple02Icon,
@@ -49,7 +49,7 @@ export default function SecurityNotes() {
         Built with security at every layer
       </h2>
       <p className="mt-2 max-w-2xl text-muted-foreground">
-        Your environment variables contain sensitive data. Here is how ENV Store
+        Your environment variables contain sensitive data. Here&apos;s how ENV Store
         keeps them safe.
       </p>
 

@@ -37,8 +37,16 @@ export interface IProjectResponse {
   warning?: string;
 }
 
+export interface IPaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
 export interface IProjectListResponse {
   projects: IProject[];
   sharedProjects: IProject[];
+  pagination: IPaginationMeta;
   warning?: string;
 }

@@ -4,8 +4,8 @@ import { IProjectResponse, IProjectListResponse } from '@/types';
 import { ProjectInput, UpdateProjectInput } from '@/schema';
 
 export const projectService = {
-  getAll: () =>
-    api.get<never, IProjectListResponse>(API_ENDPOINTS.PROJECTS.LIST),
+  getAll: (params?: { page?: number; limit?: number }) =>
+    api.get<never, IProjectListResponse>(API_ENDPOINTS.PROJECTS.LIST, { params }),
 
   getById: (id: string) =>
     api.get<never, IProjectResponse>(API_ENDPOINTS.PROJECTS.GET(id)),

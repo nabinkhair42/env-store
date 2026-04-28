@@ -15,7 +15,7 @@ const steps = [
     number: '03',
     title: 'Add your variables',
     description:
-      'Paste .env content, drag-and-drop files, or add variables one by one. Encrypted instantly.',
+      'Paste .env content, drag and drop files, or add variables one by one. Everything is encrypted instantly.',
   },
   {
     number: '04',

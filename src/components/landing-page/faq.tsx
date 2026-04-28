@@ -12,15 +12,15 @@ const faqs = [
   },
   {
     q: 'Can I import an existing .env file?',
-    a: 'Yes. Paste the contents of any .env file into the editor and it will parse each KEY=VALUE pair automatically. Comments and blank lines are handled gracefully.',
+    a: 'Yes. Paste the contents of any .env file into the editor, and it will parse each KEY=VALUE pair automatically. Comments and blank lines are handled gracefully.',
   },
   {
     q: 'How do I export my variables?',
-    a: 'Open any project and click Export. You get a standard .env file per environment. You can also copy individual values or the entire file to clipboard.',
+    a: 'Open any project and click Export. You get a standard .env file for each environment. You can also copy individual values or the entire file to your clipboard.',
   },
   {
     q: 'Is ENV Store free?',
-    a: 'Yes — completely free and open source. No plans, paywalls, or premium tiers.',
+    a: 'Yes — completely free and open source. No paid plans, paywalls, or premium tiers.',
   },
   {
     q: 'Can I share variables with my team?',

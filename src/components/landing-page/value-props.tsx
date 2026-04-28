@@ -13,7 +13,7 @@ import {
 const features = [
   {
     title: 'Multi-environment support',
-    desc: 'Dev, staging, production — each with its own variables. Switch with tabs.',
+    desc: 'Development, staging, and production — each with its own variables. Switch between them with tabs.',
     icon: Layers01Icon,
   },
   {
@@ -23,17 +23,17 @@ const features = [
   },
   {
     title: 'Project-scoped storage',
-    desc: 'Group variables by project. Organize across all your applications.',
+    desc: 'Group variables by project. Stay organized across all your applications.',
     icon: DatabaseIcon,
   },
   {
     title: 'Fast copy & export',
-    desc: 'Copy values or download .env files per environment with one click.',
+    desc: 'Copy values or download .env files for any environment with a single click.',
     icon: Copy01Icon,
   },
   {
     title: 'No CLI required',
-    desc: 'Simple web interface — open, paste, save. Import .env files instantly.',
+    desc: 'A simple web interface — open, paste, and save. Import .env files instantly.',
     icon: Globe02Icon,
   },
   {
@@ -51,7 +51,7 @@ export default function ValueProps() {
         Everything you need to manage environment variables
       </h2>
       <p className="mt-2 max-w-2xl text-muted-foreground">
-        Built for teams that need reliable, secure access to their project
+        Built for teams that need reliable and secure access to their project
         configurations across every environment.
       </p>
 

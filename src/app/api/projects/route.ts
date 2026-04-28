@@ -1,10 +1,7 @@
 import { auth } from '@/auth';
-import {
-  safeDecryptEnvironments,
-  safeEncryptEnvironments,
-} from '@/lib/crypto-helpers';
+import { PROJECTS_PER_PAGE } from '@/config/app-data';
+import { safeEncryptEnvironments } from '@/lib/crypto-helpers';
 import { client } from '@/lib/db';
-import { migrateProjectToEnvironments } from '@/lib/migration';
 import { env } from '@/schema/env';
 import { ProjectSchema } from '@/schema';
 import { IProject, IProjectMember } from '@/types';
@@ -43,42 +40,40 @@ async function populateMembers(db: Db, projectIds: string[]): Promise<Map<string
   return result;
 }
 
-function decryptProject(raw: Record<string, unknown>): { project: IProject; failedKeys: string[] } {
-  const environments = migrateProjectToEnvironments(raw as unknown as IProject);
-  const { environments: decrypted, failedKeys } = safeDecryptEnvironments(environments);
-  return {
-    project: { ...raw, environments: decrypted, variables: undefined } as unknown as IProject,
-    failedKeys,
-  };
-}
-
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user?.id)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+    const { searchParams } = request.nextUrl;
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || String(PROJECTS_PER_PAGE), 10)));
+    const skip = (page - 1) * limit;
+
     const db = client.db(env.DATABASE_NAME);
     const collection = db.collection<IProject>('projects');
 
-    const projects = await collection
-      .find({ userId: session.user.id })
-      .project({ name: 1, description: 1, environments: 1, variables: 1, createdAt: 1, updatedAt: 1 })
-      .sort({ updatedAt: -1 })
-      .toArray();
+    // Owned projects: paginate, skip variables/environments to avoid PBKDF2 decryption cost
+    const [ownedTotal, ownedRaw] = await Promise.all([
+      collection.countDocuments({ userId: session.user.id }),
+      collection
+        .find({ userId: session.user.id })
+        .project({ name: 1, description: 1, createdAt: 1, updatedAt: 1 })
+        .sort({ updatedAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .toArray(),
+    ]);
 
-    const allFailedKeys: string[] = [];
-    const ownedProjectIds: string[] = [];
+    const ownedProjectIds = ownedRaw.map((p) => p._id.toString());
+    const decryptedProjects: IProject[] = ownedRaw.map((raw) => ({
+      ...raw,
+      environments: [],
+      memberRole: 'owner' as const,
+    }) as unknown as IProject);
 
-    const decryptedProjects: IProject[] = projects.map((raw) => {
-      const id = raw._id.toString();
-      ownedProjectIds.push(id);
-      const { project, failedKeys } = decryptProject(raw);
-      allFailedKeys.push(...failedKeys);
-      return { ...project, memberRole: 'owner' as const };
-    });
-
-    // Fetch shared projects
+    // Shared projects (not paginated — typically few)
     const memberships = await db
       .collection('members')
       .find({ userId: session.user.id, status: 'accepted' })
@@ -93,16 +88,18 @@ export async function GET() {
 
       const rawShared = await collection
         .find({ _id: { $in: sharedObjIds } })
-        .project({ name: 1, description: 1, environments: 1, variables: 1, createdAt: 1, updatedAt: 1 })
+        .project({ name: 1, description: 1, createdAt: 1, updatedAt: 1 })
         .sort({ updatedAt: -1 })
         .toArray();
 
       sharedProjects = rawShared.map((raw) => {
         const id = raw._id.toString();
         sharedProjectIds.push(id);
-        const { project, failedKeys } = decryptProject(raw);
-        allFailedKeys.push(...failedKeys);
-        return { ...project, memberRole: roleMap.get(id) as IProject['memberRole'] };
+        return {
+          ...raw,
+          environments: [],
+          memberRole: roleMap.get(id) as IProject['memberRole'],
+        } as unknown as IProject;
       });
     }
 
@@ -120,9 +117,12 @@ export async function GET() {
     return NextResponse.json({
       projects: decryptedProjects,
       sharedProjects,
-      ...(allFailedKeys.length > 0 && {
-        warning: `Failed to decrypt variables: ${allFailedKeys.join(', ')}.`,
-      }),
+      pagination: {
+        page,
+        limit,
+        total: ownedTotal,
+        totalPages: Math.max(1, Math.ceil(ownedTotal / limit)),
+      },
     });
   } catch (error) {
     console.error('Error fetching projects:', error);

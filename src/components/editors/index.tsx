@@ -22,6 +22,7 @@ import {
   Download01Icon,
   SaveIcon,
   Tick01Icon,
+  Delete02Icon,
   Upload02Icon
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -341,9 +342,9 @@ export function EnvEditor({ project, onUpdate, readOnly = false }: EnvEditorProp
                         setDeleteEnvConfirm({ open: true, name });
                       }
                     }}
-                    className="ml-1 inline-flex rounded-full p-0.5 opacity-0 hover:opacity-100 hover:bg-muted transition-opacity cursor-pointer"
+                    className="ml-1 inline-flex rounded-full p-0.5"
                   >
-                    <HugeiconsIcon icon={Cancel01Icon} size={10} className="text-muted-foreground" />
+                    <HugeiconsIcon icon={Trash2} size={10} className="text-destructive" />
                   </span>
                 )}
               </TabsTrigger>

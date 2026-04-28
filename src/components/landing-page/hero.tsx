@@ -11,8 +11,8 @@ export default function Hero() {
       </h1>
 
       <p className="mt-5 max-w-2xl text-muted-foreground sm:text-lg">
-        Stop losing environment variables. Back up, organize, and recover your
-        configs across environments and teams — instantly.
+        Stop losing environment variables. Back up, organize, and share your
+        configurations across environments and teams — instantly.
       </p>
 
       <div className="mt-8">
