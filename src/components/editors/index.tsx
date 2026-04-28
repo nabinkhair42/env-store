@@ -344,7 +344,7 @@ export function EnvEditor({ project, onUpdate, readOnly = false }: EnvEditorProp
                     }}
                     className="ml-1 inline-flex rounded-full p-0.5"
                   >
-                    <HugeiconsIcon icon={Trash2} size={10} className="text-destructive" />
+                    <HugeiconsIcon icon={Delete02Icon} size={10} className="text-destructive" />
                   </span>
                 )}
               </TabsTrigger>

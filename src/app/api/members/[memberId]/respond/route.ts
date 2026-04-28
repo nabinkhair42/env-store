@@ -32,40 +32,40 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
 
     const newStatus = action === 'accept' ? 'accepted' : 'declined';
-    await db.collection('members').updateOne(
-      { _id: new ObjectId(memberId) },
-      { $set: { status: newStatus, updatedAt: new Date() } },
-    );
 
-    // Notify the project owner
-    const project = await db
-      .collection('projects')
-      .findOne({ _id: new ObjectId(member.projectId) });
+    // Run status update + project lookup in parallel — they don't depend on each other
+    const [, project] = await Promise.all([
+      db.collection('members').updateOne(
+        { _id: new ObjectId(memberId) },
+        { $set: { status: newStatus, updatedAt: new Date() } },
+      ),
+      db.collection('projects').findOne({ _id: new ObjectId(member.projectId) }),
+    ]);
 
     if (project) {
       const notifType = action === 'accept' ? 'invite_accepted' : 'invite_declined';
       const actionText = action === 'accept' ? 'accepted' : 'declined';
 
-      await db.collection('notifications').insertOne({
-        userId: project.userId,
-        type: notifType,
-        title: `Invitation ${actionText}`,
-        message: `${session.user.name || 'A user'} ${actionText} your invitation to "${project.name}"`,
-        metadata: {
-          projectId: member.projectId,
-          projectName: project.name,
-          memberId,
-        },
-        read: false,
-        createdAt: new Date(),
-      });
-
-      // Email the owner
-      const owner = await db
-        .collection('users')
-        .findOne({ _id: new ObjectId(project.userId) });
+      // Notification insert + owner lookup in parallel
+      const [, owner] = await Promise.all([
+        db.collection('notifications').insertOne({
+          userId: project.userId,
+          type: notifType,
+          title: `Invitation ${actionText}`,
+          message: `${session.user.name || 'A user'} ${actionText} your invitation to "${project.name}"`,
+          metadata: {
+            projectId: member.projectId,
+            projectName: project.name,
+            memberId,
+          },
+          read: false,
+          createdAt: new Date(),
+        }),
+        db.collection('users').findOne({ _id: new ObjectId(project.userId) }),
+      ]);
 
       if (owner?.email) {
+        // Fire-and-forget — don't block response on email
         sendNotificationEmail({
           to: owner.email,
           subject: `Invitation ${actionText} — ${project.name}`,

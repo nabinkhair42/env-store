@@ -1,9 +1,7 @@
 'use client';
 
-import { ProjectForm } from '@/components/dashboard/project-form';
 import { EnvEditor } from '@/components/editors/index';
 import { EditorSkeleton } from '@/components/loaders';
-import { MembersPanel } from '@/components/members';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,9 +19,19 @@ import {
   UserMultiple02Icon,
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+
+const MembersPanel = dynamic(
+  () => import('@/components/members').then((m) => m.MembersPanel),
+  { ssr: false },
+);
+const ProjectForm = dynamic(
+  () => import('@/components/dashboard/project-form').then((m) => m.ProjectForm),
+  { ssr: false },
+);
 
 export default function ProjectPage() {
   const { id } = useParams<{ id: string }>();
@@ -111,12 +119,14 @@ export default function ProjectPage() {
 
       {project && (
         <>
-          <MembersPanel
-            projectId={project._id as string}
-            currentRole={role}
-            open={showMembers}
-            onOpenChange={setShowMembers}
-          />
+          {showMembers && (
+            <MembersPanel
+              projectId={project._id as string}
+              currentRole={role}
+              open={showMembers}
+              onOpenChange={setShowMembers}
+            />
+          )}
           {showEdit && (
             <ProjectForm
               project={project}

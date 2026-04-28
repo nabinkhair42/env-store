@@ -1,14 +1,19 @@
 'use client';
 import { UserDropdown } from '@/components/layouts/user-control';
-import { LoginDialog } from '@/components/dialogs/login-dialog';
 import { NotificationBell } from '@/components/notifications';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/logo';
 import { ModeSwitcher } from '@/components/ui/theme-toggle';
 import { siteConfig } from '@/lib/sitemap';
 import { useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
+const LoginDialog = dynamic(
+  () => import('@/components/dialogs/login-dialog').then((m) => m.LoginDialog),
+  { ssr: false },
+);
 
 export function Navbar() {
   const router = useRouter();

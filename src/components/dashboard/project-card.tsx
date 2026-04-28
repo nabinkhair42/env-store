@@ -11,10 +11,13 @@ import {
   ItemDescription,
   ItemTitle,
 } from '@/components/ui/item';
+import { projectKeys } from '@/hooks/use-projects';
+import { projectService } from '@/services/project.service';
 import type { IProject, MemberRole } from '@/types';
 import { Delete02Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { type MouseEvent, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { type MouseEvent, memo, useCallback, useState } from 'react';
 
 interface ProjectCardProps {
   project: IProject;
@@ -23,9 +26,23 @@ interface ProjectCardProps {
   onDelete: (projectId: string) => void;
 }
 
-export function ProjectCard({ project, role, onSelect, onDelete }: ProjectCardProps) {
+function ProjectCardImpl({ project, role, onSelect, onDelete }: ProjectCardProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const isOwner = role === 'owner';
+  const qc = useQueryClient();
+  const projectId = project._id as string;
+
+  // Prefetch project detail on hover for instant navigation
+  const handlePrefetch = useCallback(() => {
+    qc.prefetchQuery({
+      queryKey: projectKeys.detail(projectId),
+      queryFn: async () => {
+        const res = await projectService.getById(projectId);
+        return res.project;
+      },
+      staleTime: 30_000,
+    });
+  }, [qc, projectId]);
 
   const handleAction = (e: MouseEvent, action: () => void) => {
     e.stopPropagation();
@@ -38,6 +55,8 @@ export function ProjectCard({ project, role, onSelect, onDelete }: ProjectCardPr
         className="cursor-pointer"
         variant="outline"
         onClick={() => onSelect(project)}
+        onMouseEnter={handlePrefetch}
+        onFocus={handlePrefetch}
       >
         <ItemContent>
           <div className="flex items-center gap-2">
@@ -87,3 +106,5 @@ export function ProjectCard({ project, role, onSelect, onDelete }: ProjectCardPr
     </>
   );
 }
+
+export const ProjectCard = memo(ProjectCardImpl);

@@ -3,6 +3,7 @@ import { client } from '@/lib/db';
 import { env } from '@/schema/env';
 import { IProject, MemberRole } from '@/types';
 import { ObjectId } from 'mongodb';
+import { cache } from 'react';
 
 export type ProjectAccessGranted = {
   allowed: true;
@@ -18,32 +19,32 @@ export type ProjectAccessDenied = {
 
 export type ProjectAccess = ProjectAccessGranted | ProjectAccessDenied;
 
-export async function checkProjectAccess(
+/**
+ * Cached per-request to dedupe repeated access checks for the same project
+ * within a single request (e.g. multiple route handler steps).
+ */
+export const checkProjectAccess = cache(async (
   projectId: string,
   userId: string,
   requiredRole?: MemberRole,
-): Promise<ProjectAccess> {
+): Promise<ProjectAccess> => {
   const db = client.db(env.DATABASE_NAME);
 
-  const project = await db
-    .collection<IProject>('projects')
-    .findOne({ _id: new ObjectId(projectId) });
+  // Run owner check + member lookup in parallel — only one will be relevant
+  // but doing both saves a roundtrip for non-owner cases.
+  const [project, member] = await Promise.all([
+    db.collection<IProject>('projects').findOne({ _id: new ObjectId(projectId) }),
+    db.collection('members').findOne({ projectId, userId, status: 'accepted' }),
+  ]);
 
   if (!project) {
     return { allowed: false, status: 404, error: 'Project not found' };
   }
 
-  // Check if user is the owner
+  // Owner check
   if (project.userId === userId) {
     return { allowed: true, role: 'owner', project };
   }
-
-  // Check membership
-  const member = await db.collection('members').findOne({
-    projectId,
-    userId,
-    status: 'accepted',
-  });
 
   if (!member) {
     return { allowed: false, status: 404, error: 'Project not found' };
@@ -51,14 +52,9 @@ export async function checkProjectAccess(
 
   const userRole = member.role as MemberRole;
 
-  // Check role hierarchy if a required role is specified
   if (requiredRole && ROLE_HIERARCHY[userRole] < ROLE_HIERARCHY[requiredRole]) {
-    return {
-      allowed: false,
-      status: 403,
-      error: 'Insufficient permissions',
-    };
+    return { allowed: false, status: 403, error: 'Insufficient permissions' };
   }
 
   return { allowed: true, role: userRole, project };
-}
+});

@@ -12,6 +12,7 @@ import {
 import { IMember } from '@/types';
 import { Delete02Icon, MoreVerticalIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { memo } from 'react';
 
 interface MemberRowProps {
   member: IMember;
@@ -20,7 +21,7 @@ interface MemberRowProps {
   onRemove: (memberId: string) => void;
 }
 
-export function MemberRow({ member, isOwner, onUpdateRole, onRemove }: MemberRowProps) {
+function MemberRowImpl({ member, isOwner, onUpdateRole, onRemove }: MemberRowProps) {
   const displayName =
     member.user?.name ||
     member.invitedEmail ||
@@ -85,3 +86,5 @@ export function MemberRow({ member, isOwner, onUpdateRole, onRemove }: MemberRow
     </div>
   );
 }
+
+export const MemberRow = memo(MemberRowImpl);

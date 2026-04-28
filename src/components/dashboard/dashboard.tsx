@@ -1,7 +1,6 @@
 'use client';
 
 import { ProjectCard } from '@/components/dashboard/project-card';
-import { ProjectForm } from '@/components/dashboard/project-form';
 import { DashboardSkeleton } from '@/components/loaders';
 import { Button } from '@/components/ui/button';
 import { ItemGroup } from '@/components/ui/item';
@@ -15,10 +14,17 @@ import {
 } from '@/components/ui/pagination';
 import { useAppContext } from '@/contexts/app-context';
 import { useDeleteProject, useProjects } from '@/hooks/use-projects';
+import { IProject } from '@/types';
 import { Add01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+
+const ProjectForm = dynamic(
+  () => import('@/components/dashboard/project-form').then((m) => m.ProjectForm),
+  { ssr: false },
+);
 
 function buildPageList(current: number, total: number): (number | 'ellipsis')[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
@@ -46,10 +52,23 @@ export function Dashboard() {
   const totalPages = pagination?.totalPages ?? 1;
   const showPagination = totalPages > 1;
 
-  const goTo = (p: number) => {
-    if (p < 1 || p > totalPages) return;
-    setPage(p);
-  };
+  const goTo = useCallback(
+    (p: number) => {
+      if (p < 1 || p > totalPages) return;
+      setPage(p);
+    },
+    [totalPages],
+  );
+
+  // Stable callbacks for memoized ProjectCard
+  const handleSelect = useCallback(
+    (p: IProject) => router.push(`/dashboard/${p._id}`),
+    [router],
+  );
+  const handleDelete = useCallback(
+    (id: string) => deleteProject(id),
+    [deleteProject],
+  );
 
   return (
     <>
@@ -108,8 +127,8 @@ export function Dashboard() {
                       <ProjectCard
                         project={project}
                         role="owner"
-                        onSelect={(p) => router.push(`/dashboard/${p._id}`)}
-                        onDelete={(id) => deleteProject(id)}
+                        onSelect={handleSelect}
+                        onDelete={handleDelete}
                       />
                     </div>
                   ))}
@@ -187,8 +206,8 @@ export function Dashboard() {
                       <ProjectCard
                         project={project}
                         role={project.memberRole ?? 'viewer'}
-                        onSelect={(p) => router.push(`/dashboard/${p._id}`)}
-                        onDelete={(id) => deleteProject(id)}
+                        onSelect={handleSelect}
+                        onDelete={handleDelete}
                       />
                     </div>
                   ))}

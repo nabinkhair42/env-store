@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { memo } from 'react';
 
 interface AvatarGroupItem {
   name: string | null;
@@ -14,7 +15,7 @@ interface AvatarGroupProps {
   size?: 'sm' | 'md';
 }
 
-export function AvatarGroup({ items, max = 3, size = 'sm' }: AvatarGroupProps) {
+function AvatarGroupImpl({ items, max = 3, size = 'sm' }: AvatarGroupProps) {
   if (items.length === 0) return null;
 
   const visible = items.slice(0, max);
@@ -48,3 +49,5 @@ export function AvatarGroup({ items, max = 3, size = 'sm' }: AvatarGroupProps) {
     </div>
   );
 }
+
+export const AvatarGroup = memo(AvatarGroupImpl);

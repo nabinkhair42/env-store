@@ -4,32 +4,33 @@ import { cn } from '@/lib/utils';
 import { INotification } from '@/types';
 import { useMarkRead } from '@/hooks/use-notifications';
 import { useRouter } from 'next/navigation';
+import { memo, useCallback } from 'react';
 
 interface NotificationItemProps {
   notification: INotification;
 }
 
-export function NotificationItem({ notification }: NotificationItemProps) {
+function timeAgo(date: Date): string {
+  const mins = Math.floor((Date.now() - new Date(date).getTime()) / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.floor(hours / 24)}d ago`;
+}
+
+function NotificationItemImpl({ notification }: NotificationItemProps) {
   const router = useRouter();
   const { mutate: markRead } = useMarkRead();
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (!notification.read) {
       markRead(notification._id as string);
     }
     if (notification.metadata.projectId) {
       router.push(`/dashboard/${notification.metadata.projectId}`);
     }
-  };
-
-  const timeAgo = (date: Date) => {
-    const mins = Math.floor((Date.now() - new Date(date).getTime()) / 60000);
-    if (mins < 1) return 'just now';
-    if (mins < 60) return `${mins}m ago`;
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours}h ago`;
-    return `${Math.floor(hours / 24)}d ago`;
-  };
+  }, [notification, markRead, router]);
 
   return (
     <button
@@ -48,3 +49,6 @@ export function NotificationItem({ notification }: NotificationItemProps) {
     </button>
   );
 }
+
+// Memoized — re-renders only when notification prop identity changes
+export const NotificationItem = memo(NotificationItemImpl);

@@ -1,5 +1,5 @@
 import { CTAButtons } from '@/components/landing-page/cta-buttons';
-import { HeroMock } from '@/components/landing-page/hero-mock';
+import Image from 'next/image';
 
 export default function Hero() {
   return (
@@ -20,7 +20,24 @@ export default function Hero() {
       </div>
 
       <div className="mt-16 w-full max-w-3xl">
-        <HeroMock />
+        <div className="overflow-hidden rounded-xl border shadow-2xl shadow-black/5">
+          <Image
+            src="/demos/dashboard-dark.png"
+            alt="ENV Store dashboard showing projects with team members"
+            width={1920}
+            height={1080}
+            className="hidden dark:block w-full h-auto"
+            priority
+          />
+          <Image
+            src="/demos/dashboard-light.png"
+            alt="ENV Store dashboard showing projects with team members"
+            width={1920}
+            height={1080}
+            className="block dark:hidden w-full h-auto"
+            priority
+          />
+        </div>
       </div>
     </section>
   );

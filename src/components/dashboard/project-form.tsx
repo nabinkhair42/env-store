@@ -23,6 +23,9 @@ interface ProjectFormProps {
   onCancel: () => void;
 }
 
+// Hoisted: default environments shape is stable, build it once at module scope
+const DEFAULT_ENV_SHAPE = DEFAULT_ENVIRONMENTS.map((name) => ({ name, variables: [] }));
+
 export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) {
   const isEditing = !!project;
   const { mutateAsync: createProject, isPending: isCreating } = useCreateProject();
@@ -34,7 +37,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
     defaultValues: {
       name: project?.name ?? '',
       description: project?.description ?? '',
-      environments: project?.environments ?? DEFAULT_ENVIRONMENTS.map((name) => ({ name, variables: [] })),
+      environments: project?.environments ?? DEFAULT_ENV_SHAPE,
     },
   });
 

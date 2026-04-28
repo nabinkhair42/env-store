@@ -26,36 +26,41 @@ export async function GET(
     const db = client.db(env.DATABASE_NAME);
 
     // Self-heal: resolve members with null userId by matching email or GitHub username
+    // Run all orphan resolutions in parallel since they're independent
     const orphanedMembers = await db
       .collection('members')
       .find({ projectId: id, userId: null })
       .toArray();
 
-    for (const m of orphanedMembers) {
-      let resolvedUserId: string | null = null;
+    if (orphanedMembers.length > 0) {
+      await Promise.all(
+        orphanedMembers.map(async (m) => {
+          let resolvedUserId: string | null = null;
 
-      if (m.invitedEmail) {
-        const user = await db.collection('users').findOne({ email: m.invitedEmail });
-        if (user) resolvedUserId = user._id.toString();
-      }
+          if (m.invitedEmail) {
+            const user = await db.collection('users').findOne({ email: m.invitedEmail });
+            if (user) resolvedUserId = user._id.toString();
+          }
 
-      if (!resolvedUserId && m.invitedGithubUsername) {
-        const ghUser = await fetchGitHubUser(m.invitedGithubUsername);
-        if (ghUser) {
-          const account = await db.collection('accounts').findOne({
-            provider: 'github',
-            providerAccountId: String(ghUser.id),
-          });
-          if (account) resolvedUserId = account.userId.toString();
-        }
-      }
+          if (!resolvedUserId && m.invitedGithubUsername) {
+            const ghUser = await fetchGitHubUser(m.invitedGithubUsername);
+            if (ghUser) {
+              const account = await db.collection('accounts').findOne({
+                provider: 'github',
+                providerAccountId: String(ghUser.id),
+              });
+              if (account) resolvedUserId = account.userId.toString();
+            }
+          }
 
-      if (resolvedUserId) {
-        await db.collection('members').updateOne(
-          { _id: m._id },
-          { $set: { userId: resolvedUserId, updatedAt: new Date() } },
-        );
-      }
+          if (resolvedUserId) {
+            await db.collection('members').updateOne(
+              { _id: m._id },
+              { $set: { userId: resolvedUserId, updatedAt: new Date() } },
+            );
+          }
+        }),
+      );
     }
 
     const members = await db
@@ -184,9 +189,9 @@ export async function POST(
 
     const result = await db.collection('members').insertOne(member);
 
-    // Create in-app notification if user exists
+    // Fire notification + email in parallel, fire-and-forget
     if (targetUserId) {
-      await db.collection('notifications').insertOne({
+      db.collection('notifications').insertOne({
         userId: targetUserId,
         type: 'invite',
         title: 'Project Invitation',
@@ -199,10 +204,9 @@ export async function POST(
         },
         read: false,
         createdAt: now,
-      });
+      }).catch(() => {});
     }
 
-    // Send email
     if (targetEmail) {
       sendInviteEmail({
         to: targetEmail,

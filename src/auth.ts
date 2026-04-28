@@ -24,29 +24,32 @@ export const { handlers, signIn, auth } = NextAuth({
         const client = await clientPromise;
         const db = client.db(env.DATABASE_NAME);
 
-        // Link invites sent to this email
-        await db.collection('members').updateMany(
-          {
-            userId: null,
-            invitedEmail: user.email.toLowerCase(),
-          },
-          {
-            $set: { userId: user.id, updatedAt: new Date() },
-          },
-        );
+        // Run email-based invite linking + account lookup in parallel
+        const [, account] = await Promise.all([
+          db.collection('members').updateMany(
+            {
+              userId: null,
+              invitedEmail: user.email.toLowerCase(),
+            },
+            {
+              $set: { userId: user.id, updatedAt: new Date() },
+            },
+          ),
+          db.collection('accounts').findOne({
+            userId: user.id,
+            provider: 'github',
+          }),
+        ]);
 
         // Link invites sent to this GitHub username
-        // Fetch the user's GitHub profile to get their login (username)
-        const account = await db.collection('accounts').findOne({
-          userId: user.id,
-          provider: 'github',
-        });
-
         if (account?.providerAccountId) {
           try {
             const res = await fetch(
               `https://api.github.com/user/${account.providerAccountId}`,
-              { headers: { Accept: 'application/vnd.github.v3+json' } },
+              {
+                headers: { Accept: 'application/vnd.github.v3+json' },
+                next: { revalidate: 3600 },
+              },
             );
             if (res.ok) {
               const ghProfile = await res.json();

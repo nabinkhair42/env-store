@@ -39,3 +39,14 @@ if (env.NODE_ENV === 'development') {
 // separate module, the client can be shared across functions.
 export default clientPromise;
 export { client };
+
+// Fire-and-forget: ensure indexes exist on server startup.
+// Idempotent and self-memoizing inside ensureIndexes().
+// Lazy import to avoid circular dep (db-indexes imports `client`).
+if (typeof window === 'undefined') {
+  clientPromise
+    .then(() => import('./db-indexes').then((m) => m.ensureIndexes()))
+    .catch(() => {
+      // Errors are logged inside ensureIndexes; don't crash startup
+    });
+}

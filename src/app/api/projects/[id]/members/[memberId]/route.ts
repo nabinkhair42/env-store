@@ -32,9 +32,9 @@ export async function PUT(request: NextRequest, { params }: Params) {
     if (!result)
       return NextResponse.json({ error: 'Member not found' }, { status: 404 });
 
-    // Notify the member
+    // Fire-and-forget notification — don't block response
     if (result.userId) {
-      await db.collection('notifications').insertOne({
+      db.collection('notifications').insertOne({
         userId: result.userId,
         type: 'role_changed',
         title: 'Role Updated',
@@ -42,7 +42,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
         metadata: { projectId, projectName: access.project.name, role },
         read: false,
         createdAt: new Date(),
-      });
+      }).catch(() => {});
     }
 
     return NextResponse.json({ member: result, message: 'Role updated' });
@@ -76,15 +76,20 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
         return NextResponse.json({ error: access.error }, { status: access.status });
     }
 
-    await db.collection('members').deleteOne({ _id: new ObjectId(memberId) });
+    // Run delete + project lookup (for notification) in parallel
+    const projectPromise =
+      !isSelfRemoval && member.userId
+        ? db.collection('projects').findOne({ _id: new ObjectId(projectId) })
+        : Promise.resolve(null);
 
-    // Notify the removed member (if removed by owner)
+    const [, project] = await Promise.all([
+      db.collection('members').deleteOne({ _id: new ObjectId(memberId) }),
+      projectPromise,
+    ]);
+
+    // Fire-and-forget notification — don't block response
     if (!isSelfRemoval && member.userId) {
-      const project = await db
-        .collection('projects')
-        .findOne({ _id: new ObjectId(projectId) });
-
-      await db.collection('notifications').insertOne({
+      db.collection('notifications').insertOne({
         userId: member.userId,
         type: 'removed',
         title: 'Removed from Project',
@@ -92,7 +97,7 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
         metadata: { projectId, projectName: project?.name },
         read: false,
         createdAt: new Date(),
-      });
+      }).catch(() => {});
     }
 
     return NextResponse.json({ message: 'Member removed' });

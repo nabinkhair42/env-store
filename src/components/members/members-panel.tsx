@@ -11,6 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 import { useMembers, useUpdateMemberRole, useRemoveMember } from '@/hooks/use-members';
 import { MemberRole } from '@/types';
+import { useCallback } from 'react';
 import { InviteForm } from './invite-form';
 import { MemberRow } from './member-row';
 
@@ -33,6 +34,21 @@ export function MembersPanel({
 
   const isOwner = currentRole === 'owner';
   const members = data?.members ?? [];
+
+  // Stable callbacks so memoized MemberRow doesn't re-render on every parent render
+  const handleUpdateRole = useCallback(
+    (memberId: string, role: 'editor' | 'viewer') => {
+      updateRole({ projectId, memberId, data: { role } });
+    },
+    [updateRole, projectId],
+  );
+
+  const handleRemove = useCallback(
+    (memberId: string) => {
+      removeMember({ projectId, memberId });
+    },
+    [removeMember, projectId],
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -66,10 +82,8 @@ export function MembersPanel({
                 key={member._id as string}
                 member={member}
                 isOwner={isOwner}
-                onUpdateRole={(memberId, role) =>
-                  updateRole({ projectId, memberId, data: { role } })
-                }
-                onRemove={(memberId) => removeMember({ projectId, memberId })}
+                onUpdateRole={handleUpdateRole}
+                onRemove={handleRemove}
               />
             ))}
           </div>

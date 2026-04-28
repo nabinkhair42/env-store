@@ -19,14 +19,41 @@ const cryptr = new Cryptr(env.ENCRYPTION_SECRET, {
   saltLength: SALT_LENGTH,
 });
 
+// --- Decrypted-value LRU cache ---
+// PBKDF2 (100k iterations) takes ~30-50ms per value. Caching by ciphertext
+// makes repeated reads of the same project nearly free.
+const MAX_CACHE_ENTRIES = 5000;
+const decryptCache = new Map<string, string>();
+
+function cachedDecrypt(ciphertext: string): string {
+  const hit = decryptCache.get(ciphertext);
+  if (hit !== undefined) {
+    // Promote to most-recent on access
+    decryptCache.delete(ciphertext);
+    decryptCache.set(ciphertext, hit);
+    return hit;
+  }
+  const plain = cryptr.decrypt(ciphertext);
+  // Evict oldest entry (Map preserves insertion order, so first is oldest)
+  if (decryptCache.size >= MAX_CACHE_ENTRIES) {
+    const oldest = decryptCache.keys().next().value;
+    if (oldest !== undefined) decryptCache.delete(oldest);
+  }
+  decryptCache.set(ciphertext, plain);
+  return plain;
+}
+
 export function safeEncryptVariables(
   variables: EnvVariable[] | undefined
 ): EnvVariable[] {
   if (!variables?.length) return [];
-  return variables.map((v) => ({
-    ...v,
-    value: v.value ? cryptr.encrypt(v.value) : v.value,
-  }));
+  return variables.map((v) => {
+    if (!v.value) return v;
+    const ciphertext = cryptr.encrypt(v.value);
+    // Pre-warm the cache so subsequent reads of newly-saved values are instant
+    decryptCache.set(ciphertext, v.value);
+    return { ...v, value: ciphertext };
+  });
 }
 
 export function safeDecryptVariables(
@@ -37,7 +64,7 @@ export function safeDecryptVariables(
   const failedKeys: string[] = [];
   const decrypted = variables.map((v) => {
     try {
-      return { ...v, value: v.value ? cryptr.decrypt(v.value) : v.value };
+      return { ...v, value: v.value ? cachedDecrypt(v.value) : v.value };
     } catch {
       failedKeys.push(v.key);
       return v;
