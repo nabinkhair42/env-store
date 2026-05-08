@@ -35,7 +35,7 @@ const ProjectForm = dynamic(
 
 export default function ProjectPage() {
   const { id } = useParams<{ id: string }>();
-  const { data: project, isLoading, refetch } = useProject(id);
+  const { data: project, isLoading } = useProject(id);
   const [showMembers, setShowMembers] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
@@ -111,8 +111,8 @@ export default function ProjectPage() {
         </div>
       ) : (
         <EnvEditor
+          key={project._id as string}
           project={project}
-          onUpdate={() => refetch()}
           readOnly={readOnly}
         />
       )}
@@ -130,10 +130,7 @@ export default function ProjectPage() {
           {showEdit && (
             <ProjectForm
               project={project}
-              onSuccess={() => {
-                setShowEdit(false);
-                refetch();
-              }}
+              onSuccess={() => setShowEdit(false)}
               onCancel={() => setShowEdit(false)}
             />
           )}

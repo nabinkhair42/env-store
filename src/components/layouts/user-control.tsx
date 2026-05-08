@@ -33,8 +33,7 @@ export function UserDropdown() {
 
   return (
     <>
-      <DropdownMenu key={`${showSettingsDialog}-${showLogoutDialog}`}>
-        {/* This key is used to force a re-render of the dropdown menu when the dialogs are closed */}
+      <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="group relative cursor-pointer outline-none" aria-label="User menu">
             <Avatar className="h-8 w-8 border border-border transition-colors group-hover:border-foreground/20">

@@ -16,12 +16,54 @@ interface VariablesListProps {
   onUpdateVariable: (
     index: number,
     field: keyof EnvVariable,
-    value: string
+    value: string,
   ) => void;
   onToggleVisibility: (index: number) => void;
   onDeleteVariable: (index: number) => void;
   onSmartPaste: (variables: EnvVariable[]) => void;
 }
+
+interface RowProps {
+  variable: EnvVariable;
+  index: number;
+  isValueVisible: boolean;
+  onUpdateVariable: VariablesListProps['onUpdateVariable'];
+  onToggleVisibility: VariablesListProps['onToggleVisibility'];
+  onDeleteVariable: VariablesListProps['onDeleteVariable'];
+  onSmartPaste: VariablesListProps['onSmartPaste'];
+  onNavigateToNext: (index: number) => void;
+  rowRefs: React.MutableRefObject<(VariableRowRef | null)[]>;
+}
+
+// Per-row wrapper that binds index-aware callbacks once per (index, parent-cb).
+// Memoized so the heavy VariableRow only re-renders when *its own* props change.
+const Row = memo(function Row({
+  variable,
+  index,
+  isValueVisible,
+  onUpdateVariable,
+  onToggleVisibility,
+  onDeleteVariable,
+  onSmartPaste,
+  onNavigateToNext,
+  rowRefs,
+}: RowProps) {
+  return (
+    <VariableRow
+      ref={(el) => {
+        rowRefs.current[index] = el;
+      }}
+      variable={variable}
+      index={index}
+      isValueVisible={isValueVisible}
+      onUpdate={(field, value) => onUpdateVariable(index, field, value)}
+      onToggleVisibility={() => onToggleVisibility(index)}
+      onDelete={() => onDeleteVariable(index)}
+      onSmartPaste={onSmartPaste}
+      onNavigateToNext={() => onNavigateToNext(index)}
+    />
+  );
+});
 
 export const VariablesList = memo(function VariablesList({
   variables,
@@ -34,13 +76,18 @@ export const VariablesList = memo(function VariablesList({
 }: VariablesListProps) {
   const rowRefs = useRef<(VariableRowRef | null)[]>([]);
 
-  const handleNavigateToNext = (fromIndex: number) => {
+  // Stable, no closure over render-scoped vars — keeps Row memo intact across renders.
+  const handleNavigateToNext = useRef((fromIndex: number) => {
     if (fromIndex === 0) {
-      onAddVariable();
+      onAddVariableRef.current();
     } else {
       rowRefs.current[fromIndex - 1]?.focusKey();
     }
-  };
+  }).current;
+
+  // Latest-callback ref so the stable `handleNavigateToNext` calls the up-to-date prop.
+  const onAddVariableRef = useRef(onAddVariable);
+  onAddVariableRef.current = onAddVariable;
 
   return (
     <div>
@@ -65,20 +112,16 @@ export const VariablesList = memo(function VariablesList({
         {variables.map((variable, index) => (
           <div key={index}>
             {index > 0 && <Separator className="my-2" />}
-            <VariableRow
-              ref={(el) => {
-                rowRefs.current[index] = el;
-              }}
+            <Row
               variable={variable}
               index={index}
               isValueVisible={!hiddenValues.has(index)}
-              onUpdate={(field, value) =>
-                onUpdateVariable(index, field, value)
-              }
-              onToggleVisibility={() => onToggleVisibility(index)}
-              onDelete={() => onDeleteVariable(index)}
+              onUpdateVariable={onUpdateVariable}
+              onToggleVisibility={onToggleVisibility}
+              onDeleteVariable={onDeleteVariable}
               onSmartPaste={onSmartPaste}
-              onNavigateToNext={() => handleNavigateToNext(index)}
+              onNavigateToNext={handleNavigateToNext}
+              rowRefs={rowRefs}
             />
           </div>
         ))}

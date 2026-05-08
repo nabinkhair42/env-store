@@ -1,62 +1,94 @@
 import { DEFAULT_ENVIRONMENTS, MAX_ENVIRONMENTS } from '@/config/app-data';
 import { EnvVariable } from '@/schema';
 import { IEnvironment } from '@/types';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
+// Single source of truth for environments + their variables.
+// State is seeded once from the server payload; the parent remounts (via the
+// route-driven `key`) when navigating between projects, so no sync effect.
 export function useEnvironmentManager(initialEnvironments: IEnvironment[]) {
   const [activeTab, setActiveTab] = useState(
-    initialEnvironments[0]?.name ?? DEFAULT_ENVIRONMENTS[0],
+    () => initialEnvironments[0]?.name ?? DEFAULT_ENVIRONMENTS[0],
   );
 
-  // Store per-environment variables in a map so edits survive tab switches
   const [envMap, setEnvMap] = useState<Map<string, EnvVariable[]>>(() => {
     const map = new Map<string, EnvVariable[]>();
-    for (const e of initialEnvironments) {
-      map.set(e.name, e.variables);
-    }
+    for (const e of initialEnvironments) map.set(e.name, e.variables);
     return map;
   });
 
   const [envNames, setEnvNames] = useState<string[]>(
-    initialEnvironments.map((e) => e.name),
+    () => initialEnvironments.map((e) => e.name),
   );
-
-  // Track if we've been initialized to avoid overwriting edits on refetch
-  const initialized = useRef(false);
-  useEffect(() => {
-    if (!initialized.current) {
-      initialized.current = true;
-      return;
-    }
-    // Sync from server on refetch (e.g., after save)
-    const map = new Map<string, EnvVariable[]>();
-    const names: string[] = [];
-    for (const e of initialEnvironments) {
-      map.set(e.name, e.variables);
-      names.push(e.name);
-    }
-    setEnvMap(map);
-    setEnvNames(names);
-    if (!names.includes(activeTab)) {
-      setActiveTab(names[0] ?? DEFAULT_ENVIRONMENTS[0]);
-    }
-  }, [initialEnvironments]);
 
   const activeVariables = useMemo(
     () => envMap.get(activeTab) ?? [],
     [envMap, activeTab],
   );
 
-  const updateVariables = useCallback(
-    (envName: string, variables: EnvVariable[]) => {
+  // --- Variable-level operations on the active tab ---
+
+  const addVariable = useCallback(() => {
+    setEnvMap((prev) => {
+      const next = new Map(prev);
+      const cur = prev.get(activeTab) ?? [];
+      next.set(activeTab, [{ key: '', value: '' }, ...cur]);
+      return next;
+    });
+  }, [activeTab]);
+
+  const updateVariable = useCallback(
+    (index: number, field: keyof EnvVariable, value: string) => {
       setEnvMap((prev) => {
+        const cur = prev.get(activeTab) ?? [];
+        const updated = cur.map((v, i) =>
+          i === index ? { ...v, [field]: value } : v,
+        );
         const next = new Map(prev);
-        next.set(envName, variables);
+        next.set(activeTab, updated);
         return next;
       });
     },
-    [],
+    [activeTab],
   );
+
+  const deleteVariable = useCallback(
+    (index: number) => {
+      setEnvMap((prev) => {
+        const next = new Map(prev);
+        next.set(activeTab, (prev.get(activeTab) ?? []).filter((_, i) => i !== index));
+        return next;
+      });
+    },
+    [activeTab],
+  );
+
+  const bulkAddVariables = useCallback(
+    (newVars: EnvVariable[]) => {
+      setEnvMap((prev) => {
+        const cur = [...(prev.get(activeTab) ?? [])];
+        for (const v of newVars) {
+          if (!v.key.trim()) continue;
+          const idx = cur.findIndex(
+            (existing) => existing.key.toLowerCase() === v.key.toLowerCase(),
+          );
+          if (idx >= 0) cur[idx] = v;
+          else cur.push(v);
+        }
+        const next = new Map(prev);
+        next.set(activeTab, cur);
+        return next;
+      });
+    },
+    [activeTab],
+  );
+
+  const getValidVariables = useCallback(
+    () => (envMap.get(activeTab) ?? []).filter((v) => v.key.trim()),
+    [envMap, activeTab],
+  );
+
+  // --- Environment-level operations ---
 
   const addEnvironment = useCallback(
     (name: string) => {
@@ -106,12 +138,14 @@ export function useEnvironmentManager(initialEnvironments: IEnvironment[]) {
     [envNames, activeTab],
   );
 
-  const getAllEnvironments = useCallback((): IEnvironment[] => {
-    return envNames.map((name) => ({
-      name,
-      variables: (envMap.get(name) ?? []).filter((v) => v.key.trim()),
-    }));
-  }, [envNames, envMap]);
+  const getAllEnvironments = useCallback(
+    (): IEnvironment[] =>
+      envNames.map((name) => ({
+        name,
+        variables: (envMap.get(name) ?? []).filter((v) => v.key.trim()),
+      })),
+    [envNames, envMap],
+  );
 
   const totalVariableCount = useMemo(() => {
     let count = 0;
@@ -126,7 +160,11 @@ export function useEnvironmentManager(initialEnvironments: IEnvironment[]) {
     activeTab,
     setActiveTab,
     activeVariables,
-    updateVariables,
+    addVariable,
+    updateVariable,
+    deleteVariable,
+    bulkAddVariables,
+    getValidVariables,
     addEnvironment,
     removeEnvironment,
     renameEnvironment,

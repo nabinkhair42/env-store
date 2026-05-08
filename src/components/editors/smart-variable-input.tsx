@@ -9,7 +9,6 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import React, {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useRef,
 } from 'react';
@@ -62,9 +61,14 @@ export const SmartVariableInput = forwardRef<
     focus: () => inputRef.current?.focus(),
   }));
 
-  useEffect(() => {
-    if (autoFocus) inputRef.current?.focus();
-  }, [autoFocus]);
+  // Ref callback runs on mount; autoFocus only takes effect on first attach.
+  const setInputRef = useCallback(
+    (el: HTMLInputElement | null) => {
+      inputRef.current = el;
+      if (el && autoFocus) el.focus();
+    },
+    [autoFocus],
+  );
 
   const handlePaste = useCallback(
     (e: React.ClipboardEvent<HTMLInputElement>) => {
@@ -141,7 +145,7 @@ export const SmartVariableInput = forwardRef<
   return (
     <div className="relative w-full">
       <Input
-        ref={inputRef}
+        ref={setInputRef}
         id={`${field}-${index}`}
         type={isVisibleRequired && !isValueVisible ? 'password' : type}
         value={variable[field] || ''}

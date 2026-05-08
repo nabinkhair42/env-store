@@ -8,7 +8,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEnvironmentManager } from '@/hooks/use-environment-manager';
 import { useUpdateProject } from '@/hooks/use-projects';
-import { useVariableManager } from '@/hooks/use-variables';
 import { downloadFile, generateEnvFile, parseEnvFile } from '@/lib/env-parser';
 import { cn } from '@/lib/utils';
 import { EnvVariable } from '@/schema';
@@ -23,7 +22,7 @@ import {
   SaveIcon,
   Tick01Icon,
   Delete02Icon,
-  Upload02Icon
+  Upload02Icon,
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import React, { useCallback, useRef, useState } from 'react';
@@ -34,11 +33,10 @@ type DeleteConfirmState = { open: boolean; index: number; varName: string };
 
 interface EnvEditorProps {
   project: IProject;
-  onUpdate: () => void;
   readOnly?: boolean;
 }
 
-export function EnvEditor({ project, onUpdate, readOnly = false }: EnvEditorProps) {
+export function EnvEditor({ project, readOnly = false }: EnvEditorProps) {
   const { mutateAsync: updateProject } = useUpdateProject();
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -54,28 +52,19 @@ export function EnvEditor({ project, onUpdate, readOnly = false }: EnvEditorProp
     activeTab,
     setActiveTab,
     activeVariables,
-    updateVariables,
-    addEnvironment,
-    removeEnvironment,
-    getAllEnvironments,
-  } = useEnvironmentManager(project.environments ?? []);
-
-  // Variable manager for the active environment
-  const {
-    variables,
     addVariable,
     updateVariable,
     deleteVariable,
     bulkAddVariables,
     getValidVariables,
-  } = useVariableManager(activeVariables);
+    addEnvironment,
+    removeEnvironment,
+    getAllEnvironments,
+  } = useEnvironmentManager(project.environments ?? []);
 
-  // Sync variable changes back to the environment manager
-  const markChanged = useCallback(() => setHasUnsavedChanges(true), []);
-
-  // When the variable manager's state changes, push it to the env manager
-  // We do this on save instead of on every keystroke to avoid loops
   const [hiddenValues, setHiddenValues] = useState<Set<number>>(new Set());
+
+  const markChanged = useCallback(() => setHasUnsavedChanges(true), []);
 
   const toggleVisibility = useCallback((index: number) => {
     setHiddenValues((prev) => {
@@ -99,14 +88,14 @@ export function EnvEditor({ project, onUpdate, readOnly = false }: EnvEditorProp
 
   const handleDeleteVariable = useCallback(
     (index: number) => {
-      const variable = variables[index];
+      const variable = activeVariables[index];
       setDeleteConfirm({
         open: true,
         index,
-        varName: variable.key || `Variable ${index + 1}`,
+        varName: variable?.key || `Variable ${index + 1}`,
       });
     },
-    [variables],
+    [activeVariables],
   );
 
   const confirmDeleteVariable = useCallback(() => {
@@ -133,37 +122,26 @@ export function EnvEditor({ project, onUpdate, readOnly = false }: EnvEditorProp
   const saveProject = useCallback(async () => {
     setSaveStatus('saving');
     try {
-      // Push current tab's variables to the env manager before collecting all
-      updateVariables(activeTab, getValidVariables());
-
-      // Need a small delay for state to settle, or read directly
-      const currentEnvs = getAllEnvironments().map((e) =>
-        e.name === activeTab ? { ...e, variables: getValidVariables() } : e,
-      );
-
       await updateProject({
         id: project._id as string,
-        data: { environments: currentEnvs },
+        data: { environments: getAllEnvironments() },
       });
       setSaveStatus('saved');
       setLastSaved(new Date());
       setHasUnsavedChanges(false);
-      onUpdate();
       setTimeout(() => setSaveStatus('idle'), 2000);
     } catch {
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
     }
-  }, [updateProject, project._id, activeTab, getValidVariables, updateVariables, getAllEnvironments, onUpdate]);
+  }, [updateProject, project._id, getAllEnvironments]);
 
   const handleTabChange = useCallback(
     (newTab: string) => {
-      // Save current tab's variables before switching
-      updateVariables(activeTab, variables);
       setActiveTab(newTab);
       setHiddenValues(new Set());
     },
-    [activeTab, variables, updateVariables, setActiveTab],
+    [setActiveTab],
   );
 
   const handleBulkAdd = useCallback(
@@ -217,24 +195,30 @@ export function EnvEditor({ project, onUpdate, readOnly = false }: EnvEditorProp
     [handleBulkAdd],
   );
 
-  const handleDrag = (e: React.DragEvent) => {
+  const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(e.type === 'dragenter' || e.type === 'dragover');
-  };
+  }, []);
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files?.[0]) processFile(e.dataTransfer.files[0]);
-  };
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setDragActive(false);
+      if (e.dataTransfer.files?.[0]) processFile(e.dataTransfer.files[0]);
+    },
+    [processFile],
+  );
 
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) processFile(e.target.files[0]);
-  };
+  const handleFileInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files?.[0]) processFile(e.target.files[0]);
+    },
+    [processFile],
+  );
 
-  const handleAddEnvironment = () => {
+  const handleAddEnvironment = useCallback(() => {
     const name = newEnvName.trim().toLowerCase().replace(/\s+/g, '-');
     if (!name) return;
     if (addEnvironment(name)) {
@@ -244,9 +228,9 @@ export function EnvEditor({ project, onUpdate, readOnly = false }: EnvEditorProp
     } else {
       toast.error('Environment already exists or limit reached');
     }
-  };
+  }, [newEnvName, addEnvironment, markChanged]);
 
-  const hasVariables = variables.length > 0;
+  const hasVariables = activeVariables.length > 0;
 
   return (
     <div
@@ -390,7 +374,7 @@ export function EnvEditor({ project, onUpdate, readOnly = false }: EnvEditorProp
             {name === activeTab && (
               hasVariables ? (
                 <VariablesList
-                  variables={variables}
+                  variables={activeVariables}
                   hiddenValues={hiddenValues}
                   onAddVariable={handleAddVariable}
                   onUpdateVariable={handleUpdateVariable}

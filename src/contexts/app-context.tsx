@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 
 interface AppContextType {
   showProjectForm: boolean;
@@ -12,11 +12,12 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: ReactNode }) {
   const [showProjectForm, setShowProjectForm] = useState(false);
 
-  return (
-    <AppContext.Provider value={{ showProjectForm, setShowProjectForm }}>
-      {children}
-    </AppContext.Provider>
+  const value = useMemo(
+    () => ({ showProjectForm, setShowProjectForm }),
+    [showProjectForm],
   );
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
 
 export function useAppContext() {

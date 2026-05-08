@@ -7,7 +7,9 @@ export const queryClient = new QueryClient({
       staleTime: STALE_TIME_MS,
       gcTime: GC_TIME_MS,
       retry: QUERY_RETRY_COUNT,
-      refetchOnWindowFocus: true,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
     },
     mutations: {
       retry: 0,
