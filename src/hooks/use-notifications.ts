@@ -10,9 +10,10 @@ export function useNotifications() {
   return useQuery({
     queryKey: notificationKeys.list(),
     queryFn: () => notificationService.list(),
-    refetchInterval: 60_000, // 1 minute — balance freshness vs server load
-    staleTime: 30_000, // Treat data as fresh for 30s
-    refetchOnWindowFocus: true, // Catch up immediately when user returns
+    // Notifications are pushed via mutations (mark read, mark all read) which
+    // already invalidate this query. No background polling, no focus-refetch —
+    // navigation between pages won't trigger a fetch.
+    staleTime: 5 * 60_000,
   });
 }
 

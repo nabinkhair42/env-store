@@ -15,7 +15,6 @@ export function useMembers(projectId: string) {
     queryKey: memberKeys.list(projectId),
     queryFn: () => memberService.list(projectId),
     enabled: !!projectId,
-    staleTime: 60_000, // Members change rarely; treat as fresh for 1 min
   });
 }
 

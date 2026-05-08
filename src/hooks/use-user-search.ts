@@ -20,6 +20,5 @@ export function useUserSearch(query: string) {
     queryKey: ['user-search', debouncedQuery],
     queryFn: () => userService.search(debouncedQuery),
     enabled: debouncedQuery.length >= 2,
-    staleTime: 30_000,
   });
 }

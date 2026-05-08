@@ -26,7 +26,8 @@ export function useProjects(page = 1, limit = PROJECTS_PER_PAGE) {
       };
     },
     placeholderData: keepPreviousData,
-    staleTime: 60_000, // List data fresh for 1 min — avoid refetches on remount
+    // Mutations call setQueryData / invalidateQueries to keep the cache
+    // honest, so we let navigation reuse the cache freely.
   });
 }
 
@@ -39,8 +40,6 @@ export function useProject(id: string) {
       return res.project;
     },
     enabled: !!id,
-    // Detail page is the source of truth — keep it fresh shorter to catch saves
-    staleTime: 30_000,
   });
 }
 
