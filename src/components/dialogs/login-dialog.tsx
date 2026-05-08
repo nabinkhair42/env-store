@@ -1,6 +1,7 @@
 'use client';
 
 import { SignInButton } from '@/components/auth/sign-in-button';
+import { Logo } from '@/components/logo';
 import {
   Dialog,
   DialogContent,
@@ -9,7 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Logo } from '@/components/ui/logo';
 import { siteConfig } from '@/lib/sitemap';
 
 interface LoginDialogProps {

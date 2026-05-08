@@ -12,7 +12,7 @@ import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Logo } from '../ui/logo';
+import { Logo } from '../logo';
 const SettingsDialog = dynamic(
   () =>
     import('@/components/dialogs/settings-dialog').then((m) => m.SettingsDialog),

@@ -1,8 +1,8 @@
 'use client';
 import { UserDropdown } from '@/components/layouts/user-control';
+import { Logo } from '@/components/logo';
 import { NotificationBell } from '@/components/notifications';
 import { Button } from '@/components/ui/button';
-import { Logo } from '@/components/ui/logo';
 import { ModeSwitcher } from '@/components/ui/theme-toggle';
 import { siteConfig } from '@/lib/sitemap';
 import { useSession } from 'next-auth/react';
