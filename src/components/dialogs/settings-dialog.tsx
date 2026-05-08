@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -101,16 +102,18 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           <p className="mt-1 text-sm text-muted-foreground">
             Download a JSON backup of your projects and variables
           </p>
+        </div>
+
+        <DialogFooter showCloseButton>
           <Button
             onClick={handleExport}
             disabled={exporting || projects.length === 0}
             variant="outline"
-            className="w-full mt-3"
           >
             <HugeiconsIcon icon={Download01Icon} size={16} />
             {exporting ? 'Exporting...' : 'Export All Data'}
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

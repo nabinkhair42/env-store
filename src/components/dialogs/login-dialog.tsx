@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -19,25 +20,18 @@ interface LoginDialogProps {
 export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="space-y-4">
-          <div className="flex justify-center">
-            <Logo size="lg" />
-          </div>
-          <DialogTitle className="text-2xl font-medium text-center">
-            {siteConfig.name}
-          </DialogTitle>
-          <DialogDescription className="text-center">
+      <DialogContent>
+        <DialogHeader>
+          <Logo size="lg" />
+          <DialogTitle className="text-2xl">{siteConfig.name}</DialogTitle>
+          <DialogDescription>
             Sync your environment variables across devices securely
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4">
-          <SignInButton />
-          <p className="text-xs text-center text-muted-foreground">
-            By signing in, you agree to sync your environment variables
-            securely.
-          </p>
-        </div>
+        <SignInButton />
+        <DialogFooter className="text-muted-foreground">
+          By signing in, you agree to sync your environment variables securely.
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

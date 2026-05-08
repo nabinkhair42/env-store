@@ -3,6 +3,15 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   turbopack: {},
+  // Keep rendered server components in the client-side Router Cache so that
+  // back/forward navigation reuses them instead of re-running the server
+  // component (which would flash loading.tsx).
+  experimental: {
+    staleTimes: {
+      dynamic: 300, // 5 min
+      static: 600,
+    },
+  },
   async headers() {
     return [
       {

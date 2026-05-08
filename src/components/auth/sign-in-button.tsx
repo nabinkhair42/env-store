@@ -23,7 +23,6 @@ export function SignInButton() {
     <Button
       onClick={handleSignIn}
       disabled={isLoading}
-      className="w-full"
       size="lg"
     >
       {isLoading ? (
