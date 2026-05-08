@@ -1,4 +1,3 @@
-import CTASection from '@/components/landing-page/cta-section';
 import FAQ from '@/components/landing-page/faq';
 import Hero from '@/components/landing-page/hero';
 import HowItWorks from '@/components/landing-page/how-it-works';
@@ -14,7 +13,6 @@ const page = () => {
       <ValueProps />
       <SecurityNotes />
       <FAQ />
-      <CTASection />
       <SiteFooter />
     </>
   )

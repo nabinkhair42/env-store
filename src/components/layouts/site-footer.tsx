@@ -1,12 +1,11 @@
 import { siteConfig } from '@/lib/sitemap';
 import Link from 'next/link';
 
-const author = siteConfig.authors[0];
 
 export default function SiteFooter() {
   return (
-    <footer className="bg-muted/20">
-      <div className="mx-auto w-full max-w-4xl px-6 pb-10 pt-10">
+    <footer className="w-full px-3 pb-3 sm:px-4 sm:pb-4">
+      <div className="mx-auto w-full max-w-4xl rounded-2xl border bg-muted/50 px-6 py-10 shadow-sm shadow-black/5 backdrop-blur supports-backdrop-filter:bg-muted/40">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-foreground">{siteConfig.name}</p>
@@ -76,21 +75,6 @@ export default function SiteFooter() {
               </ul>
             </div>
           </div>
-        </div>
-
-        <div className="mt-10 flex flex-col items-center justify-between gap-2 text-xs text-muted-foreground sm:flex-row">
-          <p>
-            Built by{' '}
-            <Link
-              href={author.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-foreground hover:underline"
-            >
-              {author.name}
-            </Link>
-          </p>
-          <p>&copy; {new Date().getFullYear()} {siteConfig.name}</p>
         </div>
       </div>
     </footer>

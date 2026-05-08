@@ -32,7 +32,7 @@ export function CTAButtons({
             session ? router.push('/dashboard') : setLoginOpen(true)
           }
         >
-          {primaryLabel}
+          {session ? 'Dashboard' : primaryLabel}
         </Button>
         <Button variant="outline" size="lg" asChild>
           <Link href={siteConfig.repo}>

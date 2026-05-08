@@ -5,7 +5,7 @@ const steps = [
     number: 1,
     title: 'Sign in with GitHub',
     description:
-      'One-click authentication with your GitHub account. No passwords, no setup.',
+      'One-click OAuth. No passwords, no email verification, no setup screens.',
     image: {
       dark: '/demos/signin-dark.png',
       light: '/demos/signin-light.png',
@@ -16,7 +16,7 @@ const steps = [
     number: 2,
     title: 'Create a project',
     description:
-      'Each project gets development, staging, and production environments automatically.',
+      'Every project ships with dev, staging, and production. Add custom environments like qa or preview anytime.',
     image: {
       dark: '/demos/add-project-dark.png',
       light: '/demos/add-project-light.png',
@@ -25,9 +25,9 @@ const steps = [
   },
   {
     number: 3,
-    title: 'Add your variables',
+    title: 'Paste your .env',
     description:
-      'Paste .env content or add variables one by one. Everything is encrypted instantly.',
+      'Drop in a full .env file or add KEY=VALUE pairs one at a time. Each value is encrypted before it touches the database.',
     image: {
       dark: '/demos/multiple-environment-dark.png',
       light: '/demos/multiple-environment-light.png',
@@ -36,9 +36,9 @@ const steps = [
   },
   {
     number: 4,
-    title: 'Share & export',
+    title: 'Share with your team',
     description:
-      'Invite your team, assign roles, and export .env files per environment anytime.',
+      'Invite teammates by GitHub username. Assign editor or viewer roles per project. Export the latest .env whenever you need it.',
     image: {
       dark: '/demos/team-member-dark.png',
       light: '/demos/team-member-light.png',
@@ -50,12 +50,12 @@ const steps = [
 export default function HowItWorks() {
   return (
     <section className="mx-auto w-full max-w-4xl px-6 py-24">
-      <p className="text-xs font-medium text-muted-foreground">How it works</p>
+      <p className="font-medium text-muted-foreground">How it works</p>
       <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
-        From setup to collaboration in four steps
+        From sign-in to sharing in four steps
       </h2>
       <p className="mt-2 max-w-2xl text-muted-foreground">
-        A simple workflow for teams that need reliable access to their configs.
+        A workflow that fits how you already ship code.
       </p>
 
       <div className="mt-12 grid gap-5 sm:grid-cols-2">

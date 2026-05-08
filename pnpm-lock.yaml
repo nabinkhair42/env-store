@@ -11,9 +11,6 @@ importers:
       '@auth/mongodb-adapter':
         specifier: ^3.11.2
         version: 3.11.2(mongodb@7.2.0)
-      '@base-ui/react':
-        specifier: ^1.4.1
-        version: 1.4.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.73.1(react@19.2.5))
@@ -75,8 +72,8 @@ importers:
         specifier: ^6.12.2
         version: 6.12.2
       shadcn:
-        specifier: ^4.4.0
-        version: 4.4.0(@types/node@25.6.0)(typescript@6.0.3)
+        specifier: ^4.7.0
+        version: 4.7.0(@types/node@25.6.0)(typescript@6.0.3)
       tailwind-merge:
         specifier: ^3.5.0
         version: 3.5.0
@@ -292,10 +289,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/runtime@7.29.2':
-    resolution: {integrity: sha512-JiDShH45zKHWyGe4ZNVRrCjBz8Nh9TMmZG1kh4QTK8hCBTWBi8Da+i7s1fJw7/lYpM4ccepSNfqzZ/QvABBi5g==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/template@7.28.6':
     resolution: {integrity: sha512-YA6Ma2KsCdGb+WC6UpBVFJGXL58MDA6oyONbjyF/+5sBgxY/dwkhLogbMT2GXXyU84/IhRw/2D1Os1B/giz+BQ==}
     engines: {node: '>=6.9.0'}
@@ -307,33 +300,6 @@ packages:
   '@babel/types@7.29.0':
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
-
-  '@base-ui/react@1.4.1':
-    resolution: {integrity: sha512-Ab5/LIhcmL8BQcsBUYiOfkSDRdLpvgUBzMK30cu684JPcLclYlztharvCZyNNgzJtbAiREzI9q0pI5erHCMgCw==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      '@date-fns/tz': ^1.2.0
-      '@types/react': ^17 || ^18 || ^19
-      date-fns: ^4.0.0
-      react: ^17 || ^18 || ^19
-      react-dom: ^17 || ^18 || ^19
-    peerDependenciesMeta:
-      '@date-fns/tz':
-        optional: true
-      '@types/react':
-        optional: true
-      date-fns:
-        optional: true
-
-  '@base-ui/utils@0.2.8':
-    resolution: {integrity: sha512-jvOi+c+ftGlGotNcKnzPVg2IhCaDTB6/6R3JeqdjdXktuAJi3wKH9T7+svuaKh1mmfVU11UWzUZVH74JDfi/wQ==}
-    peerDependencies:
-      '@types/react': ^17 || ^18 || ^19
-      react: ^17 || ^18 || ^19
-      react-dom: ^17 || ^18 || ^19
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -3705,9 +3671,6 @@ packages:
   require-package-name@2.0.1:
     resolution: {integrity: sha512-uuoJ1hU/k6M0779t3VMVIYpb2VMJk05cehCaABFhXaibcbvfgR8wKiozLjVFSzJPmQMRqIcO0HMyTFqfV09V6Q==}
 
-  reselect@5.1.1:
-    resolution: {integrity: sha512-K/BG6eIky/SBpzfHZv/dd+9JBFiS4SWV7FIujVyJRux6e45+73RaUHXLmIR1f7WOMaQ0U1km6qwklRQxpJJY0w==}
-
   resend@6.12.2:
     resolution: {integrity: sha512-xwgmU4b0OqoabJsIoK/x0Whk0Fcs3bpbK4i/DEWPiE5hYJHyHl0TbB6QbI3gIr+bLdLUJ1GYm/fe41aVFuHXgw==}
     engines: {node: '>=20'}
@@ -3820,8 +3783,8 @@ packages:
   setprototypeof@1.2.0:
     resolution: {integrity: sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==}
 
-  shadcn@4.4.0:
-    resolution: {integrity: sha512-0V1AjVktKwhK1e0ONXb9SeBoyJePH04iTSJeMjl9eROqjjyb8OoWYtWDI39UdBU3GzpUlFBJFohhB9c6fGOkQA==}
+  shadcn@4.7.0:
+    resolution: {integrity: sha512-70fwnesNrY1GgeD7Kdzn+3SsYeyfibm8immsA5L68+OusoPTvYF01oWExl8/latKpMpvVXcbgdbbE6VFBJQ38w==}
     hasBin: true
 
   sharp@0.34.5:
@@ -4486,8 +4449,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/runtime@7.29.2': {}
-
   '@babel/template@7.28.6':
     dependencies:
       '@babel/code-frame': 7.29.0
@@ -4510,29 +4471,6 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
-
-  '@base-ui/react@1.4.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
-    dependencies:
-      '@babel/runtime': 7.29.2
-      '@base-ui/utils': 0.2.8(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-      '@floating-ui/react-dom': 2.1.8(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-      '@floating-ui/utils': 0.2.11
-      react: 19.2.5
-      react-dom: 19.2.5(react@19.2.5)
-      use-sync-external-store: 1.6.0(react@19.2.5)
-    optionalDependencies:
-      '@types/react': 19.2.14
-
-  '@base-ui/utils@0.2.8(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
-    dependencies:
-      '@babel/runtime': 7.29.2
-      '@floating-ui/utils': 0.2.11
-      react: 19.2.5
-      react-dom: 19.2.5(react@19.2.5)
-      reselect: 5.1.1
-      use-sync-external-store: 1.6.0(react@19.2.5)
-    optionalDependencies:
-      '@types/react': 19.2.14
 
   '@discoveryjs/json-ext@0.5.7': {}
 
@@ -8040,8 +7978,6 @@ snapshots:
 
   require-package-name@2.0.1: {}
 
-  reselect@5.1.1: {}
-
   resend@6.12.2:
     dependencies:
       postal-mime: 2.7.4
@@ -8179,7 +8115,7 @@ snapshots:
 
   setprototypeof@1.2.0: {}
 
-  shadcn@4.4.0(@types/node@25.6.0)(typescript@6.0.3):
+  shadcn@4.7.0(@types/node@25.6.0)(typescript@6.0.3):
     dependencies:
       '@babel/core': 7.29.0
       '@babel/parser': 7.29.2

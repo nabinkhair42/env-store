@@ -1,68 +1,59 @@
 'use client';
 
-import { HugeiconsIcon } from '@hugeicons/react';
 import {
   Copy01Icon,
   DatabaseIcon,
-  Globe02Icon,
   Layers01Icon,
-  LockKeyIcon,
-  UserMultiple02Icon,
+  UserMultiple02Icon
 } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 
 const features = [
   {
-    title: 'Multi-environment support',
-    desc: 'Development, staging, and production — each with its own variables. Switch between them with tabs.',
+    title: 'Per-environment variables',
+    desc: 'Separate sets for dev, staging, and production. Switch via tabs. Add custom environments anytime.',
     icon: Layers01Icon,
   },
   {
-    title: 'Team sharing',
-    desc: 'Invite members by GitHub username. Assign editor or viewer roles.',
+    title: 'Team access by GitHub',
+    desc: 'Invite teammates by GitHub username. Assign editor or viewer roles per project.',
     icon: UserMultiple02Icon,
   },
   {
     title: 'Project-scoped storage',
-    desc: 'Group variables by project. Stay organized across all your applications.',
+    desc: 'Group variables by project. Each app keeps its own keys, so nothing leaks between repos.',
     icon: DatabaseIcon,
   },
   {
-    title: 'Fast copy & export',
-    desc: 'Copy values or download .env files for any environment with a single click.',
+    title: 'One-click export',
+    desc: 'Copy a single value or download the full .env for any environment. Pastes straight into your shell.',
     icon: Copy01Icon,
   },
-  {
-    title: 'No CLI required',
-    desc: 'A simple web interface — open, paste, and save. Import .env files instantly.',
-    icon: Globe02Icon,
-  },
-  {
-    title: 'Encrypted at rest',
-    desc: 'AES-256-GCM encryption with per-value salts. Your secrets stay secret.',
-    icon: LockKeyIcon,
-  },
+
 ];
 
 export default function ValueProps() {
   return (
     <section className="mx-auto w-full max-w-4xl px-6 py-24">
-      <p className="text-xs font-medium text-muted-foreground">Features</p>
+      <p className="font-medium text-muted-foreground">Features</p>
       <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
         Everything you need to manage environment variables
       </h2>
       <p className="mt-2 max-w-2xl text-muted-foreground">
-        Built for teams that need reliable and secure access to their project
-        configurations across every environment.
+        Built for teams that share configs across machines, environments, and
+        people.
       </p>
 
-      <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-12 grid gap-4 sm:grid-cols-2">
         {features.map((item, i) => (
-          <div key={i}>
-            <div className="mb-3 inline-flex size-10 items-center justify-center rounded-lg bg-muted border text-muted-foreground">
-              <HugeiconsIcon icon={item.icon} size={18} strokeWidth={1.5} />
+          <div key={i} className='bg-muted p-1.5 rounded-xl border'>
+            <div className='rounded-lg border bg-card p-5 h-full w-full'>
+              <div className="mb-3 inline-flex size-10 items-center justify-center rounded-lg bg-muted border">
+                <HugeiconsIcon icon={item.icon} size={18} strokeWidth={1.5} />
+              </div>
+              <h3 className="text-sm font-semibold">{item.title}</h3>
+              <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
             </div>
-            <h3 className="text-sm font-semibold">{item.title}</h3>
-            <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
           </div>
         ))}
       </div>

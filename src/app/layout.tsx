@@ -6,7 +6,7 @@ import { Providers } from '@/providers/root-provider';
 import { Geist } from 'next/font/google';
 import './globals.css';
 
-const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export { metadata };
 
@@ -19,7 +19,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn('font-sans', geist.variable)}
+      className={cn('font-sans', "font-sans", geist.variable)}
     >
       <body
         className={cn('antialiased font-sans', geist.variable)}
