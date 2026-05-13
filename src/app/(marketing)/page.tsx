@@ -1,7 +1,8 @@
 import FAQ from '@/components/landing-page/faq';
+import FinalCTA from '@/components/landing-page/final-cta';
 import Hero from '@/components/landing-page/hero';
 import HowItWorks from '@/components/landing-page/how-it-works';
-import SecurityNotes from '@/components/landing-page/security-notes';
+import PainPoints from '@/components/landing-page/pain-points';
 import ValueProps from '@/components/landing-page/value-props';
 import SiteFooter from '@/components/layouts/site-footer';
 
@@ -9,13 +10,14 @@ const page = () => {
   return (
     <>
       <Hero />
+      <PainPoints />
       <HowItWorks />
       <ValueProps />
-      <SecurityNotes />
       <FAQ />
+      <FinalCTA />
       <SiteFooter />
     </>
-  )
+  );
 };
 
 export default page;

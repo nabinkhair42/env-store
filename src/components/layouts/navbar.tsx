@@ -21,7 +21,7 @@ export function Navbar() {
 
   return (
     <>
-      <header className="sticky top-3 z-50 mt-3 w-full px-3 sm:top-4 sm:mt-4 sm:px-4">
+      <header className="fixed top-3 z-50 w-full px-3 sm:top-4 sm:px-4">
         <div className="mx-auto flex h-12 w-full max-w-4xl items-center justify-between rounded-full border bg-background/70 pr-2 pl-4 shadow-sm shadow-black/5 backdrop-blur supports-backdrop-filter:bg-background/60">
           <Link
             href="/"

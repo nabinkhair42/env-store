@@ -20,7 +20,7 @@ const faqs = [
   },
   {
     q: 'Is ENV Store free?',
-    a: 'Yes. Fully free and open source. No paid plans, no paywalls, no premium tiers.',
+    a: 'Yes — fully free, fully open source. No paid plans, no paywalls, no premium tiers.',
   },
   {
     q: 'Can I share variables with my team?',
@@ -34,23 +34,42 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <section className="mx-auto w-full max-w-4xl px-6 py-24">
-      <p className="font-medium text-muted-foreground">FAQ</p>
-      <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
-        Frequently asked questions
-      </h2>
+    <section id="faq" className="relative border-t border-border/60">
+      <div className="mx-auto w-full max-w-[1024px] px-6 py-24 sm:py-32">
+        <div className="grid gap-8 sm:grid-cols-12">
+          <div className="sm:col-span-5">
+            <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+              FAQ
+            </p>
+            <h2 className="mt-3 text-2xl font-medium tracking-[-0.015em] text-balance sm:text-[32px] sm:leading-[1.15]">
+              Frequently asked questions.
+            </h2>
+            <p className="mt-4 max-w-[320px] text-sm leading-relaxed text-muted-foreground">
+              Can&apos;t find what you&apos;re looking for? Open an issue on GitHub.
+            </p>
+          </div>
 
-      <div className="mt-10">
-        <Accordion type="single" collapsible>
-          {faqs.map((item, i) => (
-            <AccordionItem key={i} value={`faq-${i}`}>
-              <AccordionTrigger>{item.q}</AccordionTrigger>
-              <AccordionContent>
-                <p className="text-muted-foreground">{item.a}</p>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+          <div className="sm:col-span-7">
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((item, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`faq-${i}`}
+                  className="border-border/60"
+                >
+                  <AccordionTrigger className="text-left text-[15px] font-medium tracking-tight">
+                    {item.q}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {item.a}
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
       </div>
     </section>
   );

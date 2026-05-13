@@ -73,7 +73,7 @@ export function Dashboard() {
   return (
     <>
       <div className="mx-auto w-full max-w-4xl px-6">
-        <div className="flex flex-col gap-4 py-8 md:flex-row md:items-start md:justify-between">
+        <div className="flex flex-col gap-4 pt-24 pb-8 md:flex-row md:items-start md:justify-between">
           <div>
             <p className="text-xs font-medium text-muted-foreground">
               Dashboard
