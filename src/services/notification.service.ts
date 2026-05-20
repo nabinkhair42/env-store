@@ -11,6 +11,12 @@ export const notificationService = {
   markRead: (id: string) =>
     api.put<never, { message: string }>(API_ENDPOINTS.NOTIFICATIONS.MARK_READ(id)),
 
+  markUnread: (id: string) =>
+    api.put<never, { message: string }>(API_ENDPOINTS.NOTIFICATIONS.MARK_UNREAD(id)),
+
   markAllRead: () =>
     api.put<never, { message: string }>(API_ENDPOINTS.NOTIFICATIONS.MARK_ALL_READ),
+
+  dismiss: (id: string) =>
+    api.delete<never, { message: string }>(API_ENDPOINTS.NOTIFICATIONS.DISMISS(id)),
 };
