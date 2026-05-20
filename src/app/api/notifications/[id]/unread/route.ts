@@ -21,15 +21,15 @@ export async function PUT(
 
     const result = await db.collection('notifications').updateOne(
       { _id: new ObjectId(id), userId: session.user.id },
-      { $set: { read: true } },
+      { $set: { read: false } },
     );
 
     if (result.matchedCount === 0)
       return NextResponse.json({ error: 'Notification not found' }, { status: 404 });
 
-    return NextResponse.json({ message: 'Marked as read' });
+    return NextResponse.json({ message: 'Marked as unread' });
   } catch (error) {
-    console.error('Error marking notification read:', error);
+    console.error('Error marking notification unread:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

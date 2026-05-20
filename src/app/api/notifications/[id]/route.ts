@@ -4,7 +4,7 @@ import { env } from '@/schema/env';
 import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function PUT(
+export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
@@ -18,18 +18,17 @@ export async function PUT(
       return NextResponse.json({ error: 'Invalid notification id' }, { status: 400 });
 
     const db = client.db(env.DATABASE_NAME);
+    const result = await db.collection('notifications').deleteOne({
+      _id: new ObjectId(id),
+      userId: session.user.id,
+    });
 
-    const result = await db.collection('notifications').updateOne(
-      { _id: new ObjectId(id), userId: session.user.id },
-      { $set: { read: true } },
-    );
-
-    if (result.matchedCount === 0)
+    if (result.deletedCount === 0)
       return NextResponse.json({ error: 'Notification not found' }, { status: 404 });
 
-    return NextResponse.json({ message: 'Marked as read' });
+    return NextResponse.json({ message: 'Notification dismissed' });
   } catch (error) {
-    console.error('Error marking notification read:', error);
+    console.error('Error dismissing notification:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

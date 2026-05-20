@@ -18,7 +18,9 @@ export const API_ENDPOINTS = {
   NOTIFICATIONS: {
     LIST: '/notifications',
     MARK_READ: (id: string) => `/notifications/${id}/read`,
+    MARK_UNREAD: (id: string) => `/notifications/${id}/unread`,
     MARK_ALL_READ: '/notifications/read-all',
+    DISMISS: (id: string) => `/notifications/${id}`,
   },
   USERS: {
     SEARCH: '/users/search',
