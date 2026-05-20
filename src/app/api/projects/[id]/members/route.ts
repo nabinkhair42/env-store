@@ -3,9 +3,10 @@ import { checkProjectAccess } from '@/lib/access-control';
 import { client } from '@/lib/db';
 import { sendInviteEmail } from '@/lib/email';
 import { fetchGitHubUser } from '@/lib/github';
+import { siteConfig } from '@/lib/sitemap';
 import { env } from '@/schema/env';
 import { InviteMemberSchema } from '@/schema';
-import { IMember } from '@/types';
+import { IMember, InviteEmailStatus } from '@/types';
 import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -127,27 +128,34 @@ export async function POST(
     } else {
       targetGithubUsername = identifier.toLowerCase();
 
-      // Fetch GitHub profile to get the numeric ID (providerAccountId)
+      // Fetch GitHub profile to verify the user exists and get their numeric ID
       const ghUser = await fetchGitHubUser(targetGithubUsername);
 
-      if (ghUser) {
-        // Search our DB using the GitHub numeric ID
-        const account = await db.collection('accounts').findOne({
-          provider: 'github',
-          providerAccountId: String(ghUser.id),
-        });
+      if (!ghUser) {
+        return NextResponse.json(
+          {
+            error: `GitHub user "${targetGithubUsername}" not found. Check the username or invite by email instead.`,
+          },
+          { status: 404 },
+        );
+      }
 
-        if (account) {
-          // User exists in our DB
-          targetUserId = account.userId.toString();
-          const user = await db.collection('users').findOne({
-            _id: new ObjectId(account.userId),
-          });
-          if (user?.email) targetEmail = user.email;
-        } else if (ghUser.email) {
-          // Not in our DB but GitHub has their public email
-          targetEmail = ghUser.email;
-        }
+      // Search our DB using the GitHub numeric ID
+      const account = await db.collection('accounts').findOne({
+        provider: 'github',
+        providerAccountId: String(ghUser.id),
+      });
+
+      if (account) {
+        // User exists in our DB
+        targetUserId = account.userId.toString();
+        const user = await db.collection('users').findOne({
+          _id: new ObjectId(account.userId),
+        });
+        if (user?.email) targetEmail = user.email.toLowerCase();
+      } else if (ghUser.email) {
+        // Not in our DB but GitHub has their public email
+        targetEmail = ghUser.email.toLowerCase();
       }
     }
 
@@ -188,38 +196,52 @@ export async function POST(
     };
 
     const result = await db.collection('members').insertOne(member);
+    const memberId = result.insertedId.toString();
+    const inviteUrl = `${siteConfig.url}/invite/${memberId}`;
 
-    // Fire notification + email in parallel, fire-and-forget
+    // In-app notification for known users (sync — we want it visible immediately)
     if (targetUserId) {
-      db.collection('notifications').insertOne({
-        userId: targetUserId,
-        type: 'invite',
-        title: 'Project Invitation',
-        message: `${session.user.name || 'Someone'} invited you to "${access.project.name}" as ${role}`,
-        metadata: {
-          projectId,
-          projectName: access.project.name,
-          memberId: result.insertedId.toString(),
-          role,
-        },
-        read: false,
-        createdAt: now,
-      }).catch(() => {});
+      try {
+        await db.collection('notifications').insertOne({
+          userId: targetUserId,
+          type: 'invite',
+          title: 'Project Invitation',
+          message: `${session.user.name || 'Someone'} invited you to "${access.project.name}" as ${role}`,
+          metadata: {
+            projectId,
+            projectName: access.project.name,
+            memberId,
+            role,
+          },
+          read: false,
+          createdAt: now,
+        });
+      } catch (err) {
+        console.error('[invite] Failed to insert notification:', err);
+      }
     }
 
+    // Await email so we can report real delivery status back to the inviter.
+    // Resend errors are logged but do not fail the invite (the DB invite is the
+    // source of truth — the link can be shared manually if email failed).
+    let emailStatus: InviteEmailStatus = 'no_email';
     if (targetEmail) {
-      sendInviteEmail({
+      const emailResult = await sendInviteEmail({
         to: targetEmail,
         inviterName: session.user.name || 'A team member',
         projectName: access.project.name,
         role,
-      }).catch(() => {});
+        inviteUrl,
+      });
+      emailStatus = emailResult.status;
     }
 
     return NextResponse.json(
       {
         member: { ...member, _id: result.insertedId },
         message: 'Invitation sent',
+        emailStatus,
+        inviteUrl,
       },
       { status: 201 },
     );

@@ -9,10 +9,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { siteConfig } from '@/lib/sitemap';
 import { IMember } from '@/types';
-import { Delete02Icon, MoreVerticalIcon } from '@hugeicons/core-free-icons';
+import {
+  Copy01Icon,
+  Delete02Icon,
+  MoreVerticalIcon,
+} from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { memo } from 'react';
+import { toast } from 'react-hot-toast';
 
 interface MemberRowProps {
   member: IMember;
@@ -34,6 +40,16 @@ function MemberRowImpl({ member, isOwner, onUpdateRole, onRemove }: MemberRowPro
       : member.status === 'pending'
         ? 'secondary'
         : 'destructive';
+
+  const handleCopyInviteLink = async () => {
+    const url = `${siteConfig.url}/invite/${member._id as string}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success('Invite link copied');
+    } catch {
+      toast.error('Failed to copy');
+    }
+  };
 
   return (
     <div className="flex items-center justify-between py-3">
@@ -62,6 +78,12 @@ function MemberRowImpl({ member, isOwner, onUpdateRole, onRemove }: MemberRowPro
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              {member.status === 'pending' && (
+                <DropdownMenuItem onClick={handleCopyInviteLink}>
+                  <HugeiconsIcon icon={Copy01Icon} size={14} />
+                  Copy invite link
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 onClick={() =>
                   onUpdateRole(

@@ -22,9 +22,17 @@ export interface IMember {
   };
 }
 
+export type InviteEmailStatus =
+  | 'sent'
+  | 'failed'
+  | 'disabled'
+  | 'no_email';
+
 export interface IMemberResponse {
   member: IMember;
   message?: string;
+  emailStatus?: InviteEmailStatus;
+  inviteUrl?: string;
 }
 
 export interface IMemberListResponse {

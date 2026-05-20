@@ -27,7 +27,11 @@ function NotificationItemImpl({ notification }: NotificationItemProps) {
     if (!notification.read) {
       markRead(notification._id as string);
     }
-    if (notification.metadata.projectId) {
+    // Pending invites need the accept/decline page — the dashboard route
+    // would 404 since access isn't granted until they accept.
+    if (notification.type === 'invite' && notification.metadata.memberId) {
+      router.push(`/invite/${notification.metadata.memberId}`);
+    } else if (notification.metadata.projectId) {
       router.push(`/dashboard/${notification.metadata.projectId}`);
     }
   }, [notification, markRead, router]);

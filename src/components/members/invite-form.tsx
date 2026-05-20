@@ -15,17 +15,34 @@ import {
 } from '@/components/ui/select';
 import { useInviteMember } from '@/hooks/use-members';
 import { useUserSearch } from '@/hooks/use-user-search';
-import { Tick01Icon } from '@hugeicons/core-free-icons';
+import { InviteEmailStatus } from '@/types';
+import { Copy01Icon, Tick01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 interface InviteFormProps {
   projectId: string;
 }
 
+interface LastInvite {
+  url: string;
+  emailStatus: InviteEmailStatus;
+  identifier: string;
+}
+
+const EMAIL_STATUS_COPY: Record<InviteEmailStatus, { variant: 'default' | 'secondary' | 'destructive'; text: string }> = {
+  sent: { variant: 'default', text: 'Email sent' },
+  failed: { variant: 'destructive', text: "Email couldn't be sent — share the link below" },
+  disabled: { variant: 'secondary', text: 'Email delivery is off — share the link below' },
+  no_email: { variant: 'secondary', text: 'No email on file — share the link below' },
+};
+
 export function InviteForm({ projectId }: InviteFormProps) {
   const [identifier, setIdentifier] = useState('');
   const [role, setRole] = useState<'editor' | 'viewer'>('viewer');
+  const [lastInvite, setLastInvite] = useState<LastInvite | null>(null);
+  const [copied, setCopied] = useState(false);
   const { mutateAsync: invite, isPending } = useInviteMember();
   const { data, isFetching } = useUserSearch(identifier);
 
@@ -33,13 +50,34 @@ export function InviteForm({ projectId }: InviteFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!identifier.trim()) return;
+    const value = identifier.trim();
+    if (!value) return;
 
     try {
-      await invite({ projectId, data: { identifier: identifier.trim(), role } });
+      const res = await invite({ projectId, data: { identifier: value, role } });
+      if (res.inviteUrl) {
+        setLastInvite({
+          url: res.inviteUrl,
+          emailStatus: res.emailStatus ?? 'no_email',
+          identifier: value,
+        });
+        setCopied(false);
+      }
       setIdentifier('');
     } catch {
-      // Error handled in hook
+      // Error toast handled in hook
+    }
+  };
+
+  const handleCopy = async () => {
+    if (!lastInvite) return;
+    try {
+      await navigator.clipboard.writeText(lastInvite.url);
+      setCopied(true);
+      toast.success('Invite link copied');
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error('Failed to copy');
     }
   };
 
@@ -119,6 +157,40 @@ export function InviteForm({ projectId }: InviteFormProps) {
           {isPending ? 'Sending...' : 'Send Invite'}
         </Button>
       </ButtonGroup>
+
+      {lastInvite && (
+        <div className="space-y-2 rounded-md border bg-muted/30 p-3">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs font-medium">
+              Invited <span className="font-semibold">{lastInvite.identifier}</span>
+            </p>
+            <Badge variant={EMAIL_STATUS_COPY[lastInvite.emailStatus].variant} className="text-[10px]">
+              {EMAIL_STATUS_COPY[lastInvite.emailStatus].text}
+            </Badge>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Input
+              value={lastInvite.url}
+              readOnly
+              className="h-8 text-xs"
+              onFocus={(e) => e.target.select()}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleCopy}
+              className="h-8 shrink-0"
+            >
+              <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} size={14} />
+              {copied ? 'Copied' : 'Copy'}
+            </Button>
+          </div>
+          <p className="text-[11px] text-muted-foreground">
+            Share this link with the invitee — works even if they didn&apos;t get the email.
+          </p>
+        </div>
+      )}
     </form>
   );
 }
