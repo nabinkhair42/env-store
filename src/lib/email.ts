@@ -4,7 +4,8 @@ import { Resend } from 'resend';
 
 const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
-const FROM_EMAIL = `${siteConfig.name} <noreply@${new URL(siteConfig.url).hostname}>`;
+// Send from the apex domain: it's the one verified in Resend (the envstore. subdomain is not).
+const FROM_EMAIL = `${siteConfig.name} <noreply@nabinkhair.com.np>`;
 
 export type EmailResult =
   | { status: 'sent' }

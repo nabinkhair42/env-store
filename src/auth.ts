@@ -7,6 +7,8 @@ import GitHub from 'next-auth/providers/github';
 
 export const { handlers, signIn, auth } = NextAuth({
   adapter: MongoDBAdapter(clientPromise),
+  // Always served behind a reverse proxy (Cloudflare Tunnel), so derive the URL from the request host.
+  trustHost: true,
   providers: [
     GitHub({
       clientId: env.AUTH_GITHUB_ID,
