@@ -2,6 +2,8 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Self-contained server bundle for the Docker image.
+  output: 'standalone',
   turbopack: {},
   // Keep rendered server components in the client-side Router Cache so that
   // back/forward navigation reuses them instead of re-running the server
