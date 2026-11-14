@@ -1,0 +1,13 @@
+# Deployed to /opt/apps/env-store on the VM by .github/workflows/deploy.yml.
+# Secrets live in /opt/apps/env-store/.env on the VM (not in git).
+services:
+  app:
+    image: ghcr.io/nabinkhair42/env-store:${TAG:-latest}
+    container_name: env-store
+    restart: unless-stopped
+    env_file: .env
+    networks: [web]
+
+networks:
+  web:
+    external: true
